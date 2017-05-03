@@ -1,4 +1,4 @@
-package controle;
+package modele.joueurs;
 
 public interface Joueur {
 	

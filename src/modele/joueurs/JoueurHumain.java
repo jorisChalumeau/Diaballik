@@ -1,6 +1,6 @@
-package controle;
+package modele.joueurs;
 
-public class JoueurIA implements Joueur {
+public class JoueurHumain implements Joueur {
 
 	@Override
 	public void jouerCoup() {

@@ -1,13 +1,15 @@
-package modele;
+package controle;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import modele.Plateau;
 
 public class Main extends Application {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		launch(args);
+		Plateau p = new Plateau();
+		p.Afficher();
 	}
 
 	@Override
