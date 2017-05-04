@@ -3,7 +3,7 @@ package modele;
 public class Plateau {
 	
 	private Case[][] terrain;
-	private final static int TAILLE = 7;
+	final static int TAILLE = 7;
 	
 	public Plateau(){
 		initialiserTerrain();
@@ -31,6 +31,10 @@ public class Plateau {
             }
         }
          
+	}
+	
+	public Case obtenirCase(Point position) {
+		return terrain[position.getRow()][position.getColumn()];
 	}
 	
 	public void Afficher(){

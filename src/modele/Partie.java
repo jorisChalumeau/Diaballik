@@ -13,13 +13,13 @@ public class Partie {
 	
 	public Partie(){
 		this.p = new Plateau();
-		this.joueur1 = new JoueurHumain();
-		this.joueur2 = new JoueurHumain();
+		this.joueur1 = new JoueurHumain(1);
+		this.joueur2 = new JoueurHumain(2);
 	}
 	
 	public Partie(String difficulte){
 		this.p = new Plateau();
-		this.joueur1 = new JoueurHumain();
+		this.joueur1 = new JoueurHumain(1);
 		this.joueur2 = JoueurIA.creerIA(difficulte);
 	}
 }
