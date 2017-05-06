@@ -1,7 +1,8 @@
 package controle;
 import javafx.event.EventHandler;
 import ihm.EntrainementIHM;
-import javafx.event.ActionEvent;
+import javafx.event.ActionEvent
+;
 
 
 public class boutonPresse implements EventHandler<ActionEvent> {

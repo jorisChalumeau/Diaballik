@@ -14,6 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.WindowEvent;
 import javafx.geometry.*;
 
+
 public class EntrainementIHM extends Application {
 
 	public VBox initMenu1(){
