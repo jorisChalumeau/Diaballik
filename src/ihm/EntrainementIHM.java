@@ -1,6 +1,5 @@
 package ihm;
 import controle.boutonPresse;
-
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;

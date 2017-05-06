@@ -4,7 +4,6 @@ import ihm.EntrainementIHM;
 import javafx.event.ActionEvent;
 
 
-
 public class boutonPresse implements EventHandler<ActionEvent> {
 
     EntrainementIHM app;
