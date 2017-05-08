@@ -19,6 +19,67 @@ public class boutonPresse implements EventHandler<ActionEvent> {
     public void handle(ActionEvent event) {
         
         System.out.println("Bouton "+numero+" pressé");
+        
+        switch(numero){
+        case 1 : //Bouton Mode 2 joueurs
+        	
+        	//Modèle : Charger le modèle avec 2 joueurs humains
+        	//Vue : Afficher la "fenêtre jeu"
+        	app.afficherFenetreJeu();
+        	break;
+        	
+        case 2 : //Bouton Contre l'IA
+        	
+        	app.afficherChoixNiveau();
+        	break;
+        
+        case 3 : //Bouton Règles du jeu
+        	
+        	app.afficherRegles();//Vue : Afficher les règles
+        	break;
+        	
+        case 4 : // Bouton Quitter le jeu
+        	
+        	app.fermerAplication(); //Vue : fermer la fenetre
+        	break;
+        	
+        case 5 : // Bouton première difficulté
+        	
+        	//Modèle : Charger le modèle avec 1 joueur humain et une IA
+        	//Vue : Afficher la "fenêtre jeu"
+        	app.afficherFenetreJeu();
+        	break;
+        	
+        case 6 : // Bouton deuxième difficulté
+        	
+        	//Modèle : Charger le modèle avec 1 joueur humain et une IA
+        	//Vue : Afficher la "fenêtre jeu"
+        	app.afficherFenetreJeu();
+        	break;
+        	
+        case 7 : // Bouton troisième difficulté
+        	
+        	//Modèle : Charger le modèle avec 1 joueur humain et une IA
+        	//Vue : Afficher la "fenêtre jeu"
+        	app.afficherFenetreJeu();
+        	break;
+        	
+        case 8 : // Bouton quatrième difficulté
+        	
+        	//Modèle : Charger le modèle avec 1 joueur humain et une IA
+        	//Vue : Afficher la "fenêtre jeu"
+        	app.afficherFenetreJeu();
+        	break;
+        	
+        case 9 : // Bouton Retour vers menu principal
+        	
+        	app.afficherMenuPrincipal();
+        	break;
+        	
+        default :
+        	//faire une exception??
+        }
+        
 
     }
 }
