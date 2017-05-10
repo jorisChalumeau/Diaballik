@@ -37,6 +37,13 @@ public class Plateau {
 		return terrain[position.getRow()][position.getColumn()];
 	}
 	
+	public void actualiser(Point src, Point dest) {
+		Case newDestValue = terrain[src.getRow()][src.getColumn()];
+		Case newSrcValue = terrain[dest.getRow()][dest.getColumn()];
+		terrain[src.getRow()][src.getColumn()] = newSrcValue;
+		terrain[dest.getRow()][dest.getColumn()] = newDestValue;
+	}
+	
 	public void Afficher(){
         for(int i=0;i<TAILLE;i++){
             for(int j=0;j<TAILLE;j++){
