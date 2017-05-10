@@ -51,6 +51,7 @@ public class Plateau {
             }
             System.out.println();
         }
+        System.out.println("\n");
 }
 	
 }
