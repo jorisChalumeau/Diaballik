@@ -1,0 +1,17 @@
+IHM + Fonctionnalité Conseils:
+
+-Afficher clairement joueur courant
+-Annuler à l'infini
+-Faire jouer des gens (scenario)
+-Faire un bouton pour "echap"
+-Sauvegarde/Charger
+-Menu et texte à revoir
+-Le fait de lancer une partie en 1 clic est bien
+-Difficulté par defaut (facile), puis pouvoir changer la difficulté
+-Changer la difficulté en cours de jeu pour la demo
+-Afficher clairement le niveau de l'IA
+-Historique
+-Annuler : 	-> Pour IA on annule le tour complet 
+		->Pour humain on annule la dernière action
+-Bouton "Remontrer coup" de l'IA
+-Conseil pour les joueurs

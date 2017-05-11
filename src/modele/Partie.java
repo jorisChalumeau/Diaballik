@@ -3,7 +3,7 @@ package modele;
 import modele.joueurs.Joueur;
 import modele.joueurs.JoueurHumain;
 import modele.joueurs.JoueurIA;
-import tests.Regles;
+import modele.tests.Regles;
 
 public class Partie {
 	

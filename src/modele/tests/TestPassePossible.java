@@ -1,4 +1,4 @@
-package tests;
+package modele.tests;
 
 import java.util.function.Function;
 

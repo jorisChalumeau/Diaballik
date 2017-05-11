@@ -1,4 +1,4 @@
-package tests;
+package modele.tests;
 
 import modele.Plateau;
 import modele.Point;
