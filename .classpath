@@ -6,5 +6,6 @@
 			<accessrule kind="accessible" pattern="javafx/**"/>
 		</accessrules>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/faris/git/Diaballik/src/document/json-lib-2.4-jdk15.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

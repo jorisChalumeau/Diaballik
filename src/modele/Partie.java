@@ -1,9 +1,15 @@
 package modele;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
+
 import modele.joueurs.Joueur;
 import modele.joueurs.JoueurHumain;
 import modele.joueurs.JoueurIA;
 import modele.tests.Regles;
+import net.sf.json.JSONObject;
 
 public class Partie {
 	
@@ -46,6 +52,7 @@ public class Partie {
 	   	 else if(TypeMouvement.PASSE.equals(currentMove) && !balleLancee) {
 	   	 	balleLancee = true;
 	   	 	realiserAction(src, dest);
+	   	 	
 	   	 }
 	   	 else if(TypeMouvement.DEPLACEMENT.equals(currentMove) && cptMouvement < 2) {
 	   	 	cptMouvement++;
@@ -59,6 +66,12 @@ public class Partie {
     private void realiserAction(Point src, Point dest) {
 		p.actualiser(src, dest);
 	}
+    
+    public void sauvegarder(String filename) throws FileNotFoundException
+    {
+//    	JSONObject jsonObject = new JSONObject(instanceOfClass1);
+//    	String myJson = jsonObject.toString();
+    }
     
     public Case getCase(Point position) {
     	return p.obtenirCase(position);

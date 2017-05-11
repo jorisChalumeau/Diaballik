@@ -1,5 +1,7 @@
 package controle;
 
+import java.io.FileNotFoundException;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 import modele.ExceptionMouvementIllegal;
@@ -9,7 +11,7 @@ import modele.Point;
 
 public class Main extends Application {
 
-	public static void main(String[] args) throws ExceptionMouvementIllegal {
+	public static void main(String[] args) throws ExceptionMouvementIllegal, FileNotFoundException {
 		// TODO Auto-generated method stub
 		Partie diaballik = CreateurPartie.creerPartie();
 		diaballik.getPlateau().Afficher();
@@ -17,6 +19,7 @@ public class Main extends Application {
 		Point pointB = new Point(1, 4);
 		diaballik.executerMouvement(pointA, pointB);
 		diaballik.getPlateau().Afficher();
+		//diaballik.sauvegarder();
 		//On fait une passe
 		pointA = new Point(0, 3);
 		pointB = new Point(0, 5);
