@@ -30,6 +30,8 @@ public class Main extends Application {
 		pointB = new Point(1, 5);
 		diaballik.executerMouvement(pointA, pointB);
 		diaballik.getPlateau().Afficher();
+//		diaballik.sauvegarder("sauvegardes/test.txt");
+//		diaballik.charger("sauvegardes/test.txt");
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package modele;
 
+import org.json.simple.JSONObject;
+
 public class Plateau {
 	
 	private Case[][] terrain;
@@ -7,6 +9,38 @@ public class Plateau {
 	
 	public Plateau(){
 		initialiserTerrain();
+	}
+	
+	public Plateau(JSONObject jsonPlat){
+		initialiserTerrain(jsonPlat);
+	}
+	
+	public void initialiserTerrain(JSONObject jsonPlat){
+		terrain = new Case[TAILLE][TAILLE];
+		int val;
+		
+		for (int i = 0; i < TAILLE; i++) {
+			for (int j = 0; j < TAILLE; j++) {
+				val = Integer.parseInt(jsonPlat.get(""+(7 * i + j)).toString());
+				
+				switch(val){
+				case 1:
+					this.terrain[i][j] = Case.PION_BLANC;
+					break;
+				case 2:
+					this.terrain[i][j] = Case.PION_BLANC_AVEC_BALLON;
+					break;
+				case 3:
+					this.terrain[i][j] = Case.PION_NOIR;
+					break;
+				case 4:
+					this.terrain[i][j] = Case.PION_NOIR_AVEC_BALLON;
+					break;
+				default:
+					this.terrain[i][j] = Case.LIBRE;
+				}
+			}
+		}
 	}
 	
 	public void initialiserTerrain(){

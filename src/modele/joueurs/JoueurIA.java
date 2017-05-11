@@ -2,27 +2,17 @@ package modele.joueurs;
 
 public abstract class JoueurIA implements Joueur {
 	
-	@Override
-	public void jouerCoup() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void chercherCoupsPossibles() {
-		// TODO Auto-generated method stub
-		
-	}
 	
-	public static JoueurIA creerIA(String difficulte){
+	
+	public static JoueurIA creerIA(int numJoueur, String difficulte){
 		
 		switch(difficulte){
 		case("difficile"):
-			return new JoueurIADifficile();
+			return new JoueurIADifficile(numJoueur);
 		case("moyen"):
-			return new JoueurIAMoyen();
+			return new JoueurIAMoyen(numJoueur);
 		default:
-			return new JoueurIAFacile();
+			return new JoueurIAFacile(numJoueur);
 		}
 	}
 
