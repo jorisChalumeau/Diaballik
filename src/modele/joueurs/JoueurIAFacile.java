@@ -134,9 +134,7 @@ public class JoueurIAFacile extends JoueurIA {
 		if(mouvementRandom3.type == TypeMouvement.DEPLACEMENT) deplacementRestant--;
 		else ballePassee=true;
 		plateauActuel.actualiser(mouvementRandom3.src, mouvementRandom3.dest);
-		System.out.println(listeMvm1.size());
-		System.out.println(listeMvm2.size());
-		System.out.println(listeMvm3.size());
+	
 	}
 
 

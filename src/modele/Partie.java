@@ -162,6 +162,7 @@ public class Partie {
 		}
 		
 	}
+	
 
 	public Case getCase(Point position) {
 		return p.obtenirCase(position);
