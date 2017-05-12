@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -17,6 +18,7 @@ import org.json.simple.parser.ParseException;
 import modele.joueurs.Joueur;
 import modele.joueurs.JoueurHumain;
 import modele.joueurs.JoueurIA;
+import modele.joueurs.JoueurIAFacile;
 import modele.tests.Regles;
 
 public class Partie {
@@ -28,6 +30,7 @@ public class Partie {
 	private Joueur joueur1;
 	private Joueur joueur2;
 	private int cptMouvement = 0;
+	public JoueurIAFacile iaFacile;
 	private Regles r;
 	// private ArrayList<Joueur, TypeMouvement> historique;
 	// Map<K, V>
@@ -44,8 +47,9 @@ public class Partie {
 
 	public Partie(String difficulte) {
 		this.p = new Plateau();
+		this.r = new Regles();
 		this.joueur1 = new JoueurHumain(1);
-		this.joueur2 = JoueurIA.creerIA(2, difficulte);
+		this.iaFacile = JoueurIA.creerIAFacile(2);
 		this.joueurActuel = joueur1;
 	}
 
@@ -134,7 +138,7 @@ public class Partie {
 				this.joueur1 = new JoueurHumain(1);
 				break;
 			default:
-				this.joueur1 = JoueurIA.creerIA(1, difficulte);
+				this.joueur1 = JoueurIA.creerIAFacile(1);
 			}
 
 			// creation joueur2
@@ -144,7 +148,7 @@ public class Partie {
 				this.joueur2 = new JoueurHumain(2);
 				break;
 			default:
-				this.joueur2 = JoueurIA.creerIA(2, difficulte);
+				this.joueur2 = JoueurIA.creerIAFacile(2);
 			}
 			
 			// TODO : ajout historique de coups, etc.
@@ -175,6 +179,23 @@ public class Partie {
 			joueurActuel = joueur1;
 
 		}
+	}
+	
+	public void IAtoHumain() {
+		resetActionsPossibles();
+		joueurActuel = joueur1;
+	}
+	
+	public void coupIA()
+	{
+		iaFacile.plateauActuel = new Plateau(getPlateau());
+		iaFacile.jouerCoup();
+		this.p = iaFacile.plateauActuel;
+		IAtoHumain();
+	}
+	
+	public void finDeTour(){
+		changerJoueur();
 	}
 
 	private void resetActionsPossibles() {

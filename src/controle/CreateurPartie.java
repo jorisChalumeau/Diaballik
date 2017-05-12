@@ -5,7 +5,7 @@ import modele.Partie;
 public class CreateurPartie {
 	
 	public static Partie creerPartie() {
-        return new Partie();
+        return new Partie("facile");
 	}
 	
 }

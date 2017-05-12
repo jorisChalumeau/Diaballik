@@ -15,11 +15,6 @@ public class JoueurHumain implements Joueur {
 		
 	}
 
-	@Override
-	public void chercherCoupsPossibles() {
-		// TODO Auto-generated method stub
-		
-	}
 	
 	public int getNumeroJoueur(){
 		return numJoueur;

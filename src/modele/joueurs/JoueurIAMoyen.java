@@ -13,11 +13,7 @@ public class JoueurIAMoyen extends JoueurIA {
 		
 	}
 
-	@Override
-	public void chercherCoupsPossibles() {
-		// TODO Auto-generated method stub
-		
-	}
+	
 
 	@Override
 	public int getNumeroJoueur() {

@@ -15,6 +15,19 @@ public class Plateau {
 		initialiserTerrain(jsonPlat);
 	}
 	
+	public Plateau(Plateau p)
+	{
+		this.terrain = new Case[7][7];
+
+		for (int i = 0;i<7;i++)
+		{
+			for(int j=0; j<7; j++)
+			{
+				this.terrain[i][j] = p.terrain[i][j];
+			}
+		}
+	}
+	
 	public void initialiserTerrain(JSONObject jsonPlat){
 		terrain = new Case[TAILLE][TAILLE];
 		int val;
