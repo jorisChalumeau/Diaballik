@@ -61,10 +61,89 @@ public class Partie {
 		return p;
 	}
 
+	// renvoie la liste des points où le joueur peut effectuer une action avec le pion sélectionné
+	public ArrayList<Point> obtenirActionsPossibles(Point src) {
+		ArrayList<Point> listePoints = null;
+
+		// si la cellule sélectionnée est vide ou que c'est un pion de la
+		// mauvaise couleur
+		if (!actionAutorisee(src))
+			return null;
+
+		// si le joueur a cliqué sur le pion qui a le ballon
+		if (p.obtenirCase(src).equals(Case.PION_BLANC_AVEC_BALLON)
+				|| p.obtenirCase(src).equals(Case.PION_NOIR_AVEC_BALLON))
+			listePoints = getPassesPossibles(src);
+		// si le joueur a cliqué sur un autre pion
+		else
+			listePoints = getMouvementsPossibles(src);
+
+		if (listePoints == null)
+			return null;
+
+		for (Point dest : listePoints) {
+			if (!r.obtenirActionDuJoueurSiActionPossible(p, src, dest, joueurActuel)
+					.equals(TypeMouvement.MOUVEMENT_ILLEGAL))
+				listePoints.add(dest);
+		}
+
+		return listePoints;
+	}
+
+	private boolean actionAutorisee(Point src) {
+		if (joueurActuel == joueur1 && !(p.obtenirCase(src).equals(Case.PION_BLANC_AVEC_BALLON)
+				|| p.obtenirCase(src).equals(Case.PION_BLANC)))
+			return false;
+		if (joueurActuel == joueur2 && !(p.obtenirCase(src).equals(Case.PION_NOIR_AVEC_BALLON)
+				|| p.obtenirCase(src).equals(Case.PION_NOIR)))
+			return false;
+
+		return true;
+	}
+
+	private ArrayList<Point> getPassesPossibles(Point src) {
+		int ligneSrc = src.getRow();
+		int colonneSrc = src.getColumn();
+		ArrayList<Point> listePoints = new ArrayList<Point>();
+
+		// liste de tous les points sur la meme ligne, colonne ou diagonale que le point source sur le plateau
+		for (int i = 0; i < Plateau.TAILLE; i++) {
+			for (int j = 0; j < Plateau.TAILLE; j++) {
+				if ((i != ligneSrc || j != colonneSrc) && 
+						((i == ligneSrc)
+						|| (j == colonneSrc)
+						|| (j - colonneSrc == i - ligneSrc)
+						|| (j - colonneSrc == -(i - ligneSrc)))) {
+					listePoints.add(new Point(i, j));
+				}
+			}
+		}
+	
+		return listePoints;
+	}
+
+	private ArrayList<Point> getMouvementsPossibles(Point src) {
+		int ligneSrc = src.getRow();
+		int colonneSrc = src.getColumn();
+		ArrayList<Point> listePoints = new ArrayList<Point>();
+
+		// liste de tous les points 2cases autour du point source sur le plateau
+		for (int i = 0; i < Plateau.TAILLE; i++) {
+			for (int j = 0; j < Plateau.TAILLE; j++) {
+				if ((i == ligneSrc && (j == colonneSrc - 2 || j == colonneSrc - 1 || j == colonneSrc + 1 || j == colonneSrc + 2))
+						|| ((i == ligneSrc - 1 || i == ligneSrc + 1) && (j == colonneSrc - 1 || j == colonneSrc || j == colonneSrc + 1))
+						|| ((i == ligneSrc - 2 || i == ligneSrc + 2) && j == colonneSrc)) {
+					listePoints.add(new Point(i, j));
+				}
+			}
+		}
+		return listePoints;
+	}
+
 	public void executerMouvement(Point src, Point dest) throws ExceptionMouvementIllegal {
 		TypeMouvement currentMove = r.obtenirActionDuJoueurSiActionPossible(this.p, src, dest, this.joueurActuel);
 		if (TypeMouvement.MOUVEMENT_ILLEGAL.equals(currentMove)) {
-			//throw new ExceptionMouvementIllegal();
+			// throw new ExceptionMouvementIllegal();
 		} else if (TypeMouvement.PASSE.equals(currentMove) && !balleLancee) {
 			balleLancee = true;
 			realiserAction(src, dest);
@@ -73,7 +152,7 @@ public class Partie {
 			cptMouvement++;
 			realiserAction(src, dest);
 		} else {
-			//throw new ExceptionMouvementIllegal();
+			// throw new ExceptionMouvementIllegal();
 		}
 	}
 
@@ -129,7 +208,6 @@ public class Partie {
 
 			// on transforme le plateau en json
 			this.p = new Plateau(jsonPlat);
-			
 
 			// creation joueur1
 			String difficulte = (String) jsonObject.get("joueur1");
@@ -150,7 +228,7 @@ public class Partie {
 			default:
 				this.joueur2 = JoueurIA.creerIAFacile(2);
 			}
-			
+
 			// TODO : ajout historique de coups, etc.
 
 		} catch (FileNotFoundException e) {
@@ -160,9 +238,8 @@ public class Partie {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
 
 	public Case getCase(Point position) {
 		return p.obtenirCase(position);
@@ -181,21 +258,20 @@ public class Partie {
 
 		}
 	}
-	
+
 	public void IAtoHumain() {
 		resetActionsPossibles();
 		joueurActuel = joueur1;
 	}
-	
-	public void coupIA()
-	{
+
+	public void coupIA() {
 		iaFacile.plateauActuel = new Plateau(getPlateau());
 		iaFacile.jouerCoup();
 		this.p = iaFacile.plateauActuel;
 		IAtoHumain();
 	}
-	
-	public void finDeTour(){
+
+	public void finDeTour() {
 		changerJoueur();
 	}
 
