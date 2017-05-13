@@ -1,5 +1,6 @@
 package ihm;
 import controle.boutonPresse;
+import controle.clicSurCase;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -14,11 +15,15 @@ import javafx.scene.image.ImageView;
 import javafx.stage.WindowEvent;
 import javafx.geometry.*;
 import javafx.scene.text.*;
+import javafx.scene.shape.*;
+import javafx.scene.paint.*;
 
 
 public class EntrainementIHM extends Application {
 	private BorderPane b = new BorderPane();
 	private Stage stage;
+	private StackPane[] plateau = new StackPane[49];
+	private Rectangle[] cases = new Rectangle[49];
 	
 	//REGLAGES RECURRENTS D OBJETS
 	public void setBoutonClassique(Button b, int numero){
@@ -165,7 +170,53 @@ public class EntrainementIHM extends Application {
 	}
 	
 	public void afficherFenetreJeu(){
-		b.setCenter(new Text("Pas encore fait MDR"));
+		
+		HBox Fenetre = new HBox();
+		VBox Gauche = new VBox();
+		VBox Droite = new VBox();
+		
+		Label j2 = new Label("C'est au joueur 2 de jouer");
+	    j2.setStyle("-fx-font-size: 14; -fx-text-fill: blue;");
+	    
+	    //Initialisation des cases du Plateau
+	    for(int i=0;i<49;i++){
+	    	cases[i] = CaseGraphique.rectCase();
+	    }
+	    
+	    for(int i=0;i<3;i++){
+	    	plateau[i] = CaseGraphique.caseBleu(cases[i]);
+	    	plateau[i+4] = CaseGraphique.caseBleu(cases[i+4]);
+	    }
+	    plateau[3] = CaseGraphique.caseBleuBalle(cases[3]);
+	    for(int i=7;i<42;i++){
+	    	plateau[i] = CaseGraphique.caseVide(cases[i]);
+	    }
+	    for(int i=42;i<45;i++){
+	    	plateau[i] = CaseGraphique.caseOrange(cases[i]);
+	    	plateau[i+4] = CaseGraphique.caseOrange(cases[i+4]);
+	    }
+	    plateau[45] = CaseGraphique.caseOrangeBalle(cases[45]);
+	    
+	    //On met les cases dans une grille
+	    GridPane grille = new GridPane();
+	    for(int i=0;i<49;i++){
+	    	grille.add(plateau[i], i%7, i/7);
+	    }
+	    
+	    //On connecte les cases au contrôleur
+	    for(int i=0;i<49;i++){
+	    	plateau[i].setOnMouseClicked(new clicSurCase(this,i,cases));
+	    }
+	    
+	    Label j1 = new Label("C'est au joueur 1 de jouer");
+	    j1.setStyle("-fx-font-size: 14; -fx-text-fill: orange;");
+	    
+	    Gauche.getChildren().addAll(j2,grille,j1);
+	    
+	    Fenetre.getChildren().addAll(Gauche,Droite);
+	    
+		//b.setCenter(new Text("Pas encore fait MDR"));
+	    b.setCenter(Fenetre);
 		b.setBottom(null);
 		b.setTop(null);
 	}

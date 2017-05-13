@@ -1,5 +1,6 @@
 package controle;
 import javafx.event.EventHandler;
+import modele.Partie;
 import ihm.EntrainementIHM;
 import javafx.event.ActionEvent
 ;
@@ -9,6 +10,7 @@ public class boutonPresse implements EventHandler<ActionEvent> {
 
     EntrainementIHM app;
     int numero;
+    Partie diaballik;
 
     public boutonPresse(EntrainementIHM a, int n) {
         app = a;
@@ -23,7 +25,7 @@ public class boutonPresse implements EventHandler<ActionEvent> {
         switch(numero){
         case 1 : //Bouton Mode 2 joueurs
         	
-        	//Modèle : Charger le modèle avec 2 joueurs humains
+        	diaballik = CreateurPartie.creerPartie(); //Modèle : Charger le modèle avec 2 joueurs humains
         	//Vue : Afficher la "fenêtre jeu"
         	app.afficherFenetreJeu();
         	break;
