@@ -1,18 +1,18 @@
 package controle;
 import javafx.event.EventHandler;
 import modele.Partie;
-import ihm.EntrainementIHM;
+import ihm.Affichage;
 import javafx.event.ActionEvent
 ;
 
 
 public class boutonPresse implements EventHandler<ActionEvent> {
 
-    EntrainementIHM app;
+    Affichage app;
     int numero;
     Partie diaballik;
 
-    public boutonPresse(EntrainementIHM a, int n) {
+    public boutonPresse(Affichage a, int n) {
         app = a;
         numero = n;
     }
