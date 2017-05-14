@@ -1,5 +1,7 @@
 package controle;
 import ihm.Affichage;
+import modele.Partie;
+import modele.Point;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -8,12 +10,16 @@ import javafx.stage.WindowEvent;
 
 
 public class EntrainementIHM extends Application {	
-	
+	public static Partie diaballik;
+	public static Point dernierPionChoisi;
+	public static Boolean aTOnCliqueSurUnPion;
 	
     @Override
     public void start(Stage stage) throws Exception {
         final boolean fullScreen = false;
         
+        
+        //INITIALISATION IHM
         Affichage app = new Affichage();
         app.stage = stage;
         

@@ -1,18 +1,6 @@
 package ihm;
-import javafx.application.Application;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
-//import javafx.scene.canvas.Canvas;
-//import javafx.scene.canvas.GraphicsContext;
-import javafx.stage.Stage;
+
 import javafx.scene.layout.*;
-//import javafx.scene.paint.Color;
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.stage.WindowEvent;
-import javafx.geometry.*;
-import javafx.scene.text.*;
 import javafx.scene.shape.*;
 import javafx.scene.paint.*;
 

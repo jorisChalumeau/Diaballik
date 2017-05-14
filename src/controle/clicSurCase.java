@@ -3,7 +3,6 @@ import javafx.event.EventHandler;
 import ihm.*;
 import modele.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 
 public class clicSurCase implements EventHandler<MouseEvent> {
@@ -23,8 +22,11 @@ public class clicSurCase implements EventHandler<MouseEvent> {
         
         System.out.println("Case "+(numero+1)+" pressée");
         
+        /*if (!EntrainementIHM.aTOnCliqueSurUnPion){
+        	if (EntrainementIHM.diaballik.getCase(Point()))
+        }*/
        
-        Case[numero].setFill(Color.GREEN);
+        ColorateurDeRectangles.enVert(Case[numero]);
         
     }
 }
