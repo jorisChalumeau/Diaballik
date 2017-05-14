@@ -14,17 +14,12 @@ public class TestPasseurRecepteur implements Test {
 				if(Case.PION_BLANC_AVEC_BALLON.equals(p.obtenirCase(src)) && Case.PION_BLANC.equals(p.obtenirCase(dest))) {
 					return true;
 				}
-				else if(Case.PION_BLANC_AVEC_BALLON.equals(p.obtenirCase(dest)) && Case.PION_BLANC.equals(p.obtenirCase(src))) {
-					return true;
-				}
 			}
 			else {
 				if(Case.PION_NOIR_AVEC_BALLON.equals(p.obtenirCase(src)) && Case.PION_NOIR.equals(p.obtenirCase(dest))) {
 					return true;
 				}
-				else if(Case.PION_NOIR_AVEC_BALLON.equals(p.obtenirCase(dest)) && Case.PION_NOIR.equals(p.obtenirCase(src))) {
-					return true;
-				}
+
 			}
 			return false;
 		}
