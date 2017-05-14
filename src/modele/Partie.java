@@ -313,10 +313,6 @@ public class Partie {
 	public boolean laPartieEstEnCours() {
 		return partieLancee;
 	}
-	
-	public Joueur getJoueurActuel(){
-		return joueurActuel;
-	}
 
 	public boolean partieFinie() {
 		return r.checkGameIsOver(joueurActuel, p);
