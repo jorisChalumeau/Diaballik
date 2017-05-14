@@ -227,6 +227,27 @@ public class Affichage {
 		public void deplacementOrange(int n1, int n2){
 			plateau[n2] = CaseGraphique.caseOrange(cases[n2]);
 		    grille.add(plateau[n2], n2%7, n2/7);
+		    plateau[n2].setOnMouseClicked(new clicSurCase(this,n2,cases));
+		    plateau[n1] = CaseGraphique.caseVide(cases[n1]);
+		    grille.add(plateau[n1], n1%7, n1/7);
+		    plateau[n1].setOnMouseClicked(new clicSurCase(this,n1,cases));
+		}
+		
+		public void deplacementBleu(int n1, int n2){
+			plateau[n2] = CaseGraphique.caseBleu(cases[n2]);
+		    grille.add(plateau[n2], n2%7, n2/7);
+		    plateau[n1] = CaseGraphique.caseVide(cases[n1]);
+		    grille.add(plateau[n1], n1%7, n1/7);
+		}
+		
+		public void passeOrange(int n1, int n2){
+			plateau[n2] = CaseGraphique.caseOrange(cases[n2]);
+		    grille.add(plateau[n2], n2%7, n2/7);
+		}
+		
+		public void passeBleu(int n1, int n2){
+			plateau[n2] = CaseGraphique.caseOrange(cases[n2]);
+		    grille.add(plateau[n2], n2%7, n2/7);
 		}
 
 }
