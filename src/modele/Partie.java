@@ -65,6 +65,7 @@ public class Partie {
 	// renvoie la liste des points où le joueur peut effectuer une action avec le pion sélectionné
 	public ArrayList<Point> obtenirActionsPossibles(Point src) {
 		ArrayList<Point> listePoints = null;
+		ArrayList<Point> listePointsFinale = new ArrayList<Point>();
 
 		// si la cellule sélectionnée est vide ou que c'est un pion de la
 		// mauvaise couleur
@@ -85,10 +86,10 @@ public class Partie {
 		for (Point dest : listePoints) {
 			if (!r.obtenirActionDuJoueurSiActionPossible(p, src, dest, joueurActuel)
 					.equals(TypeMouvement.MOUVEMENT_ILLEGAL))
-				listePoints.add(dest);
+				listePointsFinale.add(dest);
 		}
 
-		return listePoints;
+		return listePointsFinale;
 	}
 
 	private boolean actionAutorisee(Point src) {
