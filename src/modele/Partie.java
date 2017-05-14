@@ -33,7 +33,6 @@ public class Partie {
 	private int cptMouvement = 0;
 	public JoueurIAFacile iaFacile;
 	private Regles r;
-	private int fd = 0;
 	// private ArrayList<Joueur, TypeMouvement> historique;
 	// Map<K, V>
 	// K = "t"+x+"-j"+y;
@@ -161,10 +160,6 @@ public class Partie {
 
 	private void realiserAction(Point src, Point dest) {
 		p.actualiser(src, dest);
-
-		// on regarde si le tour est fini
-		if (balleLancee && (cptMouvement == 2))
-			changerJoueur();
 	}
 
 	public void sauvegarder(String filepath) throws FileNotFoundException {
