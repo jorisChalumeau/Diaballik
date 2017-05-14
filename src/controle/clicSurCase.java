@@ -37,15 +37,17 @@ public class clicSurCase implements EventHandler<MouseEvent> {
         			 ColorateurDeRectangles.enVert(caseGraphique[48 - num]);
         		 } 
         		 ColorateurDeRectangles.enGris(caseGraphique[numero]);
-        		 //EntrainementIHM.aTOnCliqueSurUnPion = true;
+        		 EntrainementIHM.aTOnCliqueSurUnPion = true;
         		 EntrainementIHM.dernierPionChoisi = new Point(numeroModele/7,numeroModele%7);
         	 }
         }
         else{ // On a cliqué sur un pion, on doit maintenant sélectionner la case ciblée
         	Point dest = new Point (numero/7,numero%7);
         	try{
-        	EntrainementIHM.diaballik.executerMouvement(EntrainementIHM.dernierPionChoisi, dest);
-        	app.deplacementOuPasse(EntrainementIHM.numeroCase,numero);
+        	Case typePionSource = EntrainementIHM.diaballik.executerMouvement(EntrainementIHM.dernierPionChoisi, dest);
+	        	if (typePionSource == Case.PION_BLANC){
+	        		app.deplacementOrange(EntrainementIHM.numeroCase,numero);
+	        	}
         	}
         	catch(Exception e){
         		System.out.println("déplacement impossible");

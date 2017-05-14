@@ -16,6 +16,7 @@ public class Affichage {
 	public Stage stage;
 	public StackPane[] plateau = new StackPane[49];
 	public Rectangle[] cases = new Rectangle[49];
+	private GridPane grille;
 	
 	//REGLAGES RECURRENTS D OBJETS
 		public void setBoutonClassique(Button b, int numero){
@@ -190,10 +191,11 @@ public class Affichage {
 		    plateau[45] = CaseGraphique.caseOrangeBalle(cases[45]);
 		    
 		    //On met les cases dans une grille
-		    GridPane grille = new GridPane();
+		    grille = new GridPane();
 		    for(int i=0;i<49;i++){
 		    	grille.add(plateau[i], i%7, i/7);
 		    }
+		    
 		    
 		    //On connecte les cases au contrôleur
 		    for(int i=0;i<49;i++){
@@ -222,11 +224,9 @@ public class Affichage {
 	        );
 		}
 		
-		public void deplacementOuPasse(int n1, int n2){
-			StackPane temp;
-			temp = plateau[n1];
-			plateau[n1] = plateau[n2];
-			plateau[n2] = temp;
+		public void deplacementOrange(int n1, int n2){
+			plateau[n2] = CaseGraphique.caseOrange(cases[n2]);
+		    grille.add(plateau[n2], n2%7, n2/7);
 		}
 
 }
