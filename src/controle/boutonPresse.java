@@ -24,7 +24,8 @@ public class boutonPresse implements EventHandler<ActionEvent> {
         switch(numero){
         case 1 : //Bouton Mode 2 joueurs
         	
-        	EntrainementIHM.diaballik = CreateurPartie.creerPartie(); //Modèle : Charger le modèle avec 2 joueurs humains
+        	EntrainementIHM.diaballik = CreateurPartie.creerPartie2Humains();
+        	//Modèle : Charger le modèle avec 2 joueurs humains
         	//Vue : Afficher la "fenêtre jeu"
         	app.afficherFenetreJeu();
         	break;
@@ -45,22 +46,22 @@ public class boutonPresse implements EventHandler<ActionEvent> {
         	break;
         	
         case 5 : // Bouton première difficulté
-        	
-        	//Modèle : Charger le modèle avec 1 joueur humain et une IA
+        	EntrainementIHM.diaballik = CreateurPartie.creerPartieIAFacile();
+        	//Modèle : Charger le modèle avec 1 joueur humain et une IA Facile
         	//Vue : Afficher la "fenêtre jeu"
         	app.afficherFenetreJeu();
         	break;
         	
         case 6 : // Bouton deuxième difficulté
         	
-        	//Modèle : Charger le modèle avec 1 joueur humain et une IA
+        	//Modèle : Charger le modèle avec 1 joueur humain et une IA Moyenne
         	//Vue : Afficher la "fenêtre jeu"
         	app.afficherFenetreJeu();
         	break;
         	
         case 7 : // Bouton troisième difficulté
         	
-        	//Modèle : Charger le modèle avec 1 joueur humain et une IA
+        	//Modèle : Charger le modèle avec 1 joueur humain et une IA Difficile
         	//Vue : Afficher la "fenêtre jeu"
         	app.afficherFenetreJeu();
         	break;
