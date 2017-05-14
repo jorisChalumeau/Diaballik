@@ -149,5 +149,7 @@ public class JoueurIAFacile extends JoueurIA {
 	public String getDifficulte() {
 		return "facile";
 	}
+
+
 	
 }

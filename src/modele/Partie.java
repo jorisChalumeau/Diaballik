@@ -65,7 +65,6 @@ public class Partie {
 	// renvoie la liste des points où le joueur peut effectuer une action avec le pion sélectionné
 	public ArrayList<Point> obtenirActionsPossibles(Point src) {
 		ArrayList<Point> listePoints = null;
-		ArrayList<Point> listePointsFinale = new ArrayList<Point>();
 
 		// si la cellule sélectionnée est vide ou que c'est un pion de la
 		// mauvaise couleur
@@ -86,10 +85,10 @@ public class Partie {
 		for (Point dest : listePoints) {
 			if (!r.obtenirActionDuJoueurSiActionPossible(p, src, dest, joueurActuel)
 					.equals(TypeMouvement.MOUVEMENT_ILLEGAL))
-				listePointsFinale.add(dest);
+				listePoints.add(dest);
 		}
 
-		return listePointsFinale;
+		return listePoints;
 	}
 
 	private boolean actionAutorisee(Point src) {
@@ -142,22 +141,7 @@ public class Partie {
 		return listePoints;
 	}
 
-	public Point executerMouvement(Point src, Point dest) throws ExceptionMouvementIllegal {
-		TypeMouvement currentMove = r.obtenirActionDuJoueurSiActionPossible(this.p, src, dest, this.joueurActuel);
-		if (TypeMouvement.MOUVEMENT_ILLEGAL.equals(currentMove)) {
-			throw new ExceptionMouvementIllegal();
-		} else if (TypeMouvement.PASSE.equals(currentMove) && !balleLancee) {
-			balleLancee = true;
-			realiserAction(src, dest);
-			return src;
-		} else if (TypeMouvement.DEPLACEMENT.equals(currentMove) && cptMouvement < 2) {
-			cptMouvement++;
-			realiserAction(src, dest);
-			return src;
-		} else {
-			throw new ExceptionMouvementIllegal();
-		}
-	}
+	
 
 	private void realiserAction(Point src, Point dest) {
 		p.actualiser(src, dest);
@@ -266,6 +250,23 @@ public class Partie {
 		resetActionsPossibles();
 		joueurActuel = joueur1;
 	}
+	
+	public Point executerMouvement(Point src, Point dest) throws ExceptionMouvementIllegal {
+        TypeMouvement currentMove = r.obtenirActionDuJoueurSiActionPossible(this.p, src, dest, this.joueurActuel);
+        if (TypeMouvement.MOUVEMENT_ILLEGAL.equals(currentMove)) {
+            throw new ExceptionMouvementIllegal();
+        } else if (TypeMouvement.PASSE.equals(currentMove) && !balleLancee) {
+            balleLancee = true;
+            realiserAction(src, dest);
+            return src;
+        } else if (TypeMouvement.DEPLACEMENT.equals(currentMove) && cptMouvement < 2) {
+            cptMouvement++;
+            realiserAction(src, dest);
+            return src;
+        } else {
+            throw new ExceptionMouvementIllegal();
+        }
+    }
 
 	public void coupIA() {
 		iaFacile.plateauActuel = new Plateau(getPlateau());
