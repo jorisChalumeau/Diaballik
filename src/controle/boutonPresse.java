@@ -76,6 +76,11 @@ public class boutonPresse implements EventHandler<ActionEvent> {
         	
         	app.afficherMenuPrincipal();
         	break;
+        
+        case 10 : // Bouton Fin de tour
+        	EntrainementIHM.diaballik.finDeTour();
+        	
+        	break;
         	
         default :
         	//faire une exception??

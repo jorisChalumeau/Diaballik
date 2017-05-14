@@ -3,6 +3,7 @@ import controle.boutonPresse;
 import controle.clicSurCase;
 import javafx.stage.Stage;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -205,7 +206,17 @@ public class Affichage {
 		    Label j1 = new Label("C'est au joueur 1 de jouer");
 		    j1.setStyle("-fx-font-size: 14; -fx-text-fill: orange;");
 		    
+		    Button finTour = new Button("FIN DE TOUR");
+		    finTour.setPrefSize(300, 50);
+		    finTour.setMinSize(150, 30);
+		    finTour.setStyle("-fx-background-color: #FFFF33; -fx-text-fill: black; -fx-font-size: 24;");
+		    finTour.setOnAction(new boutonPresse(this,10));
+		    
 		    Gauche.getChildren().addAll(j2,grille,j1);
+		    
+
+		    Droite.getChildren().addAll(finTour);
+
 		    
 		    Fenetre.getChildren().addAll(Gauche,Droite);
 		    
@@ -236,18 +247,28 @@ public class Affichage {
 		public void deplacementBleu(int n1, int n2){
 			plateau[n2] = CaseGraphique.caseBleu(cases[n2]);
 		    grille.add(plateau[n2], n2%7, n2/7);
+		    plateau[n2].setOnMouseClicked(new clicSurCase(this,n2,cases));
 		    plateau[n1] = CaseGraphique.caseVide(cases[n1]);
 		    grille.add(plateau[n1], n1%7, n1/7);
+		    plateau[n1].setOnMouseClicked(new clicSurCase(this,n1,cases));
 		}
 		
 		public void passeOrange(int n1, int n2){
-			plateau[n2] = CaseGraphique.caseOrange(cases[n2]);
+			plateau[n2] = CaseGraphique.caseOrangeBalle(cases[n2]);
 		    grille.add(plateau[n2], n2%7, n2/7);
+		    plateau[n2].setOnMouseClicked(new clicSurCase(this,n2,cases));
+		    plateau[n1] = CaseGraphique.caseOrange(cases[n1]);
+		    grille.add(plateau[n1], n1%7, n1/7);
+		    plateau[n1].setOnMouseClicked(new clicSurCase(this,n1,cases));
 		}
 		
 		public void passeBleu(int n1, int n2){
-			plateau[n2] = CaseGraphique.caseOrange(cases[n2]);
+			plateau[n2] = CaseGraphique.caseBleuBalle(cases[n2]);
 		    grille.add(plateau[n2], n2%7, n2/7);
+		    plateau[n2].setOnMouseClicked(new clicSurCase(this,n2,cases));
+		    plateau[n1] = CaseGraphique.caseBleu(cases[n1]);
+		    grille.add(plateau[n1], n1%7, n1/7);
+		    plateau[n1].setOnMouseClicked(new clicSurCase(this,n1,cases));
 		}
 
 }

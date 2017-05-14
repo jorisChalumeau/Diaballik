@@ -52,6 +52,12 @@ public class clicSurCase implements EventHandler<MouseEvent> {
 	        	if (typePionSource == Case.PION_NOIR){
 	        		app.deplacementBleu(EntrainementIHM.numeroCase,numero);
 	        	}
+	        	if (typePionSource == Case.PION_BLANC_AVEC_BALLON){
+	        		app.passeOrange(EntrainementIHM.numeroCase,numero);
+	        	}
+	        	if (typePionSource == Case.PION_NOIR_AVEC_BALLON){
+	        		app.passeBleu(EntrainementIHM.numeroCase,numero);
+	        	}
         	}
         	catch(Exception e){
         		System.out.println("déplacement impossible");
