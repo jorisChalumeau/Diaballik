@@ -20,13 +20,12 @@ public class clicSurCase implements EventHandler<MouseEvent> {
     
     @Override
     public void handle(MouseEvent event) {
-        
+        int numeroModele = 48 - numero;
         System.out.println("Case "+(numero+1)+" pressée");
         
-        if (!EntrainementIHM.aTOnCliqueSurUnPion){
-        	//Case caseCliquee = EntrainementIHM.diaballik.getCase(new Point(numero/7,numero%7));
+        if (!EntrainementIHM.aTOnCliqueSurUnPion){ //On doit cliquer sur un pion
         	
-        	ArrayList<Point> listePoints = EntrainementIHM.diaballik.obtenirActionsPossibles(new Point(numero/7,numero%7));
+        	ArrayList<Point> listePoints = EntrainementIHM.diaballik.obtenirActionsPossibles(new Point(numeroModele/7,numeroModele%7));
         	System.out.println(numero/7);
         	System.out.println(numero%7);
         	System.out.println(listePoints);
@@ -35,11 +34,26 @@ public class clicSurCase implements EventHandler<MouseEvent> {
         			 int ligne = p.getRow();
         			 int colonne = p.getColumn();
         			 int num = (ligne*7) + colonne; 
-        			 ColorateurDeRectangles.enVert(caseGraphique[num]);
+        			 ColorateurDeRectangles.enVert(caseGraphique[48 - num]);
         		 } 
+        		 ColorateurDeRectangles.enGris(caseGraphique[numero]);
+        		 //EntrainementIHM.aTOnCliqueSurUnPion = true;
+        		 EntrainementIHM.dernierPionChoisi = new Point(numeroModele/7,numeroModele%7);
         	 }
         }
-       
-        
+        else{ // On a cliqué sur un pion, on doit maintenant sélectionner la case ciblée
+        	Point dest = new Point (numero/7,numero%7);
+        	try{
+        	EntrainementIHM.diaballik.executerMouvement(EntrainementIHM.dernierPionChoisi, dest);
+        	app.deplacementOuPasse(EntrainementIHM.numeroCase,numero);
+        	}
+        	catch(Exception e){
+        		System.out.println("déplacement impossible");
+        	}
+        	for(int i =0;i<49;i++){
+        		ColorateurDeRectangles.enBlanc(caseGraphique[i]);
+        	}
+        	EntrainementIHM.aTOnCliqueSurUnPion = false;
+        }
     }
 }

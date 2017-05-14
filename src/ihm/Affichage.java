@@ -221,5 +221,12 @@ public class Affichage {
 	                )
 	        );
 		}
+		
+		public void deplacementOuPasse(int n1, int n2){
+			StackPane temp;
+			temp = plateau[n1];
+			plateau[n1] = plateau[n2];
+			plateau[n2] = temp;
+		}
 
 }

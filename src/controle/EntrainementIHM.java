@@ -12,6 +12,7 @@ import javafx.stage.WindowEvent;
 public class EntrainementIHM extends Application {	
 	public static Partie diaballik;
 	public static Point dernierPionChoisi;
+	public static int numeroCase;
 	public static Boolean aTOnCliqueSurUnPion = false;
 	
     @Override
