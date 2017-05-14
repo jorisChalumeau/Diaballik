@@ -253,17 +253,18 @@ public class Partie {
 	}
 	
 	public Case executerMouvement(Point src, Point dest) throws ExceptionMouvementIllegal {
+		Case caseSrc = p.obtenirCase(src);
         TypeMouvement currentMove = r.obtenirActionDuJoueurSiActionPossible(this.p, src, dest, this.joueurActuel);
         if (TypeMouvement.MOUVEMENT_ILLEGAL.equals(currentMove)) {
             throw new ExceptionMouvementIllegal();
         } else if (TypeMouvement.PASSE.equals(currentMove) && !balleLancee) {
             balleLancee = true;
             realiserAction(src, dest);
-            return p.obtenirCase(src);
+            return caseSrc;
         } else if (TypeMouvement.DEPLACEMENT.equals(currentMove) && cptMouvement < 2) {
             cptMouvement++;
             realiserAction(src, dest);
-            return p.obtenirCase(src);
+            return caseSrc;
         } else {
             throw new ExceptionMouvementIllegal();
         }
