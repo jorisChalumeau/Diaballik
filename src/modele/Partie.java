@@ -314,7 +314,7 @@ public class Partie {
 		return partieLancee;
 	}
 	
-	public Joueur getJoueurActuelle(){
+	public Joueur getJoueurActuel(){
 		return joueurActuel;
 	}
 
