@@ -171,7 +171,7 @@ public class Affichage {
 			VBox Droite = new VBox();
 			
 			texteTourJ2 = new Label("C'est au joueur 2 de jouer");
-			texteTourJ2.setStyle("-fx-font-size: 14; -fx-text-fill: blue;");
+			texteTourJ2.setStyle("-fx-font-size: 24; -fx-text-fill: blue;");
 			texteTourJ2.setVisible(false);
 		    
 		    //Initialisation des cases du Plateau
@@ -206,7 +206,7 @@ public class Affichage {
 		    }
 		    
 		    texteTourJ1 = new Label("C'est au joueur 1 de jouer");
-		    texteTourJ1.setStyle("-fx-font-size: 14; -fx-text-fill: orange;");
+		    texteTourJ1.setStyle("-fx-font-size: 24; -fx-text-fill: orange;");
 		    
 		    Button finTour = new Button("FIN DE TOUR");
 		    finTour.setPrefSize(300, 50);
