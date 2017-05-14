@@ -33,6 +33,7 @@ public class Partie {
 	private int cptMouvement = 0;
 	public JoueurIAFacile iaFacile;
 	private Regles r;
+	private int fd = 0;
 	// private ArrayList<Joueur, TypeMouvement> historique;
 	// Map<K, V>
 	// K = "t"+x+"-j"+y;
@@ -62,7 +63,8 @@ public class Partie {
 		return p;
 	}
 
-	// renvoie la liste des points où le joueur peut effectuer une action avec le pion sélectionné
+	// renvoie la liste des points où le joueur peut effectuer une action avec
+	// le pion sélectionné
 	public ArrayList<Point> obtenirActionsPossibles(Point src) {
 		ArrayList<Point> listePoints = null;
 		ArrayList<Point> listePointsFinale = new ArrayList<Point>();
@@ -93,11 +95,11 @@ public class Partie {
 	}
 
 	private boolean actionAutorisee(Point src) {
-		if (joueurActuel == joueur1 && !(p.obtenirCase(src).equals(Case.PION_BLANC_AVEC_BALLON)
-				|| p.obtenirCase(src).equals(Case.PION_BLANC)))
+		if (joueurActuel == joueur1 && !((p.obtenirCase(src).equals(Case.PION_BLANC_AVEC_BALLON) && !balleLancee)
+				|| (p.obtenirCase(src).equals(Case.PION_BLANC) && cptMouvement < 2)))
 			return false;
-		if (joueurActuel == joueur2 && !(p.obtenirCase(src).equals(Case.PION_NOIR_AVEC_BALLON)
-				|| p.obtenirCase(src).equals(Case.PION_NOIR)))
+		if (joueurActuel == joueur2 && !((p.obtenirCase(src).equals(Case.PION_NOIR_AVEC_BALLON) && !balleLancee)
+				|| (p.obtenirCase(src).equals(Case.PION_NOIR) && cptMouvement < 2)))
 			return false;
 
 		return true;
@@ -108,19 +110,17 @@ public class Partie {
 		int colonneSrc = src.getColumn();
 		ArrayList<Point> listePoints = new ArrayList<Point>();
 
-		// liste de tous les points sur la meme ligne, colonne ou diagonale que le point source sur le plateau
+		// liste de tous les points sur la meme ligne, colonne ou diagonale que
+		// le point source sur le plateau
 		for (int i = 0; i < Plateau.TAILLE; i++) {
 			for (int j = 0; j < Plateau.TAILLE; j++) {
-				if ((i != ligneSrc || j != colonneSrc) && 
-						((i == ligneSrc)
-						|| (j == colonneSrc)
-						|| (j - colonneSrc == i - ligneSrc)
-						|| (j - colonneSrc == -(i - ligneSrc)))) {
+				if ((i != ligneSrc || j != colonneSrc) && ((i == ligneSrc) || (j == colonneSrc)
+						|| (j - colonneSrc == i - ligneSrc) || (j - colonneSrc == -(i - ligneSrc)))) {
 					listePoints.add(new Point(i, j));
 				}
 			}
 		}
-	
+
 		return listePoints;
 	}
 
@@ -129,23 +129,42 @@ public class Partie {
 		int colonneSrc = src.getColumn();
 		ArrayList<Point> listePoints = new ArrayList<Point>();
 
-		// liste de tous les points 2cases autour du point source sur le plateau
-		for (int i = 0; i < Plateau.TAILLE; i++) {
-			for (int j = 0; j < Plateau.TAILLE; j++) {
-				if ((i == ligneSrc && (j == colonneSrc - 2 || j == colonneSrc - 1 || j == colonneSrc + 1 || j == colonneSrc + 2))
-						|| ((i == ligneSrc - 1 || i == ligneSrc + 1) && (j == colonneSrc - 1 || j == colonneSrc || j == colonneSrc + 1))
-						|| ((i == ligneSrc - 2 || i == ligneSrc + 2) && j == colonneSrc)) {
-					listePoints.add(new Point(i, j));
+		if (cptMouvement == 0) {
+			// liste de tous les points 2cases autour du point source sur le
+			// plateau
+			for (int i = 0; i < Plateau.TAILLE; i++) {
+				for (int j = 0; j < Plateau.TAILLE; j++) {
+					if ((i == ligneSrc && (j == colonneSrc - 2 || j == colonneSrc - 1 || j == colonneSrc + 1
+							|| j == colonneSrc + 2))
+							|| ((i == ligneSrc - 1 || i == ligneSrc + 1)
+									&& (j == colonneSrc - 1 || j == colonneSrc || j == colonneSrc + 1))
+							|| ((i == ligneSrc - 2 || i == ligneSrc + 2) && j == colonneSrc)) {
+						listePoints.add(new Point(i, j));
+					}
 				}
 			}
+		} else {
+			// liste de tous les points 1case autour du point source sur le
+			// plateau
+			for (int i = 0; i < Plateau.TAILLE; i++) {
+				for (int j = 0; j < Plateau.TAILLE; j++) {
+					if ((i == ligneSrc && (j == colonneSrc - 1 || j == colonneSrc + 1))
+							|| j == colonneSrc && ((i == ligneSrc - 1 || i == ligneSrc + 1))) {
+						listePoints.add(new Point(i, j));
+					}
+				}
+			}			
 		}
+		
 		return listePoints;
 	}
 
-	
-
 	private void realiserAction(Point src, Point dest) {
 		p.actualiser(src, dest);
+
+		// on regarde si le tour est fini
+		if (balleLancee && (cptMouvement == 2))
+			changerJoueur();
 	}
 
 	public void sauvegarder(String filepath) throws FileNotFoundException {
@@ -251,24 +270,30 @@ public class Partie {
 		resetActionsPossibles();
 		joueurActuel = joueur1;
 	}
-	
+
 	public Case executerMouvement(Point src, Point dest) throws ExceptionMouvementIllegal {
 		Case caseSrc = p.obtenirCase(src);
-        TypeMouvement currentMove = r.obtenirActionDuJoueurSiActionPossible(this.p, src, dest, this.joueurActuel);
-        if (TypeMouvement.MOUVEMENT_ILLEGAL.equals(currentMove)) {
-            throw new ExceptionMouvementIllegal();
-        } else if (TypeMouvement.PASSE.equals(currentMove) && !balleLancee) {
-            balleLancee = true;
-            realiserAction(src, dest);
-            return caseSrc;
-        } else if (TypeMouvement.DEPLACEMENT.equals(currentMove) && cptMouvement < 2) {
-            cptMouvement++;
-            realiserAction(src, dest);
-            return caseSrc;
-        } else {
-            throw new ExceptionMouvementIllegal();
-        }
-    }
+		int distance = compterMvtEffectues(src, dest);
+		
+		TypeMouvement currentMove = r.obtenirActionDuJoueurSiActionPossible(this.p, src, dest, this.joueurActuel);
+		if (TypeMouvement.MOUVEMENT_ILLEGAL.equals(currentMove)) {
+			throw new ExceptionMouvementIllegal();
+		} else if (TypeMouvement.PASSE.equals(currentMove) && !balleLancee) {
+			balleLancee = true;
+			realiserAction(src, dest);
+			return caseSrc;
+		} else if (TypeMouvement.DEPLACEMENT.equals(currentMove) && (cptMouvement+distance <= 2)) {
+			cptMouvement += distance;
+			realiserAction(src, dest);
+			return caseSrc;
+		} else {
+			throw new ExceptionMouvementIllegal();
+		}
+	}
+
+	private int compterMvtEffectues(Point src, Point dest) {
+		return Math.abs(dest.getRow() - src.getRow()) + Math.abs(dest.getColumn() - src.getColumn());
+	}
 
 	public void coupIA() {
 		iaFacile.plateauActuel = new Plateau(getPlateau());
@@ -284,7 +309,6 @@ public class Partie {
 	public void finDeTour() {
 		changerJoueur();
 	}
-	
 
 	private void resetActionsPossibles() {
 		cptMouvement = 0;

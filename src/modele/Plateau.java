@@ -104,5 +104,11 @@ public class Plateau {
         }
         System.out.println("\n");
 }
+
+	public boolean estVoisinVide(Point src, Point dest) {
+		if(this.obtenirCase(src).equals(Case.LIBRE) && src.estVoisin(dest))
+			return true;
+		return false;
+	}
 	
 }
