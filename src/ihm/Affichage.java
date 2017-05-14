@@ -18,6 +18,7 @@ public class Affichage {
 	public StackPane[] plateau = new StackPane[49];
 	public Rectangle[] cases = new Rectangle[49];
 	private GridPane grille;
+	private Label texteTourJ1, texteTourJ2;
 	
 	//REGLAGES RECURRENTS D OBJETS
 		public void setBoutonClassique(Button b, int numero){
@@ -169,8 +170,9 @@ public class Affichage {
 			VBox Gauche = new VBox();
 			VBox Droite = new VBox();
 			
-			Label j2 = new Label("C'est au joueur 2 de jouer");
-		    j2.setStyle("-fx-font-size: 14; -fx-text-fill: blue;");
+			texteTourJ2 = new Label("C'est au joueur 2 de jouer");
+			texteTourJ2.setStyle("-fx-font-size: 14; -fx-text-fill: blue;");
+			texteTourJ2.setVisible(false);
 		    
 		    //Initialisation des cases du Plateau
 		    for(int i=0;i<49;i++){
@@ -203,8 +205,8 @@ public class Affichage {
 		    	plateau[i].setOnMouseClicked(new clicSurCase(this,i,cases));
 		    }
 		    
-		    Label j1 = new Label("C'est au joueur 1 de jouer");
-		    j1.setStyle("-fx-font-size: 14; -fx-text-fill: orange;");
+		    texteTourJ1 = new Label("C'est au joueur 1 de jouer");
+		    texteTourJ1.setStyle("-fx-font-size: 14; -fx-text-fill: orange;");
 		    
 		    Button finTour = new Button("FIN DE TOUR");
 		    finTour.setPrefSize(300, 50);
@@ -212,7 +214,7 @@ public class Affichage {
 		    finTour.setStyle("-fx-background-color: #FFFF33; -fx-text-fill: black; -fx-font-size: 24;");
 		    finTour.setOnAction(new boutonPresse(this,10));
 		    
-		    Gauche.getChildren().addAll(j2,grille,j1);
+		    Gauche.getChildren().addAll(texteTourJ2,grille,texteTourJ1);
 		    
 
 		    Droite.getChildren().addAll(finTour);
@@ -224,6 +226,17 @@ public class Affichage {
 		    b.setCenter(Fenetre);
 			b.setBottom(null);
 			b.setTop(null);
+		}
+		
+		public void afficherMessageTourDuJoueur(int joueur){
+			if (joueur == 1){
+				texteTourJ1.setVisible(true);
+				texteTourJ2.setVisible(false);
+			}
+			else{
+				texteTourJ1.setVisible(false);
+				texteTourJ2.setVisible(true);
+			}
 		}
 		
 		public void fermerAplication(){

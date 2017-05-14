@@ -80,6 +80,7 @@ public class boutonPresse implements EventHandler<ActionEvent> {
         
         case 10 : // Bouton Fin de tour
         	EntrainementIHM.diaballik.finDeTour();
+        	app.afficherMessageTourDuJoueur(EntrainementIHM.diaballik.getNumJoueurCourant());
         	
         	break;
         	
