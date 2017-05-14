@@ -110,11 +110,11 @@ public class JoueurIAFacile extends JoueurIA {
 
 	
 	
-	@Override
-	public void jouerCoup() {
+	public void jouerCoup() throws PionBloqueException{
 		//Premiere Action
 		List<MouvementIA> listeMvm1 = genererMouvementsPossibles(plateauActuel, obtenirPositionDesPions(plateauActuel, this), this);
 		MouvementIA mouvementRandom1 = listeMvm1.get(generator.nextInt(listeMvm1.size()));
+		if(listeMvm1.size()==0) throw new PionBloqueException();
 		if(mouvementRandom1.type == TypeMouvement.DEPLACEMENT) deplacementRestant--;
 		else ballePassee=true;
 		plateauActuel.actualiser(mouvementRandom1.src, mouvementRandom1.dest);
@@ -122,6 +122,7 @@ public class JoueurIAFacile extends JoueurIA {
 		//Deuxieme Action
 		Random generator2 = new Random();
 		List<MouvementIA> listeMvm2 = genererMouvementsPossibles(plateauActuel, obtenirPositionDesPions(plateauActuel, this), this);
+		if(listeMvm2.size()==0) throw new PionBloqueException();
 		MouvementIA mouvementRandom2 = listeMvm2.get(generator2.nextInt(listeMvm2.size()));
 		if(mouvementRandom2.type == TypeMouvement.DEPLACEMENT) deplacementRestant--;
 		else ballePassee=true;
@@ -130,6 +131,7 @@ public class JoueurIAFacile extends JoueurIA {
 		//Troisieme Action
 		Random generator3 = new Random();
 		List<MouvementIA> listeMvm3 = genererMouvementsPossibles(plateauActuel, obtenirPositionDesPions(plateauActuel, this), this);
+		if(listeMvm2.size()==0) throw new PionBloqueException();
 		MouvementIA mouvementRandom3 = listeMvm3.get(generator3.nextInt(listeMvm3.size()));
 		if(mouvementRandom3.type == TypeMouvement.DEPLACEMENT) deplacementRestant--;
 		else ballePassee=true;

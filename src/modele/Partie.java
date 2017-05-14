@@ -19,6 +19,7 @@ import modele.joueurs.Joueur;
 import modele.joueurs.JoueurHumain;
 import modele.joueurs.JoueurIA;
 import modele.joueurs.JoueurIAFacile;
+import modele.joueurs.PionBloqueException;
 import modele.tests.Regles;
 
 public class Partie {
@@ -266,7 +267,11 @@ public class Partie {
 
 	public void coupIA() {
 		iaFacile.plateauActuel = new Plateau(getPlateau());
-		iaFacile.jouerCoup();
+		try {
+			iaFacile.jouerCoup();
+		} catch (PionBloqueException e) {
+			finDeTour();
+		}
 		this.p = iaFacile.plateauActuel;
 		IAtoHumain();
 	}
@@ -274,6 +279,7 @@ public class Partie {
 	public void finDeTour() {
 		changerJoueur();
 	}
+	
 
 	private void resetActionsPossibles() {
 		cptMouvement = 0;
