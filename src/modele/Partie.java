@@ -94,6 +94,8 @@ public class Partie {
 	}
 
 	private boolean actionAutorisee(Point src) {
+		if(!(joueurActuel instanceof JoueurHumain))
+			return false;
 		if (joueurActuel == joueur1 && !((p.obtenirCase(src).equals(Case.PION_BLANC_AVEC_BALLON) && !balleLancee)
 				|| (p.obtenirCase(src).equals(Case.PION_BLANC) && cptMouvement < 2)))
 			return false;

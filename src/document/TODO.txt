@@ -1,0 +1,20 @@
+
+
+* MODELE :
+	- regle d'antijeu à gérer
+	- IAFacile => IHM
+		- implémenter IAFacile dans IHM tel quel
+		- améliorer IAFacile
+	- ajouter les boutons (et leurs méthodes modèles) :
+		- annuler coup(Humain)/tour(IA) => historique coups
+		- 
+		
+		
+		
+		
+		
+		
+		
+Historique de coups:
+	- Stack<Coup>
+		Coup : (Joueur, Point, Point)
