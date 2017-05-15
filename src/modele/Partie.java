@@ -31,7 +31,6 @@ public class Partie {
 	private Joueur joueur1;
 	private Joueur joueur2;
 	private int cptMouvement = 0;
-	public JoueurIAFacile iaFacile;
 	private Regles r;
 	// private ArrayList<Joueur, TypeMouvement> historique;
 	// Map<K, V>
@@ -50,12 +49,16 @@ public class Partie {
 		this.p = new Plateau();
 		this.r = new Regles();
 		this.joueur1 = new JoueurHumain(1);
-		this.iaFacile = JoueurIA.creerIAFacile(2);
+		this.joueur2 = JoueurIA.creerIAFacile(2);
 		this.joueurActuel = joueur1;
 	}
 
 	public int getNumJoueurCourant() {
 		return joueurActuel.getNumeroJoueur();
+	}
+	
+	public Joueur getJoueurCourant() {
+		return joueurActuel;
 	}
 
 	public Plateau getPlateau() {
@@ -259,14 +262,13 @@ public class Partie {
 			joueurActuel = joueur2;
 		} else {
 			joueurActuel = joueur1;
-
 		}
 	}
 
-	public void IAtoHumain() {
-		resetActionsPossibles();
-		joueurActuel = joueur1;
-	}
+//	public void IAtoHumain() {
+//		resetActionsPossibles();
+//		joueurActuel = joueur1;
+//	}
 
 	public Case executerMouvement(Point src, Point dest) throws ExceptionMouvementIllegal {
 		Case caseSrc = p.obtenirCase(src);
@@ -292,15 +294,21 @@ public class Partie {
 		return Math.abs(dest.getRow() - src.getRow()) + Math.abs(dest.getColumn() - src.getColumn());
 	}
 
-	public void coupIA() {
-		iaFacile.plateauActuel = new Plateau(getPlateau());
-		try {
-			iaFacile.jouerCoup();
-		} catch (PionBloqueException e) {
+	public ArrayList<MouvementIA> jouerIA() {
+		ArrayList<MouvementIA> listeCoups = null;
+		
+		if(joueurActuel instanceof JoueurIA){
+			((JoueurIA) joueurActuel).plateauActuel = new Plateau(this.p);
+			try {
+				listeCoups = ((JoueurIA) joueurActuel).jouerCoup();
+			} catch (PionBloqueException e) {
+				finDeTour();
+			}
+			this.p = ((JoueurIA) joueurActuel).plateauActuel;
 			finDeTour();
 		}
-		this.p = iaFacile.plateauActuel;
-		IAtoHumain();
+		
+		return listeCoups;
 	}
 
 	public void finDeTour() {
@@ -322,6 +330,10 @@ public class Partie {
 
 	public void mettreFinALaPartie() {
 		partieLancee = false;
+	}
+
+	public boolean tourIA() {
+		return (joueurActuel instanceof JoueurIA);
 	}
 
 }

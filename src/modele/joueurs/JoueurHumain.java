@@ -43,7 +43,8 @@ public class JoueurHumain implements Joueur {
 	}
 	
 	@Override
-	public void jouerCoup() {
+	public ArrayList<MouvementIA> jouerCoup() {
+		return null;
 		// TODO Auto-generated method stub
 		
 	}

@@ -8,8 +8,6 @@ import modele.*;
 import modele.tests.Regles;
 
 public class JoueurIAFacile extends JoueurIA {
-	int numJoueur;
-	public Plateau plateauActuel;
 	Regles r;
 	List<Point> piecesPositions;
 	List<Point> allPosibleCoord;
@@ -37,11 +35,11 @@ public class JoueurIAFacile extends JoueurIA {
 		}
 	}
 	
-	private Point[] obtenirPositionDesPions(Plateau plateau, JoueurIAFacile player)
+	private Point[] obtenirPositionDesPions(Plateau plateau, JoueurIA joueur)
 	{
 		Point[] tmpPieceList = new Point[7];
 		int i = 0;
-		if (player.getNumeroJoueur() == 2)
+		if (joueur.getNumeroJoueur() == 2)
 		{
 			for (Point x : allPosibleCoord)
 			{
@@ -109,8 +107,9 @@ public class JoueurIAFacile extends JoueurIA {
 	}
 
 	
-	
-	public void jouerCoup() throws PionBloqueException{
+	@Override
+	public ArrayList<MouvementIA> jouerCoup() throws PionBloqueException{
+		ArrayList<MouvementIA> listeCoups = new ArrayList<MouvementIA>();
 		//Premiere Action
 		List<MouvementIA> listeMvm1 = genererMouvementsPossibles(plateauActuel, obtenirPositionDesPions(plateauActuel, this), this);
 		MouvementIA mouvementRandom1 = listeMvm1.get(generator.nextInt(listeMvm1.size()));
@@ -118,6 +117,7 @@ public class JoueurIAFacile extends JoueurIA {
 		if(mouvementRandom1.type == TypeMouvement.DEPLACEMENT) deplacementRestant--;
 		else ballePassee=true;
 		plateauActuel.actualiser(mouvementRandom1.src, mouvementRandom1.dest);
+		listeCoups.add(mouvementRandom1);
 		
 		//Deuxieme Action
 		Random generator2 = new Random();
@@ -127,6 +127,7 @@ public class JoueurIAFacile extends JoueurIA {
 		if(mouvementRandom2.type == TypeMouvement.DEPLACEMENT) deplacementRestant--;
 		else ballePassee=true;
 		plateauActuel.actualiser(mouvementRandom2.src, mouvementRandom2.dest);
+		listeCoups.add(mouvementRandom2);
 		
 		//Troisieme Action
 		Random generator3 = new Random();
@@ -136,9 +137,18 @@ public class JoueurIAFacile extends JoueurIA {
 		if(mouvementRandom3.type == TypeMouvement.DEPLACEMENT) deplacementRestant--;
 		else ballePassee=true;
 		plateauActuel.actualiser(mouvementRandom3.src, mouvementRandom3.dest);
-	
+		listeCoups.add(mouvementRandom3);
+		
+		return listeCoups;
 	}
-
+	
+	public void setPlateauActuel(Plateau plateau){
+		plateauActuel = plateau;
+	}
+	
+	public Plateau getPlateauActuel(){
+		return plateauActuel;
+	}
 
 	@Override
 	public int getNumeroJoueur() {

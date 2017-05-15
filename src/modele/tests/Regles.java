@@ -62,6 +62,10 @@ public class Regles {
 	}
 
 	public boolean checkGameIsOver(Joueur joueurActuel, Plateau plateau) {
+		return (checkCasGagnant(joueurActuel, plateau) || checkCasAntijeu());
+	}
+	
+	private boolean checkCasGagnant(Joueur joueurActuel, Plateau plateau){
 		if(joueurActuel.getNumeroJoueur()==1) {
 			for(int i = 0; i < 7; i++) {
 				if(Case.PION_BLANC_AVEC_BALLON.equals(plateau.obtenirCase(new Point(6, i)))) {
@@ -78,4 +82,11 @@ public class Regles {
 		}
 		return false;
 	}
+	
+	private boolean checkCasAntijeu(){
+		// TODO
+		return false;
+	}
+	
+	
 }

@@ -1,5 +1,9 @@
 package modele.joueurs;
 
+import java.util.ArrayList;
+
+import modele.MouvementIA;
+
 public class JoueurIAMoyen extends JoueurIA {
 	int numJoueur;
 	
@@ -8,7 +12,8 @@ public class JoueurIAMoyen extends JoueurIA {
 	}
 	
 	@Override
-	public void jouerCoup() {
+	public ArrayList<MouvementIA> jouerCoup() {
+		return null;
 		// TODO Auto-generated method stub
 		
 	}

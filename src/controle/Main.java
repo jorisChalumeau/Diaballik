@@ -21,7 +21,7 @@ public class Main extends Application {
 		diaballik.finDeTour();
 		diaballik.getPlateau().Afficher();
 		//A l'IA de jouer
-		diaballik.coupIA();
+		diaballik.jouerIA();
 		diaballik.getPlateau().Afficher();
 		//Tour 2
 		pointA = new Point(0, 3);
