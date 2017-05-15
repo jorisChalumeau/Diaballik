@@ -59,7 +59,7 @@ public class Affichage {
 		    vbox.setSpacing(20);
 		    vbox.setAlignment(Pos.CENTER);
 			
-		    Button bFacile = new Button("Mere de Joris (désolé)");
+		    Button bFacile = new Button("Facile");
 		    setBoutonClassique(bFacile,5);
 
 		    Button bNormal = new Button("Normal");
@@ -206,7 +206,7 @@ public class Affichage {
 		    }
 		    
 		    texteTourJ1 = new Label("C'est au joueur 1 de jouer");
-		    texteTourJ1.setStyle("-fx-font-size: 24; -fx-text-fill: orange;");
+		    texteTourJ1.setStyle("-fx-font-size: 24; -fx-text-fill: FF6500;");
 		    
 		    Button finTour = new Button("FIN DE TOUR");
 		    finTour.setPrefSize(300, 50);
