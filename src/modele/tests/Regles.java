@@ -89,7 +89,7 @@ public class Regles {
 		Point[] listeDesPions = new Point[7];
 
 		listeDesPions = plateau.obtenirPositionDesPions(joueurActuel);
-		int colonne = listeDesPions[0].getColumn();
+		
 		int cptVoisinAdverse = 0;
 		
 		//Creation d'une liste d'entier = [0,1,2,3,4,5,6] et a chaque fois que l'on trouve un pion on regarde son numColonne et on enleve ce num dans la liste
@@ -103,28 +103,33 @@ public class Regles {
 		}
 		
 		//Tout les pions sont sur des colonnes differentes => possibilité de ligne bloquante
+		
 		if (listeDEntier.size() == 7){
+			int row = listeDesPions[0].getRow();
 			for (Point p : listeDesPions){
-				if (p.getColumn() - colonne != 0 || p.getColumn() - colonne != 1 || p.getColumn() - colonne != -1){
-					return false;
-				}
-				else{
+				if (p.getRow() - row == 0 || p.getRow() - row == 1 || p.getRow() - row == -1){
 					if (p.getRow()==0){
-						if (!plateau.estVoisinVide(p, p.changeRow(1))){
+						if (plateau.obtenirCase(p.changeRow(1))!=Case.LIBRE){
 							cptVoisinAdverse++;
 						}
 					}
 					else if (p.getRow()==6){
-						if (!plateau.estVoisinVide(p, p.changeRow(-1))){
+						if (plateau.obtenirCase(p.changeRow(-1))!=Case.LIBRE){
 							cptVoisinAdverse++;
 						}
 					}
 					else {
-						if (!plateau.estVoisinVide(p, p.changeRow(1)) || !plateau.estVoisinVide(p, p.changeRow(-1))){
+						if (plateau.obtenirCase(p.changeRow(1))!=Case.LIBRE || plateau.obtenirCase(p.changeRow(-1))!=Case.LIBRE){
 							cptVoisinAdverse++;
 						}
 					}
-					colonne = p.getColumn();
+					row = p.getRow();
+					
+				}
+				else{
+					System.out.println(p.getRow() - row);
+					System.out.println("TEST\n");
+					return false;
 				}
 			}
 		}
