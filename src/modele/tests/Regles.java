@@ -1,10 +1,10 @@
 package modele.tests;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import modele.Case;
+import modele.Partie;
 import modele.Plateau;
 import modele.Point;
 import modele.TypeMouvement;
@@ -62,21 +62,21 @@ public class Regles {
 		return null;
 	}
 
-	public boolean checkGameIsOver(Joueur joueurActuel, Plateau plateau) {
-		return (checkCasGagnant(joueurActuel, plateau) || checkCasAntijeu(joueurActuel, plateau));
+	public boolean checkGameIsOver(Partie p) {
+		return (checkCasGagnant(p) || checkCasAntijeu(p));
 	}
 	
-	private boolean checkCasGagnant(Joueur joueurActuel, Plateau plateau){
-		if(joueurActuel.getNumeroJoueur()==1) {
+	private boolean checkCasGagnant(Partie p){
+		if(p.getNumJoueurCourant()==1) {
 			for(int i = 0; i < 7; i++) {
-				if(Case.PION_BLANC_AVEC_BALLON.equals(plateau.obtenirCase(new Point(6, i)))) {
+				if(Case.PION_BLANC_AVEC_BALLON.equals(p.getPlateau().obtenirCase(new Point(6, i)))) {
 					return true;
 				}
 			}
 		}
 		else {
 			for(int i = 0; i < 7; i++) {
-				if(Case.PION_NOIR_AVEC_BALLON.equals(plateau.obtenirCase(new Point(0, i)))) {
+				if(Case.PION_NOIR_AVEC_BALLON.equals(p.getPlateau().obtenirCase(new Point(0, i)))) {
 					return true;
 				}
 			}
@@ -84,11 +84,14 @@ public class Regles {
 		return false;
 	}
 	
-	private boolean checkCasAntijeu(Joueur joueurActuel, Plateau plateau){
+	private boolean checkCasAntijeu(Partie p){
 		// TODO
 		Point[] listeDesPions = new Point[7];
-
-		listeDesPions = plateau.obtenirPositionDesPions(joueurActuel);
+		if(p.getJoueurCourant().equals(p.getJ1())){
+			listeDesPions = p.getPlateau().obtenirPositionDesPions(p.getJ2());
+		}
+		else listeDesPions = p.getPlateau().obtenirPositionDesPions(p.getJ1());
+		
 		
 		int cptVoisinAdverse = 0;
 		
@@ -96,9 +99,9 @@ public class Regles {
 		//Si a la fin la liste est vide c'est que chaque pion est sur une colonne differente
 		List<Integer> listeDEntier= new ArrayList<Integer>();
 		
-		for (Point p : listeDesPions){
-			if (!listeDEntier.contains(p.getColumn())){
-                listeDEntier.add(p.getColumn());
+		for (Point point : listeDesPions){
+			if (!listeDEntier.contains(point.getColumn())){
+                listeDEntier.add(point.getColumn());
             }
 		}
 		
@@ -106,29 +109,27 @@ public class Regles {
 		
 		if (listeDEntier.size() == 7){
 			int row = listeDesPions[0].getRow();
-			for (Point p : listeDesPions){
-				if (p.getRow() - row == 0 || p.getRow() - row == 1 || p.getRow() - row == -1){
-					if (p.getRow()==0){
-						if (plateau.obtenirCase(p.changeRow(1))!=Case.LIBRE){
+			for (Point point : listeDesPions){
+				if (point.getRow() - row == 0 || point.getRow() - row == 1 || point.getRow() - row == -1){
+					if (point.getRow()==0){
+						if (p.getPlateau().obtenirCase(point.changeRow(1))!=Case.LIBRE){
 							cptVoisinAdverse++;
 						}
 					}
-					else if (p.getRow()==6){
-						if (plateau.obtenirCase(p.changeRow(-1))!=Case.LIBRE){
+					else if (point.getRow()==6){
+						if (p.getPlateau().obtenirCase(point.changeRow(-1))!=Case.LIBRE){
 							cptVoisinAdverse++;
 						}
 					}
 					else {
-						if (plateau.obtenirCase(p.changeRow(1))!=Case.LIBRE || plateau.obtenirCase(p.changeRow(-1))!=Case.LIBRE){
+						if (p.getPlateau().obtenirCase(point.changeRow(1))!=Case.LIBRE || p.getPlateau().obtenirCase(point.changeRow(-1))!=Case.LIBRE){
 							cptVoisinAdverse++;
 						}
 					}
-					row = p.getRow();
+					row = point.getRow();
 					
 				}
 				else{
-					System.out.println(p.getRow() - row);
-					System.out.println("TEST\n");
 					return false;
 				}
 			}

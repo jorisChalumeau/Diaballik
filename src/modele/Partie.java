@@ -264,6 +264,14 @@ public class Partie {
 			joueurActuel = joueur1;
 		}
 	}
+	
+	public Joueur getJ1(){
+		return joueur1;
+	}
+	
+	public Joueur getJ2(){
+		return joueur2;
+	}
 
 //	public void IAtoHumain() {
 //		resetActionsPossibles();
@@ -325,8 +333,9 @@ public class Partie {
 	}
 
 	public boolean partieFinie() {
-		return r.checkGameIsOver(joueurActuel, p);
+		return r.checkGameIsOver(this);
 	}
+	
 
 	public void mettreFinALaPartie() {
 		partieLancee = false;
