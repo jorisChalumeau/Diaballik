@@ -290,7 +290,7 @@ public class Affichage {
 		    //COLONNE 2
 		    Fenetre.add(reglages, 1, 0, 1, 2);
 		    GridPane.setHalignment(reglages, HPos.RIGHT);
-		    GridPane.setValignment(reglages, VPos.CENTER);
+		    //GridPane.setValignment(reglages, VPos.CENTER);
 		    GridPane.setMargin(reglages, new Insets(0,30,0,0));
 		    
 		    Fenetre.add(aide, 1,0, 1,2);
@@ -324,7 +324,7 @@ public class Affichage {
 
 		    Fenetre.getColumnConstraints().addAll(ctrColonne(60), ctrColonne(40));
 		    Fenetre.getRowConstraints().addAll(ctrLigne(10), ctrLigne(5), ctrLigne(15), ctrLigne(5), ctrLigne(35), ctrLigne(15), ctrLigne(5), ctrLigne(10));
-		    Fenetre.setGridLinesVisible(true);
+		    //Fenetre.setGridLinesVisible(true);
 		    
 		    
 			//b.setCenter(new Text("Pas encore fait MDR"));
