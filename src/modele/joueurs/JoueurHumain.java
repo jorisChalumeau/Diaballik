@@ -31,8 +31,6 @@ public class JoueurHumain implements Joueur {
 		deplacementRestant = 2;
 		ballePassee = false;
 
-
-		
 	}
 	
 	@Override
@@ -67,7 +65,6 @@ public class JoueurHumain implements Joueur {
 
 						}
 					}
-
 				}
 				
 			if (!ballePassee)
@@ -76,7 +73,6 @@ public class JoueurHumain implements Joueur {
 					MouvementIA tmp = new MouvementIA(pions[6], pions[i], TypeMouvement.PASSE);
 					mouvementsJoueur.add(tmp);
 				}
-		
 		}
 		return mouvementsJoueur;
 	}

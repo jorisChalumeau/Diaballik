@@ -1,6 +1,7 @@
 package modele.tests;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import modele.Case;
@@ -86,6 +87,7 @@ public class Regles {
 	private boolean checkCasAntijeu(Joueur joueurActuel, Plateau plateau){
 		// TODO
 		Point[] listeDesPions = new Point[7];
+
 		listeDesPions = plateau.obtenirPositionDesPions(joueurActuel);
 		int colonne = listeDesPions[0].getColumn();
 		int cptVoisinAdverse = 0;
@@ -93,16 +95,15 @@ public class Regles {
 		//Creation d'une liste d'entier = [0,1,2,3,4,5,6] et a chaque fois que l'on trouve un pion on regarde son numColonne et on enleve ce num dans la liste
 		//Si a la fin la liste est vide c'est que chaque pion est sur une colonne differente
 		List<Integer> listeDEntier= new ArrayList<Integer>();
-		for(int i=0;i<7;i++)
-			listeDEntier.add(i);
 		
 		for (Point p : listeDesPions){
-			if (listeDEntier.contains(p.getColumn())){
-				listeDEntier.remove(p.getColumn());
-			}	
+			if (!listeDEntier.contains(p.getColumn())){
+                listeDEntier.add(p.getColumn());
+            }
 		}
+		
 		//Tout les pions sont sur des colonnes differentes => possibilité de ligne bloquante
-		if (listeDEntier.size() == 0){
+		if (listeDEntier.size() == 7){
 			for (Point p : listeDesPions){
 				if (p.getColumn() - colonne != 0 || p.getColumn() - colonne != 1 || p.getColumn() - colonne != -1){
 					return false;
