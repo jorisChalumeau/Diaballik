@@ -247,7 +247,7 @@ public class Affichage {
 		    finTour.setOnAction(new boutonPresse(this,10));
 		    finTour.setAlignment(Pos.CENTER);
 		    
-		    final ImageView iconeReglages = new ImageView(new Image("file:Images/reglages50x50.png"));
+		    final ImageView iconeReglages = new ImageView(new Image("file:Images/reglages.png"));
 		    Button reglages = new Button("",iconeReglages);
 		    setBoutonDesign2(reglages,11);
 		    

@@ -20,6 +20,7 @@ public class LancementIHM extends Application {
         final boolean fullScreen = false;
         
         
+        
         //INITIALISATION IHM
         Affichage app = new Affichage();
         app.stage = stage;
