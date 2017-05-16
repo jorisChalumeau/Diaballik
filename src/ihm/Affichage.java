@@ -58,10 +58,10 @@ public class Affichage {
 		    vbox.setSpacing(20);
 		    vbox.setAlignment(Pos.CENTER);
 			
-		    Button b2joueurs = new Button("Mode 2 joueurs");
+		    Button b2joueurs = new Button("Joueur contre Joueur");
 		    setBoutonClassique(b2joueurs,1);
 
-		    Button bIA = new Button("Contre l'IA");
+		    Button bIA = new Button("Joueur contre Ordinateur");
 		    setBoutonClassique(bIA,2);
 		    
 		    Button bRegles = new Button("Règles du jeu");
@@ -247,26 +247,30 @@ public class Affichage {
 		    finTour.setOnAction(new boutonPresse(this,10));
 		    finTour.setAlignment(Pos.CENTER);
 		    
-		    final ImageView iconeReglages = new ImageView(new Image("file:Images/reglages.png"));
+		    final ImageView iconeReglages = new ImageView(new Image("file:Images/reglages50x50.png"));
 		    Button reglages = new Button("",iconeReglages);
 		    setBoutonDesign2(reglages,11);
 		    
-		    Button aide = new Button();
+		    final ImageView iconeAide = new ImageView(new Image("file:Images/astuce50x50.png"));
+		    Button aide = new Button("",iconeAide);
 		    setBoutonDesign2(aide,12);
 		    
-		    Button annuler = new Button();
+		    final ImageView iconeAnnuler = new ImageView(new Image("file:Images/undo50x50.png"));
+		    Button annuler = new Button("",iconeAnnuler);
 		    setBoutonDesign3(annuler,13,"45FCFC");
 		    
-		    Button remontrerIA = new Button();
+		    final ImageView iconeRemontrerIA = new ImageView(new Image("file:Images/mind50x50.png"));
+		    Button remontrerIA = new Button("",iconeRemontrerIA);
 		    setBoutonDesign3(remontrerIA,14,"30B264");
 		    
-		    Button refaire = new Button();
+		    final ImageView iconeRefaire = new ImageView(new Image("file:Images/redo50x50.png"));
+		    Button refaire = new Button("",iconeRefaire);
 		    setBoutonDesign3(refaire,15,"45FCFC");
 		    
-		    Label texteDeplRestants = new Label("J'aime bien les pates");
+		    Label texteDeplRestants = new Label("Déplacements restants : ");
 		    texteDeplRestants.setStyle("-fx-font-size: 24; -fx-text-fill: black;");
 		    
-		    Label textePassesRestantes = new Label("Oui oui oui oui");
+		    Label textePassesRestantes = new Label("Passe restante : ");
 		    textePassesRestantes.setStyle("-fx-font-size: 24; -fx-text-fill: black;");
 		    
 		    
@@ -286,7 +290,7 @@ public class Affichage {
 		    //COLONNE 2
 		    Fenetre.add(reglages, 1, 0, 1, 2);
 		    GridPane.setHalignment(reglages, HPos.RIGHT);
-		    //GridPane.setValignment(reglages, VPos.CENTER);
+		    GridPane.setValignment(reglages, VPos.CENTER);
 		    GridPane.setMargin(reglages, new Insets(0,30,0,0));
 		    
 		    Fenetre.add(aide, 1,0, 1,2);
