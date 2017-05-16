@@ -20,13 +20,14 @@ public class LancementIHM extends Application {
         final boolean fullScreen = false;
         
         
+        
         //INITIALISATION IHM
         Affichage app = new Affichage();
         app.stage = stage;
         
         app.stage.setTitle("Test IHM Diaballik");
-        app.stage.setMinHeight(450);
-        stage.setMinWidth(400);
+        app.stage.setMinHeight(640);
+        stage.setMinWidth(640);
         
 //        ScrollPane sp = new ScrollPane();
          
