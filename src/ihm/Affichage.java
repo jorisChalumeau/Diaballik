@@ -33,6 +33,23 @@ public class Affichage {
 		    b.setOnAction(new boutonPresse(this,numero));
 		}
 		
+		public void setBoutonDesign2(Button b, int numero){
+			b.setMaxSize(60, 60);
+		    b.setMinSize(60, 60);
+		    b.setStyle("-fx-background-color: #D5D4D7; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
+		    b.setOnAction(new boutonPresse(this,numero));
+		    b.setAlignment(Pos.CENTER);
+		}
+		
+		public void setBoutonDesign3(Button b, int numero, String couleur){
+		    b.setMinSize(50, 50);
+		    b.setMaxSize(77, 65);
+		    b.setStyle("-fx-background-color: #"+couleur+"; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
+		    b.setOnAction(new boutonPresse(this,numero));
+		}
+		
+		
+		
 		//COMPOSANTS (ensembles d'objets)
 		public VBox initMenu1(){
 			VBox vbox = new VBox();
@@ -143,7 +160,19 @@ public class Affichage {
 		    vbox.getChildren().addAll(bRetour);
 		    return vbox;
 		}
-	    
+		
+		private RowConstraints ctrLigne(int pourcentage){
+			RowConstraints r = new RowConstraints();
+		    r.setPercentHeight(pourcentage);
+		    return r;
+		}
+		
+		private ColumnConstraints ctrColonne(int pourcentage){
+			ColumnConstraints c = new ColumnConstraints();
+		    c.setPercentWidth(pourcentage);
+		    return c;
+		}
+		
 		//METHODES D AFFICHAGE
 		public void afficherChoixNiveau(){
 			VBox menu2 = initMenu2();
@@ -171,10 +200,7 @@ public class Affichage {
 		
 		public void afficherFenetreJeu(){
 			
-			HBox Fenetre = new HBox();
-			VBox Gauche = new VBox();
-			VBox Droite = new VBox();
-			
+			//Les Objets graphiques
 			texteTourJ2 = new Label("C'est au joueur 2 de jouer");
 			texteTourJ2.setStyle("-fx-font-size: 24; -fx-text-fill: blue;");
 			texteTourJ2.setVisible(false);
@@ -203,6 +229,7 @@ public class Affichage {
 		    for(int i=0;i<49;i++){
 		    	grille.add(plateau[i], i%7, i/7);
 		    }
+		    grille.setAlignment(Pos.CENTER);
 		    
 		    
 		    //On connecte les cases au contrôleur
@@ -214,18 +241,87 @@ public class Affichage {
 		    texteTourJ1.setStyle("-fx-font-size: 24; -fx-text-fill: FF6500;");
 		    
 		    Button finTour = new Button("FIN DE TOUR");
-		    finTour.setPrefSize(300, 50);
-		    finTour.setMinSize(150, 30);
-		    finTour.setStyle("-fx-background-color: #FFFF33; -fx-text-fill: black; -fx-font-size: 24;");
+		    finTour.setPrefSize(250, 50);
+		    finTour.setMinSize(150, 50);
+		    finTour.setStyle("-fx-background-color: #FFFF33; -fx-text-fill: black; -fx-font-size: 24; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
 		    finTour.setOnAction(new boutonPresse(this,10));
+		    finTour.setAlignment(Pos.CENTER);
 		    
-		    Gauche.getChildren().addAll(texteTourJ2,grille,texteTourJ1);
+		    final ImageView iconeReglages = new ImageView(new Image("file:Images/reglages50x50.png"));
+		    Button reglages = new Button("",iconeReglages);
+		    setBoutonDesign2(reglages,11);
+		    
+		    Button aide = new Button();
+		    setBoutonDesign2(aide,12);
+		    
+		    Button annuler = new Button();
+		    setBoutonDesign3(annuler,13,"45FCFC");
+		    
+		    Button remontrerIA = new Button();
+		    setBoutonDesign3(remontrerIA,14,"30B264");
+		    
+		    Button refaire = new Button();
+		    setBoutonDesign3(refaire,15,"45FCFC");
+		    
+		    Label texteDeplRestants = new Label("J'aime bien les pates");
+		    texteDeplRestants.setStyle("-fx-font-size: 24; -fx-text-fill: black;");
+		    
+		    Label textePassesRestantes = new Label("Oui oui oui oui");
+		    textePassesRestantes.setStyle("-fx-font-size: 24; -fx-text-fill: black;");
+		    
+		    
+		    // On met tous les composants graphiques dans une grille "Fenêtre"
+		    GridPane Fenetre = new GridPane();
+		    Fenetre.setAlignment(Pos.CENTER);
+		    
+		    //COLONNE 1
+		    Fenetre.add(texteTourJ2, 0, 0);
+		    GridPane.setHalignment(texteTourJ1,HPos.CENTER);
+		    
+		    Fenetre.add(grille, 0, 1, 1, 5);
+		    
+		    Fenetre.add(texteTourJ1, 0, 7);
+		    GridPane.setHalignment(texteTourJ2,HPos.CENTER);
+		    
+		    //COLONNE 2
+		    Fenetre.add(reglages, 1, 0, 1, 2);
+		    GridPane.setHalignment(reglages, HPos.RIGHT);
+		    //GridPane.setValignment(reglages, VPos.CENTER);
+		    GridPane.setMargin(reglages, new Insets(0,30,0,0));
+		    
+		    Fenetre.add(aide, 1,0, 1,2);
+		    GridPane.setHalignment(aide, HPos.RIGHT);
+		    GridPane.setMargin(aide, new Insets(reglages.getMaxHeight()*2 + 15,30,0,0));
+		    
+		    Fenetre.add(texteDeplRestants, 1, 4);
+		    GridPane.setValignment(texteDeplRestants, VPos.TOP);
+		    GridPane.setMargin(texteDeplRestants, new Insets(0,0,0,0));
+		    
+		    Fenetre.add(textePassesRestantes, 1, 4);
+		    GridPane.setValignment(textePassesRestantes, VPos.TOP);
+		    GridPane.setMargin(textePassesRestantes, new Insets(50,0,0,0));
+		    
+		    Fenetre.add(annuler, 1, 5);
+		    GridPane.setHalignment(annuler, HPos.CENTER);
+		    GridPane.setMargin(annuler, new Insets(0,annuler.getMaxWidth()*2+10,0,0));
+		    
+		    Fenetre.add(remontrerIA, 1, 5);
+		    GridPane.setHalignment(remontrerIA, HPos.CENTER);
+		    
+		    Fenetre.add(refaire, 1, 5);
+		    GridPane.setHalignment(refaire, HPos.CENTER);
+		    GridPane.setMargin(refaire, new Insets(0,0,0,refaire.getMaxWidth()*2+10));
+		    
+		    Fenetre.add(finTour,1,6, 1,2);
+		    GridPane.setHalignment(finTour, HPos.CENTER);
+	        GridPane.setValignment(finTour, VPos.TOP);
+
 		    
 
-		    Droite.getChildren().addAll(finTour);
-
+		    Fenetre.getColumnConstraints().addAll(ctrColonne(60), ctrColonne(40));
+		    Fenetre.getRowConstraints().addAll(ctrLigne(10), ctrLigne(5), ctrLigne(15), ctrLigne(5), ctrLigne(35), ctrLigne(15), ctrLigne(5), ctrLigne(10));
+		    Fenetre.setGridLinesVisible(true);
 		    
-		    Fenetre.getChildren().addAll(Gauche,Droite);
 		    
 			//b.setCenter(new Text("Pas encore fait MDR"));
 		    b.setCenter(Fenetre);
