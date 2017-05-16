@@ -62,7 +62,7 @@ public class Regles {
 	}
 
 	public boolean checkGameIsOver(Joueur joueurActuel, Plateau plateau) {
-		return (checkCasGagnant(joueurActuel, plateau) || checkCasAntijeu());
+		return (checkCasGagnant(joueurActuel, plateau) || checkCasAntijeu(joueurActuel, plateau));
 	}
 	
 	private boolean checkCasGagnant(Joueur joueurActuel, Plateau plateau){
@@ -83,9 +83,56 @@ public class Regles {
 		return false;
 	}
 	
-	private boolean checkCasAntijeu(){
+	private boolean checkCasAntijeu(Joueur joueurActuel, Plateau plateau){
 		// TODO
-		return false;
+		Point[] listeDesPions = new Point[7];
+		listeDesPions = plateau.obtenirPositionDesPions(joueurActuel);
+		int colonne = listeDesPions[0].getColumn();
+		int cptVoisinAdverse = 0;
+		
+		//Creation d'une liste d'entier = [0,1,2,3,4,5,6] et a chaque fois que l'on trouve un pion on regarde son numColonne et on enleve ce num dans la liste
+		//Si a la fin la liste est vide c'est que chaque pion est sur une colonne differente
+		List<Integer> listeDEntier= new ArrayList<Integer>();
+		for(int i=0;i<7;i++)
+			listeDEntier.add(i);
+		
+		for (Point p : listeDesPions){
+			if (listeDEntier.contains(p.getColumn())){
+				listeDEntier.remove(p.getColumn());
+			}	
+		}
+		//Tout les pions sont sur des colonnes differentes => possibilité de ligne bloquante
+		if (listeDEntier.size() == 0){
+			for (Point p : listeDesPions){
+				if (p.getColumn() - colonne != 0 || p.getColumn() - colonne != 1 || p.getColumn() - colonne != -1){
+					return false;
+				}
+				else{
+					if (p.getRow()==0){
+						if (!plateau.estVoisinVide(p, p.changeRow(1))){
+							cptVoisinAdverse++;
+						}
+					}
+					else if (p.getRow()==6){
+						if (!plateau.estVoisinVide(p, p.changeRow(-1))){
+							cptVoisinAdverse++;
+						}
+					}
+					else {
+						if (!plateau.estVoisinVide(p, p.changeRow(1)) || !plateau.estVoisinVide(p, p.changeRow(-1))){
+							cptVoisinAdverse++;
+						}
+					}
+					colonne = p.getColumn();
+				}
+			}
+		}
+		//Au moins deux pions sont sur une meme colonne donc pas de ligne bloquante possible
+		else return false;
+		
+		//Si le nombre d'adversaire voisin = 3 alors triche -> report x9
+		if (cptVoisinAdverse>=3) return true;
+		else return false;
 	}
 	
 	

@@ -16,7 +16,7 @@ public class JoueurHumain implements Joueur {
 	private int numJoueur;
 	Regles r;
 	List<Point> piecesPositions;
-	List<Point> allPosibleCoord;
+
 	Random generator;
 	private int deplacementRestant;
 	private boolean ballePassee;
@@ -26,20 +26,13 @@ public class JoueurHumain implements Joueur {
 		this.numJoueur=numJ;
 		r = new Regles();
 		piecesPositions = new ArrayList<>();
-		allPosibleCoord = new ArrayList<>();
+
 		generator = new Random();
 		deplacementRestant = 2;
 		ballePassee = false;
 
 
-		for (int i = 0; i < 7; i++)
-		{
-			for (int j = 0; j < 7; j++)
-			{
-				allPosibleCoord.add(new Point(i, j));
-			}
-
-		}
+		
 	}
 	
 	@Override
@@ -47,38 +40,6 @@ public class JoueurHumain implements Joueur {
 		return null;
 		// TODO Auto-generated method stub
 		
-	}
-	
-	private Point[] obtenirPositionDesPions(Plateau plateau, JoueurHumain player)
-	{
-		Point[] tmpPieceList = new Point[7];
-		int i = 0;
-		if (player.getNumeroJoueur() == 2)
-		{
-			for (Point x : allPosibleCoord)
-			{
-				if (plateau.obtenirCase(x) == Case.PION_NOIR)
-				{
-					tmpPieceList[i] = x;
-					i++;
-				}
-				if (plateau.obtenirCase(x) == Case.PION_NOIR_AVEC_BALLON)
-					tmpPieceList[6] = x;
-			}
-		} else
-		{
-			for (Point x : allPosibleCoord)
-			{
-				if (plateau.obtenirCase(x) == Case.PION_BLANC)
-				{
-					tmpPieceList[i] = x;
-					i++;
-				}
-				if (plateau.obtenirCase(x) == Case.PION_BLANC_AVEC_BALLON)
-					tmpPieceList[6] = x;
-			}
-		}
-		return tmpPieceList;
 	}
 	
 	public List<MouvementIA> genererMouvementsPossibles(Plateau plateau, Point[] pions, JoueurIAFacile ia){

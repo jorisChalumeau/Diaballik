@@ -1,18 +1,43 @@
 package modele;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.json.simple.JSONObject;
+
+import modele.joueurs.Joueur;
+import modele.joueurs.JoueurHumain;
 
 public class Plateau {
 	
 	private Case[][] terrain;
 	final static int TAILLE = 7;
+	List<Point> allPosibleCoord;
 	
 	public Plateau(){
+		allPosibleCoord = new ArrayList<>();
 		initialiserTerrain();
+		for (int i = 0; i < 7; i++)
+		{
+			for (int j = 0; j < 7; j++)
+			{
+				allPosibleCoord.add(new Point(i, j));
+			}
+
+		}
 	}
 	
 	public Plateau(JSONObject jsonPlat){
+		allPosibleCoord = new ArrayList<>();
 		initialiserTerrain(jsonPlat);
+		for (int i = 0; i < 7; i++)
+		{
+			for (int j = 0; j < 7; j++)
+			{
+				allPosibleCoord.add(new Point(i, j));
+			}
+
+		}
 	}
 	
 	public Plateau(Plateau p)
@@ -27,6 +52,8 @@ public class Plateau {
 			}
 		}
 	}
+	
+	
 	
 	public void initialiserTerrain(JSONObject jsonPlat){
 		terrain = new Case[TAILLE][TAILLE];
@@ -78,6 +105,38 @@ public class Plateau {
             }
         }
          
+	}
+	
+	public Point[] obtenirPositionDesPions(Joueur player)
+	{
+		Point[] tmpPieceList = new Point[7];
+		int i = 0;
+		if (player.getNumeroJoueur() == 2)
+		{
+			for (Point x : allPosibleCoord)
+			{
+				if (this.obtenirCase(x) == Case.PION_NOIR)
+				{
+					tmpPieceList[i] = x;
+					i++;
+				}
+				if (this.obtenirCase(x) == Case.PION_NOIR_AVEC_BALLON)
+					tmpPieceList[6] = x;
+			}
+		} else
+		{
+			for (Point x : allPosibleCoord)
+			{
+				if (this.obtenirCase(x) == Case.PION_BLANC)
+				{
+					tmpPieceList[i] = x;
+					i++;
+				}
+				if (this.obtenirCase(x) == Case.PION_BLANC_AVEC_BALLON)
+					tmpPieceList[6] = x;
+			}
+		}
+		return tmpPieceList;
 	}
 	
 	public Case obtenirCase(Point position) {
