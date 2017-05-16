@@ -62,7 +62,7 @@ public class JoueurIAFacile extends JoueurIA {
 		ArrayList<MouvementIA> listeCoups = new ArrayList<MouvementIA>();
 
 		for (int nbMvt = 0; nbMvt < 3; nbMvt++) {
-			MouvementIA mvt = jouerMouvement(partie);
+			MouvementIA mvt = jouerAction(partie);
 			if (mvt != null)
 				listeCoups.add(mvt);
 		}
@@ -70,7 +70,7 @@ public class JoueurIAFacile extends JoueurIA {
 		return listeCoups;
 	}
 
-	private MouvementIA jouerMouvement(Partie partie) {
+	private MouvementIA jouerAction(Partie partie) {
 		List<MouvementIA> listeMvm = genererMouvementsPossibles(partie);
 		if (listeMvm.size() != 0) {
 			MouvementIA mouvementRandom = listeMvm.get(generator.nextInt(listeMvm.size()));
