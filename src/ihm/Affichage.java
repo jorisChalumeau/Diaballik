@@ -1,4 +1,5 @@
 package ihm;
+import controle.LancementIHM;
 import controle.boutonPresse;
 import controle.clicSurCase;
 import javafx.stage.Stage;
@@ -8,6 +9,8 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.WindowEvent;
+import modele.Partie;
+import modele.Point;
 import javafx.geometry.*;
 import javafx.scene.shape.*;
 
@@ -19,6 +22,8 @@ public class Affichage {
 	public Rectangle[] cases = new Rectangle[49];
 	private GridPane grille;
 	private Label texteTourJ1, texteTourJ2;
+	private Partie diaballik;
+	private Point pointPionSelectionne;
 	
 	//REGLAGES RECURRENTS D OBJETS
 		public void setBoutonClassique(Button b, int numero){
@@ -284,4 +289,36 @@ public class Affichage {
 		    plateau[n1].setOnMouseClicked(new clicSurCase(this,n1,cases));
 		}
 
+		public void deselection() {
+			for (int i = 0; i < 49; i++) {
+				if(!cases[i].getFill().equals(Color.WHITE))
+					ColorateurDeRectangles.enBlanc(cases[i]);
+			}
+			pointPionSelectionne = null;
+		}
+
+		public Partie getDiaballik() {
+			return diaballik;
+		}
+
+		public void setDiaballik(Partie nouvellePartie) {
+			diaballik = nouvellePartie;
+		}
+
+		public Point getPointPionSelectionne() {
+			return pointPionSelectionne;
+		}
+
+		public void setPointPionSelectionne(Point pointPionSelectionne) {
+			this.pointPionSelectionne = pointPionSelectionne;
+		}
+		
+		public int pointToNumCase(Point src){
+			return 48 - (src.getRow() * 7 + src.getColumn());
+		}
+		
+		public Point numCaseToPoint(int numCase){
+			int numModele = 48 - numCase;
+			return new Point(numModele / 7, numModele % 7);
+		}
 }

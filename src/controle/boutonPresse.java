@@ -9,7 +9,7 @@ import ihm.ColorateurDeRectangles;
 
 import java.util.ArrayList;
 
-import controle.EntrainementIHM;
+import controle.LancementIHM;
 import javafx.event.ActionEvent;
 
 public class boutonPresse implements EventHandler<ActionEvent> {
@@ -25,12 +25,10 @@ public class boutonPresse implements EventHandler<ActionEvent> {
 	@Override
 	public void handle(ActionEvent event) {
 
-		System.out.println("Bouton " + numero + " pressé");
-
 		switch (numero) {
 		case 1: // Bouton Mode 2 joueurs
 
-			EntrainementIHM.diaballik = CreateurPartie.creerPartie2Humains();
+			app.setDiaballik(CreateurPartie.creerPartie2Humains());
 			// Modèle : Charger le modèle avec 2 joueurs humains
 			// Vue : Afficher la "fenêtre jeu"
 			app.afficherFenetreJeu();
@@ -52,7 +50,7 @@ public class boutonPresse implements EventHandler<ActionEvent> {
 			break;
 
 		case 5: // Bouton première difficulté
-			EntrainementIHM.diaballik = CreateurPartie.creerPartieIAFacile();
+			app.setDiaballik(CreateurPartie.creerPartieIAFacile());
 			// Modèle : Charger le modèle avec 1 joueur humain et une IA Facile
 			// Vue : Afficher la "fenêtre jeu"
 			app.afficherFenetreJeu();
@@ -86,12 +84,12 @@ public class boutonPresse implements EventHandler<ActionEvent> {
 			break;
 
 		case 10: // Bouton Fin de tour
-			if (!EntrainementIHM.diaballik.partieFinie()) {
-				EntrainementIHM.diaballik.finDeTour();
-				app.afficherMessageTourDuJoueur(EntrainementIHM.diaballik.getNumJoueurCourant());
-				if(EntrainementIHM.diaballik.tourIA()){
+			if (!app.getDiaballik().partieFinie()) {
+				lancerFinDeTour();
+				if(app.getDiaballik().tourIA()){
 					faireJouerIA();
-					// redéclencher ce bouton de fin du tour
+					// fin de tour JoueurIA
+					lancerFinDeTour();
 				}
 			}
 			break;
@@ -102,8 +100,15 @@ public class boutonPresse implements EventHandler<ActionEvent> {
 
 	}
 
+	private void lancerFinDeTour() {
+		app.getDiaballik().finDeTour();
+		app.afficherMessageTourDuJoueur(app.getDiaballik().getNumJoueurCourant());
+		// on désélectionne si qqch est encore sélectionné
+		app.deselection();
+	}
+
 	private void faireJouerIA() {
-		ArrayList<MouvementIA> listeCoups = EntrainementIHM.diaballik.jouerIA();
+		ArrayList<MouvementIA> listeCoups = app.getDiaballik().jouerIA();
 		Case caseSrc;
 		int numeroSrc, numeroDest;
 
@@ -111,7 +116,7 @@ public class boutonPresse implements EventHandler<ActionEvent> {
 			System.out.println("l'ia n'a pas trouvé de coup");
 		} else {
 			for(MouvementIA mvt : listeCoups){
-				caseSrc = EntrainementIHM.diaballik.getPlateau().obtenirCase(mvt.src);
+				caseSrc = app.getDiaballik().getPlateau().obtenirCase(mvt.src);
 				numeroSrc = 48 - (mvt.src.getRow() * 7 + mvt.src.getColumn());
 				numeroDest = 48 - (mvt.dest.getRow() * 7 + mvt.dest.getColumn());
 				

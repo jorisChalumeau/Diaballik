@@ -23,17 +23,17 @@ public class clicSurCase implements EventHandler<MouseEvent> {
 	@Override
 	public void handle(MouseEvent event) {
 		int numeroModele = 48 - numero;
-		
+
 		// si la partie est finie, le clic sur une case ne fait plus rien
-		if (!EntrainementIHM.diaballik.partieFinie()) {
+		if (!app.getDiaballik().partieFinie()) {
 
 			// on vérifie que ce n'est pas le tour de l'IA
-			if (!EntrainementIHM.diaballik.tourIA()) {
+			if (!app.getDiaballik().tourIA()) {
 
 				// aucun pion sélectionné <=> le joueur veut sélectionner un
 				// pion
-				if (!EntrainementIHM.aTOnCliqueSurUnPion) {
-					ArrayList<Point> listePoints = EntrainementIHM.diaballik
+				if (app.getPointPionSelectionne() == null) {
+					ArrayList<Point> listePoints = app.getDiaballik()
 							.obtenirActionsPossibles(new Point(numeroModele / 7, numeroModele % 7));
 
 					if (listePoints != null) {
@@ -44,40 +44,35 @@ public class clicSurCase implements EventHandler<MouseEvent> {
 							ColorateurDeRectangles.enVert(caseGraphique[48 - num]);
 						}
 						ColorateurDeRectangles.enGris(caseGraphique[numero]);
-						EntrainementIHM.aTOnCliqueSurUnPion = true;
-						EntrainementIHM.dernierPionChoisi = new Point(numeroModele / 7, numeroModele % 7);
-						EntrainementIHM.numeroCase = numero;
+						app.setPointPionSelectionne(new Point(numeroModele / 7, numeroModele % 7));
 					}
 				} else {
 					// On a cliqué sur un pion, on doit maintenant
 					// sélectionner la case ciblée
 					Point dest = new Point(numeroModele / 7, numeroModele % 7);
 					try {
-						Case typePionSource = EntrainementIHM.diaballik
-								.executerMouvement(EntrainementIHM.dernierPionChoisi, dest);
-						if (typePionSource == Case.PION_BLANC) {
-							app.deplacementOrange(EntrainementIHM.numeroCase, numero);
-						}
-						if (typePionSource == Case.PION_NOIR) {
-							app.deplacementBleu(EntrainementIHM.numeroCase, numero);
-						}
-						if (typePionSource == Case.PION_BLANC_AVEC_BALLON) {
-							app.passeOrange(EntrainementIHM.numeroCase, numero);
-						}
-						if (typePionSource == Case.PION_NOIR_AVEC_BALLON) {
-							app.passeBleu(EntrainementIHM.numeroCase, numero);
+						Case typePionSource = app.getDiaballik().executerMouvement(app.getPointPionSelectionne(), dest);
+						int numeroCase = app.pointToNumCase(app.getPointPionSelectionne());
+						switch(typePionSource){
+						case PION_BLANC:
+							app.deplacementOrange(numeroCase, numero); break;
+						case PION_NOIR:
+							app.deplacementBleu(numeroCase, numero); break;
+						case PION_BLANC_AVEC_BALLON:
+							app.passeOrange(numeroCase, numero); break;
+						case PION_NOIR_AVEC_BALLON:
+							app.passeBleu(numeroCase, numero); break;
+						default:
+							break;
 						}
 					} catch (Exception e) {
 						System.out.println("déplacement impossible");
 					}
-					for (int i = 0; i < 49; i++) {
-						ColorateurDeRectangles.enBlanc(caseGraphique[i]);
-					}
-					EntrainementIHM.aTOnCliqueSurUnPion = false;
+					app.deselection();
 				}
-				if (EntrainementIHM.diaballik.partieFinie()) {
+				if (app.getDiaballik().partieFinie()) {
 					System.out.println("\n\n\n######################################\n\nLe joueur "
-							+ EntrainementIHM.diaballik.getNumJoueurCourant()
+							+ app.getDiaballik().getNumJoueurCourant()
 							+ " a gagné\n\n######################################");
 				}
 			}
