@@ -26,7 +26,11 @@ public class Main extends Application {
 		//Tour 2
 		pointA = new Point(0, 3);
 		pointB = new Point(0, 5);
-		diaballik.executerMouvement(pointA, pointB);
+		try{
+			diaballik.executerMouvement(pointA, pointB);
+		}catch(ExceptionMouvementIllegal e){
+			
+		}
 		diaballik.finDeTour();
 		diaballik.getPlateau().Afficher();
 		

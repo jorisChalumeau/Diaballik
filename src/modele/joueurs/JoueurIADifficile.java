@@ -3,6 +3,8 @@ package modele.joueurs;
 import java.util.ArrayList;
 
 import modele.MouvementIA;
+import modele.Partie;
+import modele.Plateau;
 
 public class JoueurIADifficile extends JoueurIA {
 	int numJoueur;
@@ -12,7 +14,7 @@ public class JoueurIADifficile extends JoueurIA {
 	}
 	
 	@Override
-	public ArrayList<MouvementIA> jouerCoup() {
+	public ArrayList<MouvementIA> jouerCoup(Partie partie) throws PionBloqueException {
 		return null;
 		// TODO Auto-generated method stub
 		

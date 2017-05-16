@@ -1,6 +1,7 @@
 package controle;
 
 import javafx.event.EventHandler;
+import javafx.util.Duration;
 import modele.Case;
 import modele.MouvementIA;
 import modele.Point;
@@ -8,8 +9,12 @@ import ihm.Affichage;
 import ihm.ColorateurDeRectangles;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import controle.LancementIHM;
+import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 
 public class boutonPresse implements EventHandler<ActionEvent> {
@@ -86,10 +91,8 @@ public class boutonPresse implements EventHandler<ActionEvent> {
 		case 10: // Bouton Fin de tour
 			if (!app.getDiaballik().partieFinie()) {
 				lancerFinDeTour();
-				if(app.getDiaballik().tourIA()){
+				if (app.getDiaballik().tourIA()) {
 					faireJouerIA();
-					// fin de tour JoueurIA
-					lancerFinDeTour();
 				}
 			}
 			break;
@@ -109,32 +112,43 @@ public class boutonPresse implements EventHandler<ActionEvent> {
 
 	private void faireJouerIA() {
 		ArrayList<MouvementIA> listeCoups = app.getDiaballik().jouerIA();
-		Case caseSrc;
-		int numeroSrc, numeroDest;
 
 		if (listeCoups == null) {
 			System.out.println("l'ia n'a pas trouvé de coup");
+			lancerFinDeTour();
 		} else {
-			for(MouvementIA mvt : listeCoups){
-				caseSrc = app.getDiaballik().getPlateau().obtenirCase(mvt.src);
-				numeroSrc = 48 - (mvt.src.getRow() * 7 + mvt.src.getColumn());
-				numeroDest = 48 - (mvt.dest.getRow() * 7 + mvt.dest.getColumn());
-				
-				if (caseSrc == Case.PION_BLANC) {
+			Iterator<MouvementIA> it = listeCoups.iterator();
+
+			// espacer chaque coup de l'IA de 2s pour les rendre plus "visibles"
+			PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
+			pause.setOnFinished(event -> {
+				// déclenché à la fin du timer de 2s
+				MouvementIA mvt = it.next();
+				int numeroSrc = app.pointToNumCase(mvt.src);
+				int numeroDest = app.pointToNumCase(mvt.dest);
+
+				if (mvt.caseSrc == Case.PION_BLANC) {
 					app.deplacementOrange(numeroSrc, numeroDest);
 				}
-				if (caseSrc == Case.PION_NOIR) {
+				if (mvt.caseSrc == Case.PION_NOIR) {
 					app.deplacementBleu(numeroSrc, numeroDest);
 				}
-				if (caseSrc == Case.PION_BLANC_AVEC_BALLON) {
+				if (mvt.caseSrc == Case.PION_BLANC_AVEC_BALLON) {
 					app.passeOrange(numeroSrc, numeroDest);
 				}
-				if (caseSrc == Case.PION_NOIR_AVEC_BALLON) {
+				if (mvt.caseSrc == Case.PION_NOIR_AVEC_BALLON) {
 					app.passeBleu(numeroSrc, numeroDest);
 				}
-			}
-			for (int i = 0; i < 49; i++) {
-				ColorateurDeRectangles.enBlanc(app.cases[i]);
+				if (it.hasNext())
+					pause.play();
+				else
+					// fin du tour de l'ia après un délai pour qu'il ait le
+					// temps de jouer
+					lancerFinDeTour();
+			});
+
+			if (it.hasNext()) {
+				pause.play();
 			}
 		}
 	}

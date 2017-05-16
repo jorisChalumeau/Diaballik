@@ -9,157 +9,88 @@ import modele.tests.Regles;
 
 public class JoueurIAFacile extends JoueurIA {
 	Regles r;
-	List<Point> piecesPositions;
-	List<Point> allPosibleCoord;
 	Random generator;
-	private int deplacementRestant;
-	private boolean ballePassee;
-	
+
 	public JoueurIAFacile(int numJoueur) {
 		this.numJoueur = numJoueur;
 		r = new Regles();
-		piecesPositions = new ArrayList<>();
-		allPosibleCoord = new ArrayList<>();
 		generator = new Random();
-		deplacementRestant = 2;
-		ballePassee = false;
-
-
-		for (int i = 0; i < 7; i++)
-		{
-			for (int j = 0; j < 7; j++)
-			{
-				allPosibleCoord.add(new Point(i, j));
-			}
-
-		}
 	}
-	
-	private Point[] obtenirPositionDesPions(Plateau plateau, JoueurIA joueur)
-	{
-		Point[] tmpPieceList = new Point[7];
-		int i = 0;
-		if (joueur.getNumeroJoueur() == 2)
-		{
-			for (Point x : allPosibleCoord)
-			{
-				if (plateau.obtenirCase(x) == Case.PION_NOIR)
-				{
-					tmpPieceList[i] = x;
-					i++;
-				}
-				if (plateau.obtenirCase(x) == Case.PION_NOIR_AVEC_BALLON)
-					tmpPieceList[6] = x;
-			}
-		} else
-		{
-			for (Point x : allPosibleCoord)
-			{
-				if (plateau.obtenirCase(x) == Case.PION_BLANC)
-				{
-					tmpPieceList[i] = x;
-					i++;
-				}
-				if (plateau.obtenirCase(x) == Case.PION_BLANC_AVEC_BALLON)
-					tmpPieceList[6] = x;
-			}
-		}
-		return tmpPieceList;
-	}
-	
-	public List<MouvementIA> genererMouvementsPossibles(Plateau plateau, Point[] pions, JoueurIAFacile ia){
+
+	@Override
+	public List<MouvementIA> genererMouvementsPossibles(Partie partie) {
 		List<MouvementIA> mouvementsJoueur = new ArrayList<>();
-		for (int i = 0; i < 7; i++)
-		{
-			if (deplacementRestant > 0)
-				for (int j = -1; j < 2; j = j + 2)
-				{
-					if (pions[i].changeColumn(j).getColumn() > 0 && pions[i].changeColumn(j).getColumn() < 7)
-					{
-						if (r.obtenirActionDuJoueurSiActionPossible(plateau, pions[i], pions[i].changeColumn(j), ia) == TypeMouvement.DEPLACEMENT)
-						{
-							MouvementIA tmp = new MouvementIA(pions[i], pions[i].changeColumn(j), TypeMouvement.DEPLACEMENT);
+		Plateau p = partie.getPlateau();
+		Point[] pions = p.obtenirPositionDesPions(this);
+
+		for (int i = 0; i < 7; i++) {
+			if (partie.getCptMouvement() < 2)
+				for (int j = -1; j < 2; j = j + 2) {
+					if (pions[i].changeColumn(j).getColumn() > 0 && pions[i].changeColumn(j).getColumn() < 7) {
+						if (r.obtenirActionDuJoueurSiActionPossible(p, pions[i], pions[i].changeColumn(j),
+								this) == TypeMouvement.DEPLACEMENT) {
+							MouvementIA tmp = new MouvementIA(pions[i], pions[i].changeColumn(j),
+									TypeMouvement.DEPLACEMENT, p.obtenirCase(pions[i]));
 							mouvementsJoueur.add(tmp);
 						}
 					}
 
-					if (pions[i].changeRow(j).getRow() >= 0 && pions[i].changeRow(j).getRow() < 7)
-					{
-						if (r.obtenirActionDuJoueurSiActionPossible(plateau, pions[i], pions[i].changeRow(j), ia) == TypeMouvement.DEPLACEMENT)
-						{
-							MouvementIA tmp = new MouvementIA(pions[i], pions[i].changeRow(j), TypeMouvement.DEPLACEMENT);
+					if (pions[i].changeRow(j).getRow() >= 0 && pions[i].changeRow(j).getRow() < 7) {
+						if (r.obtenirActionDuJoueurSiActionPossible(p, pions[i], pions[i].changeRow(j),
+								this) == TypeMouvement.DEPLACEMENT) {
+							MouvementIA tmp = new MouvementIA(pions[i], pions[i].changeRow(j),
+									TypeMouvement.DEPLACEMENT, p.obtenirCase(pions[i]));
 							mouvementsJoueur.add(tmp);
 
 						}
 					}
 
 				}
-				
-			if (!ballePassee)
-				if (r.obtenirActionDuJoueurSiActionPossible(plateau, pions[6], pions[i], ia) == TypeMouvement.PASSE)
-				{
-					MouvementIA tmp = new MouvementIA(pions[6], pions[i], TypeMouvement.PASSE);
+
+			if (!partie.getBalleLancee())
+				if (r.obtenirActionDuJoueurSiActionPossible(p, pions[6], pions[i], this) == TypeMouvement.PASSE) {
+					MouvementIA tmp = new MouvementIA(pions[6], pions[i], TypeMouvement.PASSE, p.obtenirCase(pions[6]));
 					mouvementsJoueur.add(tmp);
 				}
-		
+
 		}
 		return mouvementsJoueur;
 	}
 
-	
 	@Override
-	public ArrayList<MouvementIA> jouerCoup() throws PionBloqueException{
+	public ArrayList<MouvementIA> jouerCoup(Partie partie) throws PionBloqueException, InterruptedException {
 		ArrayList<MouvementIA> listeCoups = new ArrayList<MouvementIA>();
-		//Premiere Action
-		List<MouvementIA> listeMvm1 = genererMouvementsPossibles(plateauActuel, obtenirPositionDesPions(plateauActuel, this), this);
-		MouvementIA mouvementRandom1 = listeMvm1.get(generator.nextInt(listeMvm1.size()));
-		if(listeMvm1.size()==0) throw new PionBloqueException();
-		if(mouvementRandom1.type == TypeMouvement.DEPLACEMENT) deplacementRestant--;
-		else ballePassee=true;
-		plateauActuel.actualiser(mouvementRandom1.src, mouvementRandom1.dest);
-		listeCoups.add(mouvementRandom1);
-		
-		//Deuxieme Action
-		Random generator2 = new Random();
-		List<MouvementIA> listeMvm2 = genererMouvementsPossibles(plateauActuel, obtenirPositionDesPions(plateauActuel, this), this);
-		if(listeMvm2.size()==0) throw new PionBloqueException();
-		MouvementIA mouvementRandom2 = listeMvm2.get(generator2.nextInt(listeMvm2.size()));
-		if(mouvementRandom2.type == TypeMouvement.DEPLACEMENT) deplacementRestant--;
-		else ballePassee=true;
-		plateauActuel.actualiser(mouvementRandom2.src, mouvementRandom2.dest);
-		listeCoups.add(mouvementRandom2);
-		
-		//Troisieme Action
-		Random generator3 = new Random();
-		List<MouvementIA> listeMvm3 = genererMouvementsPossibles(plateauActuel, obtenirPositionDesPions(plateauActuel, this), this);
-		if(listeMvm2.size()==0) throw new PionBloqueException();
-		MouvementIA mouvementRandom3 = listeMvm3.get(generator3.nextInt(listeMvm3.size()));
-		if(mouvementRandom3.type == TypeMouvement.DEPLACEMENT) deplacementRestant--;
-		else ballePassee=true;
-		plateauActuel.actualiser(mouvementRandom3.src, mouvementRandom3.dest);
-		listeCoups.add(mouvementRandom3);
-		
+
+		for (int nbMvt = 0; nbMvt < 3; nbMvt++) {
+			MouvementIA mvt = jouerMouvement(partie);
+			if (mvt != null)
+				listeCoups.add(mvt);
+		}
+
 		return listeCoups;
 	}
-	
-	public void setPlateauActuel(Plateau plateau){
-		plateauActuel = plateau;
-	}
-	
-	public Plateau getPlateauActuel(){
-		return plateauActuel;
+
+	private MouvementIA jouerMouvement(Partie partie) {
+		List<MouvementIA> listeMvm = genererMouvementsPossibles(partie);
+		if (listeMvm.size() != 0) {
+			MouvementIA mouvementRandom = listeMvm.get(generator.nextInt(listeMvm.size()));
+			try {
+				partie.executerMouvement(mouvementRandom.src, mouvementRandom.dest);
+				return mouvementRandom;
+			} catch (ExceptionMouvementIllegal e) {
+			}
+		}
+		return null;
 	}
 
 	@Override
 	public int getNumeroJoueur() {
 		return numJoueur;
 	}
-	
+
 	@Override
 	public String getDifficulte() {
 		return "facile";
 	}
 
-
-	
 }
