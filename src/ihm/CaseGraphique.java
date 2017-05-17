@@ -7,7 +7,7 @@ import javafx.scene.paint.*;
 public class CaseGraphique {
 
 	public static Rectangle rectCase(){
-		Rectangle c = new Rectangle(50,50);
+		Rectangle c = new Rectangle(60,60);
 	    //c.setFill(Color.web("0x33FF33"));
 		c.setFill(Color.WHITE);
 	    c.setStroke(Color.BLACK);
@@ -15,21 +15,21 @@ public class CaseGraphique {
 	}
 	
 	private static Circle pionOrange(){
-		Circle pion = new Circle(22);
+		Circle pion = new Circle(26.4);
 	    pion.setStroke(Color.BLACK);
 	    pion.setFill(Color.web("0xFF8000"));
 	    return pion;
 	}
 	
 	private static Circle pionBleu(){
-		Circle pion = new Circle(22);
+		Circle pion = new Circle(26.4);
 	    pion.setStroke(Color.BLACK);
 	    pion.setFill(Color.web("0x3399FF"));
 	    return pion;
 	}
 	
 	private static Circle balle(){
-		Circle balle = new Circle(12);
+		Circle balle = new Circle(15);
 	    balle.setStroke(Color.BLACK);
 	    balle.setFill(Color.WHITE);
 	    return balle;

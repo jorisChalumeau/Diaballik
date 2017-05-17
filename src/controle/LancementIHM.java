@@ -26,8 +26,8 @@ public class LancementIHM extends Application {
         app.stage = stage;
         
         app.stage.setTitle("Test IHM Diaballik");
-        app.stage.setMinHeight(640);
-        stage.setMinWidth(640);
+        app.stage.setMinHeight(645);
+        stage.setMinWidth(720);
         
 //        ScrollPane sp = new ScrollPane();
          
@@ -48,7 +48,7 @@ public class LancementIHM extends Application {
             s = new Scene(app.b);
             stage.setFullScreen(true);            
         } else {
-            s = new Scene(app.b, 800, 600);
+            s = new Scene(app.b, 800, 610);
         }
         stage.setScene(s);
         
