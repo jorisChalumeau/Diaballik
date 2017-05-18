@@ -15,3 +15,21 @@ IHM + Fonctionnalité Conseils:
 		->Pour humain on annule la dernière action
 -Bouton "Remontrer coup" de l'IA
 -Conseil pour les joueurs
+
+=====================================================================
+
+Audits IHM Conseils:
+-Drag and Drop
+-Enlever si on veut sur les cases possibles
+-Boutons Sauvegarder et charger a part
+-Bouton nouvelle partie avec meme parametre
+-Molette pour les réglages
+-Possibilité de choisir des parametre avant de commencer une partie
+-Bouton pour revenir menu principal 
+-Boutons retour a mettre un peu partout dans les menus
+-Avoir des regmages personalisé qu'on peut retrouver
+-Choisir le nom du joueur ?? A voir 
+-Choisir qui commence
+-Difficulté à afficher 
+-Bouton fin de tour annuler refaire et tout a mettre au milieu a droite de la fenetre (a coté de la grille)
+-Grille plus grande mais bouton de bonne taille
