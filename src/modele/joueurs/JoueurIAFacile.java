@@ -8,19 +8,17 @@ import modele.*;
 import modele.tests.Regles;
 
 public class JoueurIAFacile extends JoueurIA {
-	Regles r;
-	Random generator;
 
 	public JoueurIAFacile(int numJoueur) {
-		this.numJoueur = numJoueur;
-		r = new Regles();
-		generator = new Random();
+		super(numJoueur);
+		this.difficulte = "facile";
 	}
 
 	@Override
 	public List<MouvementIA> genererMouvementsPossibles(Partie partie) {
 		List<MouvementIA> mouvementsJoueur = new ArrayList<>();
 		Plateau p = partie.getPlateau();
+		Regles r = partie.getRegles();
 		Point[] pions = p.obtenirPositionDesPions(this);
 
 		for (int i = 0; i < 7; i++) {
@@ -58,39 +56,13 @@ public class JoueurIAFacile extends JoueurIA {
 	}
 
 	@Override
-	public ArrayList<MouvementIA> jouerCoup(Partie partie) throws PionBloqueException, InterruptedException {
-		ArrayList<MouvementIA> listeCoups = new ArrayList<MouvementIA>();
-
-		for (int nbMvt = 0; nbMvt < 3; nbMvt++) {
-			MouvementIA mvt = jouerAction(partie);
-			if (mvt != null)
-				listeCoups.add(mvt);
-		}
-
-		return listeCoups;
-	}
-
-	private MouvementIA jouerAction(Partie partie) {
-		List<MouvementIA> listeMvm = genererMouvementsPossibles(partie);
-		if (listeMvm.size() != 0) {
-			MouvementIA mouvementRandom = listeMvm.get(generator.nextInt(listeMvm.size()));
-			try {
-				partie.executerMouvement(mouvementRandom.src, mouvementRandom.dest);
-				return mouvementRandom;
-			} catch (ExceptionMouvementIllegal e) {
-			}
-		}
-		return null;
-	}
-
-	@Override
 	public int getNumeroJoueur() {
 		return numJoueur;
 	}
 
 	@Override
 	public String getDifficulte() {
-		return "facile";
+		return difficulte;
 	}
 
 }

@@ -32,6 +32,7 @@ public class Partie {
 	private Joueur joueur2;
 	private int cptMouvement = 0;
 	private Regles r;
+	private double vitesseIA = 1;
 
 	public Partie() {
 		this.p = new Plateau();
@@ -45,7 +46,31 @@ public class Partie {
 		this.p = new Plateau();
 		this.r = new Regles();
 		this.joueur1 = new JoueurHumain(1);
-		this.joueur2 = JoueurIA.creerIAFacile(2);
+		this.joueur2 = JoueurIA.creerIA(2, difficulte);
+		this.joueurActuel = joueur1;
+	}
+
+	public Partie(int inv, String difficulte) {
+		if (inv == -1) {
+			this.p = new Plateau();
+			this.r = new Regles();
+			this.joueur1 = JoueurIA.creerIA(1, difficulte);
+			this.joueur2 = new JoueurHumain(2);
+			this.joueurActuel = joueur1;
+		} else {
+			this.p = new Plateau();
+			this.r = new Regles();
+			this.joueur1 = new JoueurHumain(1);
+			this.joueur2 = JoueurIA.creerIA(2, difficulte);
+			this.joueurActuel = joueur1;
+		}
+	}
+
+	public Partie(String dif1, String dif2) {
+		this.p = new Plateau();
+		this.r = new Regles();
+		this.joueur1 = JoueurIA.creerIA(1, dif1);
+		this.joueur2 = JoueurIA.creerIA(2, dif2);
 		this.joueurActuel = joueur1;
 	}
 
@@ -219,7 +244,7 @@ public class Partie {
 				this.joueur1 = new JoueurHumain(1);
 				break;
 			default:
-				this.joueur1 = JoueurIA.creerIAFacile(1);
+				this.joueur1 = JoueurIA.creerIA(1, difficulte);
 			}
 
 			// creation joueur2
@@ -229,7 +254,7 @@ public class Partie {
 				this.joueur2 = new JoueurHumain(2);
 				break;
 			default:
-				this.joueur2 = JoueurIA.creerIAFacile(2);
+				this.joueur2 = JoueurIA.creerIA(2, difficulte);
 			}
 
 			// TODO : ajout historique de coups, etc.
@@ -341,4 +366,15 @@ public class Partie {
 		return cptMouvement;
 	}
 
+	public Regles getRegles() {
+		return this.r;
+	}
+
+	public void setVitesseIA(double vitesse) {
+		this.vitesseIA = vitesse;
+	}
+
+	public double getVitesseIA() {
+		return vitesseIA;
+	}
 }

@@ -15,30 +15,15 @@ import modele.tests.Regles;
 public class JoueurHumain implements Joueur {
 
 	private int numJoueur;
-	Regles r;
-	List<Point> piecesPositions;
-
-	Random generator;
-	private int deplacementRestant;
-	private boolean ballePassee;
 
 	public JoueurHumain(int numJ) {
-		// TODO Auto-generated method stub
 		this.numJoueur = numJ;
-		r = new Regles();
-		piecesPositions = new ArrayList<>();
-
-		generator = new Random();
-		deplacementRestant = 2;
-		ballePassee = false;
-
 	}
 
 	@Override
 	public ArrayList<MouvementIA> jouerCoup(Partie partie) throws PionBloqueException {
-		return null;
 		// TODO Auto-generated method stub
-
+		return null;
 	}
 
 	public List<MouvementIA> genererMouvementsPossibles(Plateau plateau, Point[] pions, JoueurIA ia) {

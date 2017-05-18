@@ -31,7 +31,7 @@ public class boutonPresse implements EventHandler<ActionEvent> {
 	public void handle(ActionEvent event) {
 
 		switch (numero) {
-		
+
 		case 1: // Bouton Mode 2 joueurs
 
 			app.setDiaballik(CreateurPartie.creerPartie2Humains());
@@ -56,14 +56,14 @@ public class boutonPresse implements EventHandler<ActionEvent> {
 			break;
 
 		case 5: // Bouton première difficulté
-			app.setDiaballik(CreateurPartie.creerPartieIAFacile());
+			app.setDiaballik(CreateurPartie.creerPartieIA("facile"));
 			// Modèle : Charger le modèle avec 1 joueur humain et une IA Facile
 			// Vue : Afficher la "fenêtre jeu"
 			app.afficherFenetreJeu();
 			break;
 
 		case 6: // Bouton deuxième difficulté
-
+			app.setDiaballik(CreateurPartie.creerPartieIA("moyen"));
 			// Modèle : Charger le modèle avec 1 joueur humain et une IA Moyenne
 			// Vue : Afficher la "fenêtre jeu"
 			app.afficherFenetreJeu();
@@ -90,69 +90,18 @@ public class boutonPresse implements EventHandler<ActionEvent> {
 			break;
 
 		case 16: // Bouton Recommencer
-			//Regarder type de partie dans modèle + éventuelle config
-			//Lancer une nouvelle partie
+			// Regarder type de partie dans modèle + éventuelle config
+			// Lancer une nouvelle partie
 			break;
-			
+
 		case 17: // Bouton Reprendre
 			app.cacherMenuPause();
 			break;
-		
-		
 
 		default:
 			// faire une exception??
 		}
 
 	}
-
-	private void lancerFinDeTour() {
-		app.getDiaballik().finDeTour();
-		app.afficherMessageTourDuJoueur(app.getDiaballik().getNumJoueurCourant());
-		// on désélectionne si qqch est encore sélectionné
-		app.deselection();
-	}
-
-	private void faireJouerIA() {
-		ArrayList<MouvementIA> listeCoups = app.getDiaballik().jouerIA();
-
-		if (listeCoups == null) {
-			System.out.println("l'ia n'a pas trouvé de coup");
-			lancerFinDeTour();
-		} else {
-			Iterator<MouvementIA> it = listeCoups.iterator();
-
-			// espacer chaque coup de l'IA de 2s pour les rendre plus "visibles"
-			PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
-			pause.setOnFinished(event -> {
-				// déclenché à la fin du timer de 2s
-				MouvementIA mvt = it.next();
-				int numeroSrc = app.pointToNumCase(mvt.src);
-				int numeroDest = app.pointToNumCase(mvt.dest);
-
-				if (mvt.caseSrc == Case.PION_BLANC) {
-					app.deplacementOrange(numeroSrc, numeroDest);
-				}
-				if (mvt.caseSrc == Case.PION_NOIR) {
-					app.deplacementBleu(numeroSrc, numeroDest);
-				}
-				if (mvt.caseSrc == Case.PION_BLANC_AVEC_BALLON) {
-					app.passeOrange(numeroSrc, numeroDest);
-				}
-				if (mvt.caseSrc == Case.PION_NOIR_AVEC_BALLON) {
-					app.passeBleu(numeroSrc, numeroDest);
-				}
-				if (it.hasNext())
-					pause.play();
-				else
-					// fin du tour de l'ia après un délai pour qu'il ait le
-					// temps de jouer
-					lancerFinDeTour();
-			});
-
-			if (it.hasNext()) {
-				pause.play();
-			}
-		}
-	}
+	
 }

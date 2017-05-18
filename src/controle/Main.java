@@ -13,7 +13,7 @@ public class Main extends Application {
 
 	public static void main(String[] args) throws ExceptionMouvementIllegal, FileNotFoundException {
 		// TODO Auto-generated method stub
-		Partie diaballik = CreateurPartie.creerPartieIAFacile();
+		Partie diaballik = CreateurPartie.creerPartieIA("facile");
 		//Tour du joueur 1 qui est humain 
 		Point pointA = new Point(0, 4);
 		Point pointB = new Point(1, 4);

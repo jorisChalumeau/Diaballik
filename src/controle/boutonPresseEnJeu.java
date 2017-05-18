@@ -19,7 +19,6 @@ import javafx.event.ActionEvent;
 
 public class boutonPresseEnJeu implements EventHandler<ActionEvent> {
 
-	
 	Affichage app;
 	int numero;
 
@@ -30,85 +29,81 @@ public class boutonPresseEnJeu implements EventHandler<ActionEvent> {
 
 	@Override
 	public void handle(ActionEvent event) {
-		if (!app.estEnPause()){ //Si la partie n'est pas en pause
+		if (!app.estEnPause()) { // Si la partie n'est pas en pause
 			switch (numero) {
-				case 10: // Bouton Fin de tour
-					if (!app.getDiaballik().partieFinie()) {
-						lancerFinDeTour();
-						if (app.getDiaballik().tourIA()) {
-							faireJouerIA();
-						}
+			case 10: // Bouton Fin de tour
+				if (!app.getDiaballik().tourIA()) {
+					lancerFinDeTour();
+					if (app.getDiaballik().tourIA()) {
+						faireJouerIA();
 					}
-					break;
-				
-				case 11: // Bouton pause
-					app.afficherMenuPause();
-					break;
-				
-				case 12: // Bouton Aide
-		
-					break;
-				
-				case 13: // Bouton Annuler
-		
-					break;
-				
-				case 14: // Bouton RemontrerIA
-		
-					break;
-				
-				case 15: // Bouton Refaire
-		
-					break;		
-	
-				default:
-					// faire une exception??
+				}
+				break;
+
+			case 11: // Bouton pause
+				app.afficherMenuPause();
+				break;
+
+			case 12: // Bouton Aide
+
+				break;
+
+			case 13: // Bouton Annuler
+
+				break;
+
+			case 14: // Bouton RemontrerIA
+
+				break;
+
+			case 15: // Bouton Refaire
+
+				break;
+
+			default:
+				// faire une exception??
 			}
 		}
 	}
 
 	private void lancerFinDeTour() {
-		app.getDiaballik().finDeTour();
-		app.afficherMessageTourDuJoueur(app.getDiaballik().getNumJoueurCourant());
-		// on désélectionne si qqch est encore sélectionné
-		app.deselection();
+		if (!app.getDiaballik().partieFinie()) {
+			app.getDiaballik().finDeTour();
+			app.afficherMessageTourDuJoueur(app.getDiaballik().getNumJoueurCourant());
+			// on désélectionne si qqch est encore sélectionné
+			app.deselection();
+		}
 	}
 
 	private void faireJouerIA() {
 		ArrayList<MouvementIA> listeCoups = app.getDiaballik().jouerIA();
 
 		if (listeCoups == null) {
-			System.out.println("l'ia n'a pas trouvé de coup");
+			System.out.println("l'IA n'a pas trouvé de coup");
 			lancerFinDeTour();
 		} else {
 			Iterator<MouvementIA> it = listeCoups.iterator();
 
 			// espacer chaque coup de l'IA de 2s pour les rendre plus "visibles"
-			PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
+			PauseTransition pause = new PauseTransition(Duration.seconds(1.5 / app.getDiaballik().getVitesseIA()));
 			pause.setOnFinished(event -> {
 				// déclenché à la fin du timer de 2s
 				MouvementIA mvt = it.next();
 				int numeroSrc = app.pointToNumCase(mvt.src);
 				int numeroDest = app.pointToNumCase(mvt.dest);
 
-				if (mvt.caseSrc == Case.PION_BLANC) {
-					app.deplacementOrange(numeroSrc, numeroDest);
-				}
-				if (mvt.caseSrc == Case.PION_NOIR) {
-					app.deplacementBleu(numeroSrc, numeroDest);
-				}
-				if (mvt.caseSrc == Case.PION_BLANC_AVEC_BALLON) {
-					app.passeOrange(numeroSrc, numeroDest);
-				}
-				if (mvt.caseSrc == Case.PION_NOIR_AVEC_BALLON) {
-					app.passeBleu(numeroSrc, numeroDest);
-				}
+				app.jouerActionIHM(mvt.caseSrc, numeroSrc, numeroDest);
+
 				if (it.hasNext())
 					pause.play();
-				else
+				else {
+					// test si l'IA a gagné la partie
+					app.testFinal();
+
 					// fin du tour de l'ia après un délai pour qu'il ait le
 					// temps de jouer
 					lancerFinDeTour();
+				}
 			});
 
 			if (it.hasNext()) {

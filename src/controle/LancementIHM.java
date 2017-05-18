@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 
-public class LancementIHM extends Application {	
+public class LancementIHM extends Application {
 	/*public static Partie diaballik;
 	public static Point dernierPionChoisi;
 	public static int numeroCase;

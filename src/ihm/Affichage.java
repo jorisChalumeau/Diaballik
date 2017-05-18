@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.WindowEvent;
+import modele.Case;
 import modele.Partie;
 import modele.Point;
 import javafx.geometry.*;
@@ -406,7 +407,7 @@ public class Affichage {
 			return enPause;
 		}
 		
-		public void deplacementOrange(int n1, int n2){
+		private void deplacementOrange(int n1, int n2){
 			plateau[n2] = CaseGraphique.caseOrange(cases[n2]);
 		    grille.add(plateau[n2], n2%7, n2/7);
 		    plateau[n2].setOnMouseClicked(new clicSurCase(this,n2,cases));
@@ -415,7 +416,7 @@ public class Affichage {
 		    plateau[n1].setOnMouseClicked(new clicSurCase(this,n1,cases));
 		}
 		
-		public void deplacementBleu(int n1, int n2){
+		private void deplacementBleu(int n1, int n2){
 			plateau[n2] = CaseGraphique.caseBleu(cases[n2]);
 		    grille.add(plateau[n2], n2%7, n2/7);
 		    plateau[n2].setOnMouseClicked(new clicSurCase(this,n2,cases));
@@ -424,7 +425,7 @@ public class Affichage {
 		    plateau[n1].setOnMouseClicked(new clicSurCase(this,n1,cases));
 		}
 		
-		public void passeOrange(int n1, int n2){
+		private void passeOrange(int n1, int n2){
 			plateau[n2] = CaseGraphique.caseOrangeBalle(cases[n2]);
 		    grille.add(plateau[n2], n2%7, n2/7);
 		    plateau[n2].setOnMouseClicked(new clicSurCase(this,n2,cases));
@@ -433,7 +434,7 @@ public class Affichage {
 		    plateau[n1].setOnMouseClicked(new clicSurCase(this,n1,cases));
 		}
 		
-		public void passeBleu(int n1, int n2){
+		private void passeBleu(int n1, int n2){
 			plateau[n2] = CaseGraphique.caseBleuBalle(cases[n2]);
 		    grille.add(plateau[n2], n2%7, n2/7);
 		    plateau[n2].setOnMouseClicked(new clicSurCase(this,n2,cases));
@@ -473,5 +474,36 @@ public class Affichage {
 		public Point numCaseToPoint(int numCase){
 			int numModele = 48 - numCase;
 			return new Point(numModele / 7, numModele % 7);
+		}
+
+		public void testFinal() {
+			if (this.getDiaballik().partieFinie()) {
+				System.out.println("\n\n\n######################################\n\nLe joueur "
+						+ this.getDiaballik().getNumJoueurCourant()
+						+ " a gagné\n\n######################################");
+			}
+		}
+
+		// effectue le déplacement ou la passe au niveau de l'IHM
+		public void jouerActionIHM(Case typePionSource, int numeroCaseSrc, int numeroCaseDest) {
+			switch (typePionSource) {
+			case PION_BLANC:
+				this.deplacementOrange(numeroCaseSrc, numeroCaseDest);
+				break;
+			case PION_NOIR:
+				this.deplacementBleu(numeroCaseSrc, numeroCaseDest);
+				break;
+			case PION_BLANC_AVEC_BALLON:
+				this.passeOrange(numeroCaseSrc, numeroCaseDest);
+				break;
+			case PION_NOIR_AVEC_BALLON:
+				this.passeBleu(numeroCaseSrc, numeroCaseDest);
+				break;
+			default:
+				break;
+			}
+			
+			// TODO : actualiser l'affichage du nb de déplacements / passes restants
+			
 		}
 }
