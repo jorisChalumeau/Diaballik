@@ -68,7 +68,7 @@ public class Regles {
 	}
 
 	private boolean checkCasGagnant(Partie p) {
-		if (p.getNumJoueurCourant() == 1) {
+		if (p.getNumJoueurActuel() == 1) {
 			for (int i = 0; i < 7; i++) {
 				if (Case.PION_BLANC_AVEC_BALLON.equals(p.getPlateau().obtenirCase(new Point(6, i)))) {
 					return true;
@@ -87,7 +87,7 @@ public class Regles {
 	private boolean checkCasAntijeu(Partie p) {
 		// TODO
 		Point[] listeDesPions = new Point[7];
-		if (p.getJoueurCourant().equals(p.getJ1())) {
+		if (p.getJoueurActuel().equals(p.getJ1())) {
 			listeDesPions = p.getPlateau().obtenirPositionDesPions(p.getJ2());
 		} else
 			listeDesPions = p.getPlateau().obtenirPositionDesPions(p.getJ1());

@@ -16,7 +16,7 @@ public class Main extends Application {
 		// Tour du joueur 1 qui est humain
 		Point pointA = new Point(0, 4);
 		Point pointB = new Point(1, 4);
-		diaballik.executerMouvement(pointA, pointB);
+		diaballik.executerAction(pointA, pointB);
 		diaballik.finDeTour();
 		diaballik.getPlateau().Afficher();
 		// A l'IA de jouer
@@ -26,7 +26,7 @@ public class Main extends Application {
 		pointA = new Point(0, 3);
 		pointB = new Point(0, 5);
 		try {
-			diaballik.executerMouvement(pointA, pointB);
+			diaballik.executerAction(pointA, pointB);
 		} catch (ExceptionMouvementIllegal e) {
 
 		}

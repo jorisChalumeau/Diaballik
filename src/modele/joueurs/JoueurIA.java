@@ -60,7 +60,7 @@ public abstract class JoueurIA implements Joueur {
 		if (listeMvm.size() != 0) {
 			MouvementIA mouvementRandom = listeMvm.get(generator.nextInt(listeMvm.size()));
 			try {
-				partie.executerMouvement(mouvementRandom.src, mouvementRandom.dest);
+				partie.executerAction(mouvementRandom.src, mouvementRandom.dest);
 				return mouvementRandom;
 			} catch (ExceptionMouvementIllegal e) {
 				return null;

@@ -35,7 +35,7 @@ public class boutonPresseEnJeu implements EventHandler<ActionEvent> {
 				break;
 
 			case 13: // Bouton Annuler
-
+				controleur.annulerCoup();
 				break;
 
 			case 14: // Bouton RemontrerIA
@@ -43,7 +43,7 @@ public class boutonPresseEnJeu implements EventHandler<ActionEvent> {
 				break;
 
 			case 15: // Bouton Refaire
-
+				controleur.refaireCoup();
 				break;
 
 			default:

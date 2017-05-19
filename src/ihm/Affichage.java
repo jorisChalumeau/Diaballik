@@ -300,8 +300,8 @@ public class Affichage {
 		textePassesRestantes.setStyle("-fx-font-size: 24; -fx-text-fill: black;");
 
 		// LES MENU PAUSE ET FIN DE PARTIE
-		setMenuPause(initMenuPause(controleur));
-		getMenuPause().setVisible(false);
+		menuPause = initMenuPause(controleur);
+		menuPause.setVisible(false);
 
 		// On met tous les composants graphiques dans une grille "Fenêtre"
 		GridPane Fenetre = new GridPane();

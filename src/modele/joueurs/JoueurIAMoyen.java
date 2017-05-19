@@ -45,7 +45,7 @@ public class JoueurIAMoyen extends JoueurIA {
 
 				}
 
-			if (!partie.getBalleLancee())
+			if (!partie.isBalleLancee())
 				if (r.obtenirActionDuJoueurSiActionPossible(p, pions[6], pions[i], this) == TypeMouvement.PASSE) {
 					MouvementIA tmp = new MouvementIA(pions[6], pions[i], TypeMouvement.PASSE, p.obtenirCase(pions[6]));
 					mouvementsJoueur.add(tmp);
@@ -64,7 +64,7 @@ public class JoueurIAMoyen extends JoueurIA {
 		if (listeMvm.size() != 0) {
 			MouvementIA mouvementRandom = listeMvm.get(generator.nextInt(listeMvm.size()));
 			try {
-				partie.executerMouvement(mouvementRandom.src, mouvementRandom.dest);
+				partie.executerAction(mouvementRandom.src, mouvementRandom.dest);
 				return mouvementRandom;
 			} catch (ExceptionMouvementIllegal e) {
 				return null;

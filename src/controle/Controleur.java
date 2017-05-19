@@ -1,6 +1,5 @@
 package controle;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -12,6 +11,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import modele.Case;
+import modele.Coup;
+import modele.ExceptionMouvementIllegal;
 import modele.MouvementIA;
 import modele.Partie;
 import modele.Point;
@@ -106,7 +107,7 @@ public class Controleur {
 	public void jouerCoupHumain(int numero) {
 		Point dest = numCaseToPoint(numero);
 		try {
-			Case typePionSource = diaballik.executerMouvement(pointPionSelectionne, dest);
+			Case typePionSource = diaballik.executerAction(pointPionSelectionne, dest);
 			int numeroCaseSrc = pointToNumCase(pointPionSelectionne);
 			jouerActionIHM(typePionSource, numeroCaseSrc, numero);
 		} catch (Exception e) {
@@ -137,7 +138,7 @@ public class Controleur {
 			deselection();
 
 			diaballik.finDeTour();
-			afficherMessageTourDuJoueur(diaballik.getNumJoueurCourant());
+			afficherMessageTourDuJoueur(diaballik.getNumJoueurActuel());
 		}
 	}
 
@@ -177,6 +178,32 @@ public class Controleur {
 			}
 		}
 	}
+	
+	public void annulerCoup(){
+		deselection();
+		
+		if(!diaballik.getHistorique().isEmpty()){
+			Coup action = diaballik.getHistorique().peek();
+			
+			// si le dernier coup n'a pas été joué par le joueur actuel
+			if(action.getJoueur().getNumeroJoueur() != diaballik.getNumJoueurActuel())
+				lancerFinDeTour();
+			
+			try {
+				Case typePionSource = diaballik.annulerAction();
+				int numeroCaseSrc = pointToNumCase(action.getDest());
+				int numeroCaseDest = pointToNumCase(action.getSrc());
+				jouerActionIHM(typePionSource, numeroCaseSrc, numeroCaseDest);
+			} catch (ExceptionMouvementIllegal e) {
+				System.out.println("déplacement impossible");
+			}
+		}
+		
+	}
+	
+	public void refaireCoup(){
+		
+	}
 
 	public Partie getDiaballik() {
 		return diaballik;
@@ -214,7 +241,7 @@ public class Controleur {
 	private void testFinal() {
 		if (this.getDiaballik().partieFinie()) {
 			System.out.println("\n\n\n######################################\n\nLe joueur "
-					+ this.getDiaballik().getNumJoueurCourant() + " a gagné\n\n######################################");
+					+ this.getDiaballik().getNumJoueurActuel() + " a gagné\n\n######################################");
 		}
 	}
 
@@ -248,6 +275,10 @@ public class Controleur {
 	public void lancerFenetreJeu() {
 		this.ihm.afficherFenetreJeu(this);
 		this.cacherMenuPause(); // s'assurer que la partie n'est pas en pause
+		
+		// si le joueur 1 est un IA
+		if(diaballik.tourIA())
+			faireJouerIA();
 	}
 
 }

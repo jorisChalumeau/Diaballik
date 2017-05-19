@@ -44,7 +44,7 @@ public class JoueurIAFacile extends JoueurIA {
 
 				}
 
-			if (!partie.getBalleLancee())
+			if (!partie.isBalleLancee())
 				if (r.obtenirActionDuJoueurSiActionPossible(p, pions[6], pions[i], this) == TypeMouvement.PASSE) {
 					MouvementIA tmp = new MouvementIA(pions[6], pions[i], TypeMouvement.PASSE, p.obtenirCase(pions[6]));
 					mouvementsJoueur.add(tmp);

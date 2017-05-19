@@ -2,8 +2,10 @@ package modele;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Stack;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -11,7 +13,10 @@ import org.json.simple.parser.ParseException;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 
+import controle.Controleur;
 import modele.joueurs.Joueur;
 import modele.joueurs.JoueurHumain;
 import modele.joueurs.JoueurIA;
@@ -31,10 +36,14 @@ public class Partie {
 	private int cptMouvement = 0;
 	private Regles r;
 	private double vitesseIA = 1;
+	private Stack<Coup> historique;
+	private Stack<Coup> historiqueSupprime;
 
 	public Partie() {
 		this.p = new Plateau();
 		this.r = new Regles();
+		this.historique = new Stack<Coup>();
+		this.historiqueSupprime = new Stack<Coup>();
 		this.joueur1 = new JoueurHumain(1);
 		this.joueur2 = new JoueurHumain(2);
 		this.joueurActuel = joueur1;
@@ -43,45 +52,37 @@ public class Partie {
 	public Partie(String difficulte) {
 		this.p = new Plateau();
 		this.r = new Regles();
+		this.historique = new Stack<Coup>();
+		this.historiqueSupprime = new Stack<Coup>();
 		this.joueur1 = new JoueurHumain(1);
 		this.joueur2 = JoueurIA.creerIA(2, difficulte);
 		this.joueurActuel = joueur1;
 	}
 
 	public Partie(int inv, String difficulte) {
+		this.p = new Plateau();
+		this.r = new Regles();
+		this.historique = new Stack<Coup>();
+		this.historiqueSupprime = new Stack<Coup>();
+
 		if (inv == -1) {
-			this.p = new Plateau();
-			this.r = new Regles();
 			this.joueur1 = JoueurIA.creerIA(1, difficulte);
 			this.joueur2 = new JoueurHumain(2);
-			this.joueurActuel = joueur1;
 		} else {
-			this.p = new Plateau();
-			this.r = new Regles();
 			this.joueur1 = new JoueurHumain(1);
 			this.joueur2 = JoueurIA.creerIA(2, difficulte);
-			this.joueurActuel = joueur1;
 		}
+		this.joueurActuel = joueur1;
 	}
 
 	public Partie(String dif1, String dif2) {
 		this.p = new Plateau();
 		this.r = new Regles();
+		this.historique = new Stack<Coup>();
+		this.historiqueSupprime = new Stack<Coup>();
 		this.joueur1 = JoueurIA.creerIA(1, dif1);
 		this.joueur2 = JoueurIA.creerIA(2, dif2);
 		this.joueurActuel = joueur1;
-	}
-
-	public int getNumJoueurCourant() {
-		return joueurActuel.getNumeroJoueur();
-	}
-
-	public Joueur getJoueurCourant() {
-		return joueurActuel;
-	}
-
-	public Plateau getPlateau() {
-		return p;
 	}
 
 	// renvoie la liste des points où le joueur peut effectuer une action avec
@@ -186,23 +187,43 @@ public class Partie {
 		p.actualiser(src, dest);
 	}
 
-	public void sauvegarder(String filepath) throws FileNotFoundException {
-		// tuto : https://www.tutorialspoint.com/json/json_java_example.htm
+	public static void sauvegarder(Partie partie, String filepath) {
+		JsonWriter writer;
 
-		Gson gson = new GsonBuilder().registerTypeAdapter(Joueur.class, new InterfaceAdapter<Joueur>())
-				.registerTypeAdapter(Test.class, new InterfaceAdapter<Test>()).create();
-		
-		// Partie to json :
-		String jsonString = gson.toJson(this, Partie.class);
+		try {
+			// on ouvre le fichier en ecriture
+			writer = new JsonWriter(new FileWriter(filepath));
+
+			Gson gson = new GsonBuilder().registerTypeAdapter(Joueur.class, new InterfaceAdapter<Joueur>())
+					.registerTypeAdapter(Test.class, new InterfaceAdapter<Test>()).create();
+
+			// Partie to json => on l'ecrit dans le fichier
+			gson.toJson(partie, Partie.class, writer);
+
+		} catch (IOException e) {
+			System.out.println("impossible d'ecrire dans le fichier");
+		}
+
 	}
 
-	public void charger(String filepath) {
-		
-		Gson gson = new GsonBuilder().registerTypeAdapter(Joueur.class, new InterfaceAdapter<Joueur>())
-				.registerTypeAdapter(Test.class, new InterfaceAdapter<Test>()).create();
-		// json to Partie :
-		// Partie partie = gson.fromJson(jsonString, Partie.class);
+	public static Partie charger(String filepath) {
+		Partie partie = null;
+		JsonReader reader = null;
 
+		try {
+			// on ouvre le fichier en lecture
+			reader = new JsonReader(new FileReader(filepath));
+
+			Gson gson = new GsonBuilder().registerTypeAdapter(Joueur.class, new InterfaceAdapter<Joueur>())
+					.registerTypeAdapter(Test.class, new InterfaceAdapter<Test>()).create();
+
+			// on lit dans le fichier => json to Partie
+			partie = gson.fromJson(reader, Partie.class);
+		} catch (FileNotFoundException e) {
+			System.out.println("fichier introuvable");
+		}
+
+		return partie;
 	}
 
 	public Case getCase(Point position) {
@@ -222,32 +243,56 @@ public class Partie {
 		}
 	}
 
-	public Joueur getJ1() {
-		return joueur1;
-	}
-
-	public Joueur getJ2() {
-		return joueur2;
-	}
-
-	public Case executerMouvement(Point src, Point dest) throws ExceptionMouvementIllegal {
+	public Case executerAction(Point src, Point dest) throws ExceptionMouvementIllegal {
 		Case caseSrc = p.obtenirCase(src);
 		int distance = compterMvtEffectues(src, dest);
-
 		TypeMouvement currentMove = r.obtenirActionDuJoueurSiActionPossible(this.p, src, dest, this.joueurActuel);
-		if (TypeMouvement.MOUVEMENT_ILLEGAL.equals(currentMove)) {
+
+		switch (currentMove) {
+		case DEPLACEMENT:
+			if (cptMouvement + distance <= 2) {
+				cptMouvement += distance;
+				realiserAction(src, dest);
+				// on ajoute l'action dans l'historique des coups
+				historique.push(new Coup(joueurActuel, src, dest, currentMove, cptMouvement));
+				return caseSrc;
+			} else
+				throw new ExceptionMouvementIllegal();
+		case PASSE:
+			if (!balleLancee) {
+				balleLancee = true;
+				realiserAction(src, dest);
+				// on ajoute l'action dans l'historique des coups
+				historique.push(new Coup(joueurActuel, src, dest, currentMove, cptMouvement));
+				return caseSrc;
+			} else
+				throw new ExceptionMouvementIllegal();
+		default:
 			throw new ExceptionMouvementIllegal();
-		} else if (TypeMouvement.PASSE.equals(currentMove) && !balleLancee) {
-			balleLancee = true;
-			realiserAction(src, dest);
-			// TODO : ajouter l'action dans l'historique des coups
+		}
+	}
+
+	public Case annulerAction() throws ExceptionMouvementIllegal {
+
+		Coup action = historique.pop();
+
+		Case caseSrc = p.obtenirCase(action.getDest());
+		int distance = compterMvtEffectues(action.getDest(), action.getSrc());
+
+		switch (action.getTypeMvt()) {
+		case DEPLACEMENT:
+			cptMouvement = action.getCptMouvement() - distance;
+			realiserAction(action.getDest(), action.getSrc());
+			// on ajoute l'action dans l'historique des coups
+			historiqueSupprime.push(action);
 			return caseSrc;
-		} else if (TypeMouvement.DEPLACEMENT.equals(currentMove) && (cptMouvement + distance <= 2)) {
-			cptMouvement += distance;
-			realiserAction(src, dest);
-			// TODO : ajouter l'action dans l'historique des coups
+		case PASSE:
+			balleLancee = false;
+			realiserAction(action.getDest(), action.getSrc());
+			// on ajoute l'action dans l'historique des coups
+			historiqueSupprime.push(action);
 			return caseSrc;
-		} else {
+		default:
 			throw new ExceptionMouvementIllegal();
 		}
 	}
@@ -278,10 +323,6 @@ public class Partie {
 		balleLancee = false;
 	}
 
-	public boolean laPartieEstEnCours() {
-		return partieEnCours;
-	}
-
 	public boolean partieFinie() {
 		return r.checkGameIsOver(this);
 	}
@@ -294,30 +335,93 @@ public class Partie {
 		return (joueurActuel instanceof JoueurIA);
 	}
 
-	public boolean getBalleLancee() {
-		return balleLancee;
-	}
-
-	public int getCptMouvement() {
-		return cptMouvement;
-	}
-
-	public Regles getRegles() {
-		return this.r;
-	}
-
-	public void setVitesseIA(double vitesse) {
-		this.vitesseIA = vitesse;
-	}
-
-	public double getVitesseIA() {
-		return vitesseIA;
-	}
-
 	public boolean tourFini() {
 		if (cptMouvement == 2 && balleLancee)
 			return true;
 		return false;
 	}
 
+	public int getNumJoueurActuel() {
+		return joueurActuel.getNumeroJoueur();
+	}
+
+	public Plateau getPlateau() {
+		return p;
+	}
+
+	public void setPlateau(Plateau p) {
+		this.p = p;
+	}
+
+	public boolean isPartieEnCours() {
+		return partieEnCours;
+	}
+
+	public void setPartieEnCours(boolean partieEnCours) {
+		this.partieEnCours = partieEnCours;
+	}
+
+	public Joueur getJoueurActuel() {
+		return joueurActuel;
+	}
+
+	public void setJoueurCourant(Joueur joueurActuel) {
+		this.joueurActuel = joueurActuel;
+	}
+
+	public boolean isBalleLancee() {
+		return balleLancee;
+	}
+
+	public void setBalleLancee(boolean balleLancee) {
+		this.balleLancee = balleLancee;
+	}
+
+	public Joueur getJ1() {
+		return joueur1;
+	}
+
+	public void setJ1(Joueur joueur1) {
+		this.joueur1 = joueur1;
+	}
+
+	public Joueur getJ2() {
+		return joueur2;
+	}
+
+	public void setJ2(Joueur joueur2) {
+		this.joueur2 = joueur2;
+	}
+
+	public int getCptMouvement() {
+		return cptMouvement;
+	}
+
+	public void setCptMouvement(int cptMouvement) {
+		this.cptMouvement = cptMouvement;
+	}
+
+	public Regles getRegles() {
+		return r;
+	}
+
+	public void setRegles(Regles r) {
+		this.r = r;
+	}
+
+	public double getVitesseIA() {
+		return vitesseIA;
+	}
+
+	public void setVitesseIA(double vitesseIA) {
+		this.vitesseIA = vitesseIA;
+	}
+
+	public Stack<Coup> getHistorique() {
+		return historique;
+	}
+
+	public void setHistorique(Stack<Coup> historique) {
+		this.historique = historique;
+	}
 }
