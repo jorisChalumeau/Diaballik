@@ -19,10 +19,7 @@ public class boutonPresseEnJeu implements EventHandler<ActionEvent> {
 			switch (numero) {
 			case 10: // Bouton Fin de tour
 				if (!controleur.getDiaballik().tourIA()) {
-					controleur.lancerFinDeTour();
-					if (controleur.getDiaballik().tourIA()) {
-						controleur.faireJouerIA();
-					}
+					controleur.triggerFinTour();
 				}
 				break;
 

@@ -1,7 +1,9 @@
 package controle;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Stack;
 
 import ihm.Affichage;
 import ihm.CaseGraphique;
@@ -28,7 +30,7 @@ public class Controleur {
 		pointPionSelectionne = null;
 	}
 
-	public void afficherMessageTourDuJoueur(int joueur) {
+	private void afficherMessageTourDuJoueur(int joueur) {
 		if (joueur == 1) {
 			ihm.getTexteTourJ1().setVisible(true);
 			ihm.getTexteTourJ2().setVisible(false);
@@ -109,6 +111,7 @@ public class Controleur {
 		try {
 			Case typePionSource = diaballik.executerAction(pointPionSelectionne, dest);
 			int numeroCaseSrc = pointToNumCase(pointPionSelectionne);
+			reinitHistorique();
 			jouerActionIHM(typePionSource, numeroCaseSrc, numero);
 		} catch (Exception e) {
 			System.out.println("déplacement impossible");
@@ -124,7 +127,7 @@ public class Controleur {
 		}
 	}
 
-	public void deselection() {
+	private void deselection() {
 		for (int i = 0; i < 49; i++) {
 			if (!ihm.cases[i].getFill().equals(Color.WHITE))
 				ColorateurDeRectangles.enBlanc(ihm.cases[i]);
@@ -132,7 +135,7 @@ public class Controleur {
 		pointPionSelectionne = null;
 	}
 
-	public void lancerFinDeTour() {
+	private void lancerFinDeTour() {
 		if (!diaballik.partieFinie()) {
 			// on désélectionne si qqch est encore sélectionné
 			deselection();
@@ -142,7 +145,17 @@ public class Controleur {
 		}
 	}
 
-	public void faireJouerIA() {
+	public void triggerFinTour() {
+		lancerFinDeTour();
+		reinitHistorique();
+
+		// pour faire jouer l'IA automatiquement
+		if (diaballik.tourIA()) {
+			faireJouerIA();
+		}
+	}
+
+	private void faireJouerIA() {
 		ArrayList<MouvementIA> listeCoups = diaballik.jouerIA();
 
 		if (listeCoups == null) {
@@ -178,17 +191,24 @@ public class Controleur {
 			}
 		}
 	}
-	
-	public void annulerCoup(){
+
+	private void reinitHistorique() {
+		diaballik.reinitHistoriqueSecondaire();
+
+		// TODO : griser bouton refaireCoup s'il n'est pas déjà griser =>
+		// disabledProperty
+	}
+
+	public void annulerCoup() {
 		deselection();
 		
-		if(!diaballik.getHistorique().isEmpty()){
+		if (!diaballik.getHistorique().isEmpty()) {
 			Coup action = diaballik.getHistorique().peek();
-			
-			// si le dernier coup n'a pas été joué par le joueur actuel
-			if(action.getJoueur().getNumeroJoueur() != diaballik.getNumJoueurActuel())
+
+			// si le dernier coup n'a pas ete joue par le joueur actuel
+			if (action.getJoueur().getNumeroJoueur() != diaballik.getNumJoueurActuel())
 				lancerFinDeTour();
-			
+
 			try {
 				Case typePionSource = diaballik.annulerAction();
 				int numeroCaseSrc = pointToNumCase(action.getDest());
@@ -198,11 +218,28 @@ public class Controleur {
 				System.out.println("déplacement impossible");
 			}
 		}
-		
+
 	}
-	
-	public void refaireCoup(){
-		
+
+	public void refaireCoup() {
+		deselection();
+
+		if (!diaballik.getHistoriqueSecondaire().isEmpty()) {
+			Coup action = diaballik.getHistoriqueSecondaire().peek();
+
+			// si le prochain coup n'a pas ete joue par le joueur actuel
+			if (action.getJoueur().getNumeroJoueur() != diaballik.getNumJoueurActuel())
+				lancerFinDeTour();
+
+			try {
+				Case typePionSource = diaballik.refaireAction();
+				int numeroCaseSrc = pointToNumCase(action.getSrc());
+				int numeroCaseDest = pointToNumCase(action.getDest());
+				jouerActionIHM(typePionSource, numeroCaseSrc, numeroCaseDest);
+			} catch (ExceptionMouvementIllegal e) {
+				System.out.println("déplacement impossible");
+			}
+		}
 	}
 
 	public Partie getDiaballik() {
@@ -263,21 +300,42 @@ public class Controleur {
 		default:
 			break;
 		}
-
+		
 		// TODO : actualiser l'affichage du nb de déplacements / passes restants
-
 	}
 
 	public void fermerAplication() {
 		ihm.stage.fireEvent(new WindowEvent(ihm.stage, WindowEvent.WINDOW_CLOSE_REQUEST));
 	}
+	
+	// exemple : sauvegarderApplication("./sauvegardes/test.txt");
+	public void sauvegarderApplication(String filepath){
+		File file = new File(filepath);
+		
+		// on sauvegarde la partie
+		Partie.sauvegarder(diaballik, file);
+		
+		// on sauvegarde l'ihm
+		//Affichage.sauvegarder(ihm, file);
+	}
+	
+	public void chargerApplication(String filepath){
+		File file = new File(filepath);
+		
+		// on charge la partie
+		diaballik = Partie.charger(file);
+		diaballik.getPlateau().Afficher();
+		
+		// on charge l'ihm
+		//ihm = Affichage.charger(ihm, filepath);
+	}
 
 	public void lancerFenetreJeu() {
 		this.ihm.afficherFenetreJeu(this);
 		this.cacherMenuPause(); // s'assurer que la partie n'est pas en pause
-		
+
 		// si le joueur 1 est un IA
-		if(diaballik.tourIA())
+		if (diaballik.tourIA())
 			faireJouerIA();
 	}
 

@@ -1,5 +1,6 @@
 package modele;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -37,13 +38,13 @@ public class Partie {
 	private Regles r;
 	private double vitesseIA = 1;
 	private Stack<Coup> historique;
-	private Stack<Coup> historiqueSupprime;
+	private Stack<Coup> historiqueSecondaire;
 
 	public Partie() {
 		this.p = new Plateau();
 		this.r = new Regles();
 		this.historique = new Stack<Coup>();
-		this.historiqueSupprime = new Stack<Coup>();
+		this.historiqueSecondaire = new Stack<Coup>();
 		this.joueur1 = new JoueurHumain(1);
 		this.joueur2 = new JoueurHumain(2);
 		this.joueurActuel = joueur1;
@@ -53,7 +54,7 @@ public class Partie {
 		this.p = new Plateau();
 		this.r = new Regles();
 		this.historique = new Stack<Coup>();
-		this.historiqueSupprime = new Stack<Coup>();
+		this.historiqueSecondaire = new Stack<Coup>();
 		this.joueur1 = new JoueurHumain(1);
 		this.joueur2 = JoueurIA.creerIA(2, difficulte);
 		this.joueurActuel = joueur1;
@@ -63,7 +64,7 @@ public class Partie {
 		this.p = new Plateau();
 		this.r = new Regles();
 		this.historique = new Stack<Coup>();
-		this.historiqueSupprime = new Stack<Coup>();
+		this.historiqueSecondaire = new Stack<Coup>();
 
 		if (inv == -1) {
 			this.joueur1 = JoueurIA.creerIA(1, difficulte);
@@ -79,7 +80,7 @@ public class Partie {
 		this.p = new Plateau();
 		this.r = new Regles();
 		this.historique = new Stack<Coup>();
-		this.historiqueSupprime = new Stack<Coup>();
+		this.historiqueSecondaire = new Stack<Coup>();
 		this.joueur1 = JoueurIA.creerIA(1, dif1);
 		this.joueur2 = JoueurIA.creerIA(2, dif2);
 		this.joueurActuel = joueur1;
@@ -187,32 +188,31 @@ public class Partie {
 		p.actualiser(src, dest);
 	}
 
-	public static void sauvegarder(Partie partie, String filepath) {
-		JsonWriter writer;
+	public static void sauvegarder(Partie partie, File file) {
+		JsonWriter writer = null;
 
 		try {
 			// on ouvre le fichier en ecriture
-			writer = new JsonWriter(new FileWriter(filepath));
-
+			writer = new JsonWriter(new FileWriter(file));
 			Gson gson = new GsonBuilder().registerTypeAdapter(Joueur.class, new InterfaceAdapter<Joueur>())
 					.registerTypeAdapter(Test.class, new InterfaceAdapter<Test>()).create();
 
 			// Partie to json => on l'ecrit dans le fichier
 			gson.toJson(partie, Partie.class, writer);
-
+			writer.flush();
+			writer.close();
 		} catch (IOException e) {
 			System.out.println("impossible d'ecrire dans le fichier");
 		}
-
 	}
 
-	public static Partie charger(String filepath) {
+	public static Partie charger(File file) {
 		Partie partie = null;
 		JsonReader reader = null;
 
 		try {
 			// on ouvre le fichier en lecture
-			reader = new JsonReader(new FileReader(filepath));
+			reader = new JsonReader(new FileReader(file));
 
 			Gson gson = new GsonBuilder().registerTypeAdapter(Joueur.class, new InterfaceAdapter<Joueur>())
 					.registerTypeAdapter(Test.class, new InterfaceAdapter<Test>()).create();
@@ -273,7 +273,6 @@ public class Partie {
 	}
 
 	public Case annulerAction() throws ExceptionMouvementIllegal {
-
 		Coup action = historique.pop();
 
 		Case caseSrc = p.obtenirCase(action.getDest());
@@ -284,13 +283,36 @@ public class Partie {
 			cptMouvement = action.getCptMouvement() - distance;
 			realiserAction(action.getDest(), action.getSrc());
 			// on ajoute l'action dans l'historique des coups
-			historiqueSupprime.push(action);
+			historiqueSecondaire.push(action);
 			return caseSrc;
 		case PASSE:
 			balleLancee = false;
 			realiserAction(action.getDest(), action.getSrc());
 			// on ajoute l'action dans l'historique des coups
-			historiqueSupprime.push(action);
+			historiqueSecondaire.push(action);
+			return caseSrc;
+		default:
+			throw new ExceptionMouvementIllegal();
+		}
+	}
+
+	public Case refaireAction() throws ExceptionMouvementIllegal {
+		Coup action = historiqueSecondaire.pop();
+
+		Case caseSrc = p.obtenirCase(action.getSrc());
+
+		switch (action.getTypeMvt()) {
+		case DEPLACEMENT:
+			cptMouvement = action.getCptMouvement();
+			realiserAction(action.getSrc(), action.getDest());
+			// on ajoute l'action dans l'historique des coups
+			historique.push(action);
+			return caseSrc;
+		case PASSE:
+			balleLancee = true;
+			realiserAction(action.getDest(), action.getSrc());
+			// on ajoute l'action dans l'historique des coups
+			historique.push(action);
 			return caseSrc;
 		default:
 			throw new ExceptionMouvementIllegal();
@@ -424,4 +446,14 @@ public class Partie {
 	public void setHistorique(Stack<Coup> historique) {
 		this.historique = historique;
 	}
+
+	public Stack<Coup> getHistoriqueSecondaire() {
+		return historiqueSecondaire;
+	}
+
+	public void reinitHistoriqueSecondaire() {
+		if (!historiqueSecondaire.isEmpty())
+			this.historiqueSecondaire = new Stack<Coup>();
+	}
+
 }
