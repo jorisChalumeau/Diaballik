@@ -1,13 +1,9 @@
 package modele.joueurs;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-import modele.ExceptionMouvementIllegal;
 import modele.MouvementIA;
 import modele.Partie;
-import modele.Plateau;
 
 public class JoueurIADifficile extends JoueurIA {
 	int numJoueur;

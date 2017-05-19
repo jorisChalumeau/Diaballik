@@ -54,13 +54,13 @@ public class JoueurIAMoyen extends JoueurIA {
 		}
 		return mouvementsJoueur;
 	}
-	
+
 	// à modifier pour effectuer le coup gagnant s'il est évident
 	private MouvementIA jouerAction(Partie partie) {
 		System.out.println("coucou");
 		List<MouvementIA> listeMvm = genererMouvementsPossibles(partie);
 		Random generator = new Random();
-		
+
 		if (listeMvm.size() != 0) {
 			MouvementIA mouvementRandom = listeMvm.get(generator.nextInt(listeMvm.size()));
 			try {

@@ -1,29 +1,15 @@
 package controle;
 
 import javafx.event.EventHandler;
-import javafx.util.Duration;
-import modele.Case;
-import modele.MouvementIA;
-import modele.Point;
-import ihm.Affichage;
-import ihm.ColorateurDeRectangles;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import controle.LancementIHM;
-import javafx.animation.KeyFrame;
-import javafx.animation.PauseTransition;
-import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 
 public class boutonPresse implements EventHandler<ActionEvent> {
 
-	Affichage app;
+	Controleur controleur;
 	int numero;
 
-	public boutonPresse(Affichage a, int n) {
-		app = a;
+	public boutonPresse(Controleur c, int n) {
+		controleur = c;
 		numero = n;
 	}
 
@@ -34,59 +20,60 @@ public class boutonPresse implements EventHandler<ActionEvent> {
 
 		case 1: // Bouton Mode 2 joueurs
 
-			app.setDiaballik(CreateurPartie.creerPartie2Humains());
+			controleur.setDiaballik(CreateurPartie.creerPartie2Humains());
 			// Modèle : Charger le modèle avec 2 joueurs humains
 			// Vue : Afficher la "fenêtre jeu"
-			app.afficherFenetreJeu();
+			controleur.lancerFenetreJeu();
 			break;
 
 		case 2: // Bouton Contre l'IA
 
-			app.afficherChoixNiveau();
+			controleur.getIhm().afficherChoixNiveau(controleur);
 			break;
 
 		case 3: // Bouton Règles du jeu
 
-			app.afficherRegles();// Vue : Afficher les règles
+			controleur.getIhm().afficherRegles(controleur);// Vue : Afficher les
+															// règles
 			break;
 
 		case 4: // Bouton Quitter le jeu
 
-			app.fermerAplication(); // Vue : fermer la fenetre
+			controleur.fermerAplication(); // Vue : fermer la fenetre
 			break;
 
 		case 5: // Bouton première difficulté
-			app.setDiaballik(CreateurPartie.creerPartieIA("facile"));
+			controleur.setDiaballik(CreateurPartie.creerPartieIA("facile"));
 			// Modèle : Charger le modèle avec 1 joueur humain et une IA Facile
 			// Vue : Afficher la "fenêtre jeu"
-			app.afficherFenetreJeu();
+			controleur.lancerFenetreJeu();
 			break;
 
 		case 6: // Bouton deuxième difficulté
-			app.setDiaballik(CreateurPartie.creerPartieIA("moyen"));
+			controleur.setDiaballik(CreateurPartie.creerPartieIA("moyen"));
 			// Modèle : Charger le modèle avec 1 joueur humain et une IA Moyenne
 			// Vue : Afficher la "fenêtre jeu"
-			app.afficherFenetreJeu();
+			controleur.lancerFenetreJeu();
 			break;
 
 		case 7: // Bouton troisième difficulté
-
+			controleur.setDiaballik(CreateurPartie.creerPartieIA("difficile"));
 			// Modèle : Charger le modèle avec 1 joueur humain et une IA
 			// Difficile
 			// Vue : Afficher la "fenêtre jeu"
-			app.afficherFenetreJeu();
+			controleur.lancerFenetreJeu();
 			break;
 
 		case 8: // Bouton quatrième difficulté
 
 			// Modèle : Charger le modèle avec 1 joueur humain et une IA
 			// Vue : Afficher la "fenêtre jeu"
-			app.afficherFenetreJeu();
+			// controleur.lancerFenetreJeu();
 			break;
 
 		case 9: // Bouton Retour vers menu principal
 
-			app.afficherMenuPrincipal();
+			controleur.getIhm().afficherMenuPrincipal(controleur);
 			break;
 
 		case 16: // Bouton Recommencer
@@ -95,7 +82,7 @@ public class boutonPresse implements EventHandler<ActionEvent> {
 			break;
 
 		case 17: // Bouton Reprendre
-			app.cacherMenuPause();
+			controleur.cacherMenuPause();
 			break;
 
 		default:
@@ -103,5 +90,5 @@ public class boutonPresse implements EventHandler<ActionEvent> {
 		}
 
 	}
-	
+
 }

@@ -7,20 +7,18 @@ import java.util.Random;
 import modele.ExceptionMouvementIllegal;
 import modele.MouvementIA;
 import modele.Partie;
-import modele.Plateau;
-import modele.Point;
 
 public abstract class JoueurIA implements Joueur {
 
 	int numJoueur;
 	String difficulte;
-	
-	public JoueurIA(int numJoueur){
+
+	public JoueurIA(int numJoueur) {
 		this.numJoueur = numJoueur;
 	}
-	
+
 	public static Joueur creerIA(int i, String difficulte) {
-		switch(difficulte){
+		switch (difficulte) {
 		case "moyen":
 			return new JoueurIAMoyen(i);
 		case "difficile":
@@ -70,5 +68,5 @@ public abstract class JoueurIA implements Joueur {
 		}
 		return null;
 	}
-	
+
 }

@@ -2,30 +2,28 @@ package modele;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.List;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import modele.joueurs.Joueur;
 import modele.joueurs.JoueurHumain;
 import modele.joueurs.JoueurIA;
-import modele.joueurs.JoueurIAFacile;
+import modele.joueurs.InterfaceAdapter;
 import modele.joueurs.PionBloqueException;
 import modele.tests.Regles;
+import modele.tests.Test;
 
 public class Partie {
 
 	private Plateau p;
-	private boolean partieLancee = true;
+	private boolean partieEnCours = true;
 	private Joueur joueurActuel;
 	private boolean balleLancee = false;
 	private Joueur joueur1;
@@ -191,81 +189,19 @@ public class Partie {
 	public void sauvegarder(String filepath) throws FileNotFoundException {
 		// tuto : https://www.tutorialspoint.com/json/json_java_example.htm
 
-		Case[][] tab = p.obtenirPlateau();
-
-		JSONObject contenuSauvegarde = new JSONObject();
-		JSONObject platJson = new JSONObject();
-
-		// on transforme le plateau en json
-		String tmp;
-		for (int i = 0; i < p.TAILLE; i++) {
-			for (int j = 0; j < p.TAILLE; j++) {
-				tmp = new Integer(7 * i + j).toString();
-				platJson.put(tmp, tab[i][j].contenu);
-			}
-		}
-
-		// on ajoute dans notre objet json tous les elements à sauvegarder
-		contenuSauvegarde.put("plateau", platJson);
-		contenuSauvegarde.put("joueur1", joueur1.getDifficulte());
-		contenuSauvegarde.put("joueur2", joueur2.getDifficulte());
-		// TODO : ajout historique de coups, etc.
-		// contenuSauvegarde.put("historique", historique);
-		// contenuSauvegarde.put("balleLancee", balleLancee);
-		// contenuSauvegarde.put("cptMouvement", cptMouvement);
-		// contenuSauvegarde.put("joueurActuel", joueurActuel);
-
-		try (FileWriter file = new FileWriter(filepath)) {
-
-			file.write(contenuSauvegarde.toJSONString());
-			file.flush();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		Gson gson = new GsonBuilder().registerTypeAdapter(Joueur.class, new InterfaceAdapter<Joueur>())
+				.registerTypeAdapter(Test.class, new InterfaceAdapter<Test>()).create();
+		
+		// Partie to json :
+		String jsonString = gson.toJson(this, Partie.class);
 	}
 
 	public void charger(String filepath) {
-		JSONParser parser = new JSONParser();
-
-		try {
-			JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(filepath));
-
-			// creation plateau de jeu
-			JSONObject jsonPlat = (JSONObject) jsonObject.get("plateau");
-
-			// on transforme le plateau en json
-			this.p = new Plateau(jsonPlat);
-
-			// creation joueur1
-			String difficulte = (String) jsonObject.get("joueur1");
-			switch (difficulte) {
-			case "humain":
-				this.joueur1 = new JoueurHumain(1);
-				break;
-			default:
-				this.joueur1 = JoueurIA.creerIA(1, difficulte);
-			}
-
-			// creation joueur2
-			difficulte = (String) jsonObject.get("joueur2");
-			switch (difficulte) {
-			case "humain":
-				this.joueur2 = new JoueurHumain(2);
-				break;
-			default:
-				this.joueur2 = JoueurIA.creerIA(2, difficulte);
-			}
-
-			// TODO : ajout historique de coups, etc.
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+		
+		Gson gson = new GsonBuilder().registerTypeAdapter(Joueur.class, new InterfaceAdapter<Joueur>())
+				.registerTypeAdapter(Test.class, new InterfaceAdapter<Test>()).create();
+		// json to Partie :
+		// Partie partie = gson.fromJson(jsonString, Partie.class);
 
 	}
 
@@ -343,7 +279,7 @@ public class Partie {
 	}
 
 	public boolean laPartieEstEnCours() {
-		return partieLancee;
+		return partieEnCours;
 	}
 
 	public boolean partieFinie() {
@@ -351,7 +287,7 @@ public class Partie {
 	}
 
 	public void mettreFinALaPartie() {
-		partieLancee = false;
+		partieEnCours = false;
 	}
 
 	public boolean tourIA() {
@@ -377,4 +313,11 @@ public class Partie {
 	public double getVitesseIA() {
 		return vitesseIA;
 	}
+
+	public boolean tourFini() {
+		if (cptMouvement == 2 && balleLancee)
+			return true;
+		return false;
+	}
+
 }

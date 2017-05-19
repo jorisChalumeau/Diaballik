@@ -2,15 +2,11 @@ package modele.joueurs;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-import modele.Case;
 import modele.MouvementIA;
 import modele.Partie;
 import modele.Plateau;
 import modele.Point;
-import modele.TypeMouvement;
-import modele.tests.Regles;
 
 public class JoueurHumain implements Joueur {
 

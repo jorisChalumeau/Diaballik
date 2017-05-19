@@ -1,68 +1,34 @@
 package controle;
 
 import javafx.event.EventHandler;
-import ihm.*;
-import modele.*;
-import modele.joueurs.JoueurIA;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.*;
-import java.util.ArrayList;
 
 public class clicSurCase implements EventHandler<MouseEvent> {
 
-	Affichage app;
+	Controleur controleur;
 	int numero;
 	Rectangle[] caseGraphique;
 
-	public clicSurCase(Affichage a, int n, Rectangle[] c) {
-		app = a;
+	public clicSurCase(Controleur control, int n, Rectangle[] c) {
+		controleur = control;
 		numero = n;
 		caseGraphique = c;
 	}
 
 	@Override
 	public void handle(MouseEvent event) {
-		int numeroModele = 48 - numero;
-
 		// si la partie est finie, le clic sur une case ne fait plus rien
-		if (!app.getDiaballik().partieFinie()) {
-			if (!app.estEnPause()) { // Si la partie n'est pas en pause
-				// on vérifie que ce n'est pas le tour de l'IA
-				if (!app.getDiaballik().tourIA()) {
-
-					// aucun pion sélectionné <=> le joueur veut sélectionner un
-					// pion
-					if (app.getPointPionSelectionne() == null) {
-						ArrayList<Point> listePoints = app.getDiaballik()
-								.obtenirActionsPossibles(new Point(numeroModele / 7, numeroModele % 7));
-
-						if (listePoints != null) {
-							for (Point p : listePoints) {
-								int ligne = p.getRow();
-								int colonne = p.getColumn();
-								int num = (ligne * 7) + colonne;
-								ColorateurDeRectangles.enVert(caseGraphique[48 - num]);
-							}
-							ColorateurDeRectangles.enGris(caseGraphique[numero]);
-							app.setPointPionSelectionne(new Point(numeroModele / 7, numeroModele % 7));
-						}
-					} else {
-						// On a cliqué sur un pion, on doit maintenant
-						// sélectionner la case ciblée
-						Point dest = new Point(numeroModele / 7, numeroModele % 7);
-						try {
-							Case typePionSource = app.getDiaballik().executerMouvement(app.getPointPionSelectionne(),
-									dest);
-							int numeroCaseSrc = app.pointToNumCase(app.getPointPionSelectionne());
-							app.jouerActionIHM(typePionSource, numeroCaseSrc, numero);
-						} catch (Exception e) {
-							System.out.println("déplacement impossible");
-						}
-						app.deselection();
-
-						app.testFinal();
-					}
-				}
+		if (!controleur.getDiaballik().partieFinie() && !controleur.estEnPause()
+				&& !controleur.getDiaballik().tourIA()) {
+			// aucun pion sélectionné <=> le joueur veut sélectionner un
+			// pion
+			if (controleur.getPointPionSelectionne() == null)
+				controleur.selectionPion(numero);
+			else {
+				// On a cliqué sur un pion, on doit maintenant
+				// sélectionner la case ciblée
+				controleur.jouerCoupHumain(numero);
 			}
 		}
 
