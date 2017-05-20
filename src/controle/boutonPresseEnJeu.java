@@ -18,7 +18,8 @@ public class boutonPresseEnJeu implements EventHandler<ActionEvent> {
 		if (!controleur.estEnPause()) { // Si la partie n'est pas en pause
 			switch (numero) {
 			case 10: // Bouton Fin de tour
-				if (!controleur.getDiaballik().tourIA()) {
+				if (!controleur.getDiaballik().partieFinie() && !controleur.estEnPause()
+						&& !controleur.getDiaballik().tourIA()) {
 					controleur.triggerFinTour();
 				}
 				break;
@@ -32,7 +33,11 @@ public class boutonPresseEnJeu implements EventHandler<ActionEvent> {
 				break;
 
 			case 13: // Bouton Annuler
-				controleur.annulerCoup();
+				if (!controleur.getDiaballik().partieFinie() && !controleur.estEnPause()
+						&& !(controleur.getDiaballik().tourIA()
+								&& controleur.getDiaballik().getHistoriqueSecondaire().isEmpty())) {
+					controleur.annulerCoup();
+				}
 				break;
 
 			case 14: // Bouton RemontrerIA
@@ -40,7 +45,9 @@ public class boutonPresseEnJeu implements EventHandler<ActionEvent> {
 				break;
 
 			case 15: // Bouton Refaire
-				controleur.refaireCoup();
+				if (!controleur.getDiaballik().partieFinie() && !controleur.estEnPause()) {
+					controleur.refaireCoup();
+				}
 				break;
 
 			default:

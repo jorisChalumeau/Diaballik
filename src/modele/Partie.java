@@ -29,7 +29,7 @@ import modele.tests.Test;
 public class Partie {
 
 	private Plateau p;
-	private boolean partieEnCours = true;
+	private boolean partieFinie = false;
 	private Joueur joueurActuel;
 	private boolean balleLancee = false;
 	private Joueur joueur1;
@@ -345,12 +345,16 @@ public class Partie {
 		balleLancee = false;
 	}
 
-	public boolean partieFinie() {
+	public Joueur gagnantPartie() {
 		return r.checkGameIsOver(this);
+	}
+	
+	public boolean partieFinie() {
+		return partieFinie;
 	}
 
 	public void mettreFinALaPartie() {
-		partieEnCours = false;
+		partieFinie = true;
 	}
 
 	public boolean tourIA() {
@@ -373,14 +377,6 @@ public class Partie {
 
 	public void setPlateau(Plateau p) {
 		this.p = p;
-	}
-
-	public boolean isPartieEnCours() {
-		return partieEnCours;
-	}
-
-	public void setPartieEnCours(boolean partieEnCours) {
-		this.partieEnCours = partieEnCours;
 	}
 
 	public Joueur getJoueurActuel() {

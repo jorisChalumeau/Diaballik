@@ -18,13 +18,13 @@ import modele.ExceptionMouvementIllegal;
 import modele.MouvementIA;
 import modele.Partie;
 import modele.Point;
+import modele.joueurs.Joueur;
 
 public class Controleur {
 
 	private Affichage ihm;
 	private Partie diaballik;
 	private Point pointPionSelectionne;
-	
 
 	public Controleur() {
 		pointPionSelectionne = null;
@@ -94,7 +94,7 @@ public class Controleur {
 
 		// passer automatiquement si le tour est fini
 		if (diaballik.tourFini()) {
-			this.lancerFinDeTour();
+			this.triggerFinTour();
 		}
 	}
 
@@ -172,7 +172,7 @@ public class Controleur {
 
 	public void annulerCoup() {
 		deselection();
-		
+
 		if (!diaballik.getHistorique().isEmpty()) {
 			Coup action = diaballik.getHistorique().peek();
 
@@ -247,9 +247,11 @@ public class Controleur {
 	}
 
 	private void testFinal() {
-		if (this.getDiaballik().partieFinie()) {
+		Joueur j = diaballik.gagnantPartie();
+		if (j != null) {
+			diaballik.mettreFinALaPartie();
 			System.out.println("\n\n\n######################################\n\nLe joueur "
-					+ this.getDiaballik().getNumJoueurActuel() + " a gagné\n\n######################################");
+					+ j.getNumeroJoueur() + " a gagné\n\n######################################");
 		}
 	}
 
@@ -271,34 +273,34 @@ public class Controleur {
 		default:
 			break;
 		}
-		
+
 		// TODO : actualiser l'affichage du nb de déplacements / passes restants
 	}
 
 	public void fermerAplication() {
 		ihm.fermerAplication();
 	}
-	
+
 	// exemple : sauvegarderApplication("./sauvegardes/test.txt");
-	public void sauvegarderApplication(String filepath){
+	public void sauvegarderApplication(String filepath) {
 		File file = new File(filepath);
-		
+
 		// on sauvegarde la partie
 		Partie.sauvegarder(diaballik, file);
-		
+
 		// on sauvegarde l'ihm
-		//Affichage.sauvegarder(ihm, file);
+		// Affichage.sauvegarder(ihm, file);
 	}
-	
-	public void chargerApplication(String filepath){
+
+	public void chargerApplication(String filepath) {
 		File file = new File(filepath);
-		
+
 		// on charge la partie
 		diaballik = Partie.charger(file);
 		diaballik.getPlateau().Afficher();
-		
+
 		// on charge l'ihm
-		//ihm = Affichage.charger(ihm, filepath);
+		// ihm = Affichage.charger(ihm, filepath);
 	}
 
 	public void lancerFenetreJeu() {
