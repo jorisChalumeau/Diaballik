@@ -24,71 +24,42 @@ public class Controleur {
 	private Affichage ihm;
 	private Partie diaballik;
 	private Point pointPionSelectionne;
-	private boolean enPause;
+	
 
 	public Controleur() {
 		pointPionSelectionne = null;
 	}
 
 	private void afficherMessageTourDuJoueur(int joueur) {
-		if (joueur == 1) {
-			ihm.getTexteTourJ1().setVisible(true);
-			ihm.getTexteTourJ2().setVisible(false);
-		} else {
-			ihm.getTexteTourJ1().setVisible(false);
-			ihm.getTexteTourJ2().setVisible(true);
-		}
+		ihm.afficherMessageTourDuJoueur(joueur);
 	}
 
 	public void afficherMenuPause() {
-		ihm.getMenuPause().setVisible(true);
-		enPause = true;
-
+		ihm.afficherMenuPause();
 	}
 
 	public void cacherMenuPause() {
-		ihm.getMenuPause().setVisible(false);
-		enPause = false;
+		ihm.cacherMenuPause();
 	}
 
 	public Boolean estEnPause() {
-		return enPause;
+		return ihm.estEnPause();
 	}
 
 	private void deplacementOrange(int n1, int n2) {
-		ihm.plateau[n2] = CaseGraphique.caseOrange(ihm.cases[n2]);
-		ihm.getGrille().add(ihm.plateau[n2], n2 % 7, n2 / 7);
-		ihm.plateau[n2].setOnMouseClicked(new clicSurCase(this, n2, ihm.cases));
-		ihm.plateau[n1] = CaseGraphique.caseVide(ihm.cases[n1]);
-		ihm.getGrille().add(ihm.plateau[n1], n1 % 7, n1 / 7);
-		ihm.plateau[n1].setOnMouseClicked(new clicSurCase(this, n1, ihm.cases));
+		ihm.deplacementOrange(n1, n2, this);
 	}
 
 	private void deplacementBleu(int n1, int n2) {
-		ihm.plateau[n2] = CaseGraphique.caseBleu(ihm.cases[n2]);
-		ihm.getGrille().add(ihm.plateau[n2], n2 % 7, n2 / 7);
-		ihm.plateau[n2].setOnMouseClicked(new clicSurCase(this, n2, ihm.cases));
-		ihm.plateau[n1] = CaseGraphique.caseVide(ihm.cases[n1]);
-		ihm.getGrille().add(ihm.plateau[n1], n1 % 7, n1 / 7);
-		ihm.plateau[n1].setOnMouseClicked(new clicSurCase(this, n1, ihm.cases));
+		ihm.deplacementBleu(n1, n2, this);
 	}
 
 	private void passeOrange(int n1, int n2) {
-		ihm.plateau[n2] = CaseGraphique.caseOrangeBalle(ihm.cases[n2]);
-		ihm.getGrille().add(ihm.plateau[n2], n2 % 7, n2 / 7);
-		ihm.plateau[n2].setOnMouseClicked(new clicSurCase(this, n2, ihm.cases));
-		ihm.plateau[n1] = CaseGraphique.caseOrange(ihm.cases[n1]);
-		ihm.getGrille().add(ihm.plateau[n1], n1 % 7, n1 / 7);
-		ihm.plateau[n1].setOnMouseClicked(new clicSurCase(this, n1, ihm.cases));
+		ihm.passeOrange(n1, n2, this);
 	}
 
 	private void passeBleu(int n1, int n2) {
-		ihm.plateau[n2] = CaseGraphique.caseBleuBalle(ihm.cases[n2]);
-		ihm.getGrille().add(ihm.plateau[n2], n2 % 7, n2 / 7);
-		ihm.plateau[n2].setOnMouseClicked(new clicSurCase(this, n2, ihm.cases));
-		ihm.plateau[n1] = CaseGraphique.caseBleu(ihm.cases[n1]);
-		ihm.getGrille().add(ihm.plateau[n1], n1 % 7, n1 / 7);
-		ihm.plateau[n1].setOnMouseClicked(new clicSurCase(this, n1, ihm.cases));
+		ihm.passeBleu(n1, n2, this);
 	}
 
 	public void selectionPion(int numero) {
@@ -99,9 +70,9 @@ public class Controleur {
 		if (listePoints != null) {
 			for (Point p : listePoints) {
 				num = pointToNumCase(p);
-				ColorateurDeRectangles.enVert(ihm.cases[num]);
+				ColorateurDeRectangles.enVert(ihm.getCase(num));
 			}
-			ColorateurDeRectangles.enGris(ihm.cases[numero]);
+			ColorateurDeRectangles.enGris(ihm.getCase(numero));
 			this.setPointPionSelectionne(point);
 		}
 	}
@@ -129,8 +100,8 @@ public class Controleur {
 
 	private void deselection() {
 		for (int i = 0; i < 49; i++) {
-			if (!ihm.cases[i].getFill().equals(Color.WHITE))
-				ColorateurDeRectangles.enBlanc(ihm.cases[i]);
+			if (!ihm.getCase(i).getFill().equals(Color.WHITE))
+				ColorateurDeRectangles.enBlanc(ihm.getCase(i));
 		}
 		pointPionSelectionne = null;
 	}
@@ -305,7 +276,7 @@ public class Controleur {
 	}
 
 	public void fermerAplication() {
-		ihm.stage.fireEvent(new WindowEvent(ihm.stage, WindowEvent.WINDOW_CLOSE_REQUEST));
+		ihm.fermerAplication();
 	}
 	
 	// exemple : sauvegarderApplication("./sauvegardes/test.txt");

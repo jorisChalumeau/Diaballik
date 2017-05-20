@@ -5,6 +5,7 @@ import controle.boutonPresse;
 import controle.boutonPresseEnJeu;
 import controle.clicSurCase;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -20,6 +21,7 @@ public class Affichage {
 	private GridPane grille;
 	private Label texteTourJ1, texteTourJ2;
 	private VBox menuPause;
+	private boolean enPause;
 
 	// REGLAGES RECURRENTS D OBJETS
 	public void setBoutonClassique(Button b, int numero, Controleur controleur) {
@@ -363,7 +365,71 @@ public class Affichage {
 		b.setBottom(null);
 		b.setTop(null);
 	}
+	
+	public void fermerAplication() {
+		stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
+	}
+	
+	public void afficherMessageTourDuJoueur(int joueur) {
+		if (joueur == 1) {
+			texteTourJ1.setVisible(true);
+			texteTourJ2.setVisible(false);
+		} else {
+			texteTourJ1.setVisible(false);
+			texteTourJ2.setVisible(true);
+		}
+	}
+	
+	public void afficherMenuPause() {
+		menuPause.setVisible(true);
+		enPause = true;
+	}
+	
+	public void cacherMenuPause() {
+		menuPause.setVisible(false);
+		enPause = false;
+	}
+	
+	public Boolean estEnPause() {
+		return enPause;
+	}
+	
+	public void deplacementOrange(int n1, int n2, Controleur c) {
+		plateau[n2] = CaseGraphique.caseOrange(cases[n2]);
+		getGrille().add(plateau[n2], n2 % 7, n2 / 7);
+		plateau[n2].setOnMouseClicked(new clicSurCase(c, n2, cases));
+		plateau[n1] = CaseGraphique.caseVide(cases[n1]);
+		getGrille().add(plateau[n1], n1 % 7, n1 / 7);
+		plateau[n1].setOnMouseClicked(new clicSurCase(c, n1, cases));
+	}
 
+	public void deplacementBleu(int n1, int n2, Controleur c) {
+		plateau[n2] = CaseGraphique.caseBleu(cases[n2]);
+		getGrille().add(plateau[n2], n2 % 7, n2 / 7);
+		plateau[n2].setOnMouseClicked(new clicSurCase(c, n2, cases));
+		plateau[n1] = CaseGraphique.caseVide(cases[n1]);
+		getGrille().add(plateau[n1], n1 % 7, n1 / 7);
+		plateau[n1].setOnMouseClicked(new clicSurCase(c, n1, cases));
+	}
+
+	public void passeOrange(int n1, int n2, Controleur c) {
+		plateau[n2] = CaseGraphique.caseOrangeBalle(cases[n2]);
+		getGrille().add(plateau[n2], n2 % 7, n2 / 7);
+		plateau[n2].setOnMouseClicked(new clicSurCase(c, n2, cases));
+		plateau[n1] = CaseGraphique.caseOrange(cases[n1]);
+		getGrille().add(plateau[n1], n1 % 7, n1 / 7);
+		plateau[n1].setOnMouseClicked(new clicSurCase(c, n1, cases));
+	}
+
+	public void passeBleu(int n1, int n2, Controleur c) {
+		plateau[n2] = CaseGraphique.caseBleuBalle(cases[n2]);
+		getGrille().add(plateau[n2], n2 % 7, n2 / 7);
+		plateau[n2].setOnMouseClicked(new clicSurCase(c, n2, cases));
+		plateau[n1] = CaseGraphique.caseBleu(cases[n1]);
+		getGrille().add(plateau[n1], n1 % 7, n1 / 7);
+		plateau[n1].setOnMouseClicked(new clicSurCase(c, n1, cases));
+	}
+	
 	public Label getTexteTourJ1() {
 		return texteTourJ1;
 	}
@@ -391,9 +457,15 @@ public class Affichage {
 	public VBox getMenuPause() {
 		return menuPause;
 	}
+	
+	public Rectangle getCase(int i){
+		return cases[i];
+	}
 
 	public void setMenuPause(VBox menuPause) {
 		this.menuPause = menuPause;
 	}
+	
+	
 
 }
