@@ -7,6 +7,8 @@ import java.util.Random;
 import modele.ExceptionMouvementIllegal;
 import modele.MouvementIA;
 import modele.Partie;
+import modele.Plateau;
+import modele.Point;
 
 public abstract class JoueurIA implements Joueur {
 
@@ -54,6 +56,7 @@ public abstract class JoueurIA implements Joueur {
 
 	// réimplémenté pour l'IA moyen et difficile
 	private MouvementIA jouerAction(Partie partie) {
+		if(partie.getJoueurActuel() instanceof JoueurIAFacile){
 		List<MouvementIA> listeMvm = genererMouvementsPossibles(partie);
 		Random generator = new Random();
 
@@ -66,6 +69,31 @@ public abstract class JoueurIA implements Joueur {
 				return null;
 			}
 		}
+		else 
+			return null;
+		}
+		else{
+			JoueurIADifficile iaDiff = ((JoueurIADifficile) partie.getJoueurActuel());
+			iaDiff.currentBoard=new Plateau(partie.getPlateau());
+			List<MouvementIA> moves = iaDiff.Play();
+			for (MouvementIA move:moves)
+			{
+				try
+				{
+					partie.executerAction(move.src, move.dest);
+					return move;
+				}
+				catch (ExceptionMouvementIllegal e) {
+					return null;
+				}
+			}
+		}
+		return null;
+	}
+
+	public List<MouvementIA> genererMouvementsPossibles(Noeud node, Plateau board, Point[] pieces,
+			JoueurIADifficile p) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 

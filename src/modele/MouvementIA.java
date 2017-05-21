@@ -18,6 +18,14 @@ public class MouvementIA {
 		this.type = type;
 		this.caseSrc = caseSrc;
 	}
+	
+	public MouvementIA(Point x, Point y, TypeMouvement type)
+	{
+		src = x;
+		dest = y;
+		this.type = type;
+
+	}
 
 	public void revenir() {
 		Point tmp = new Point(src.getRow(), src.getColumn());

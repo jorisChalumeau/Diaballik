@@ -335,6 +335,8 @@ public class Partie {
 
 		return listeCoups;
 	}
+	
+	
 
 	public void finDeTour() {
 		changerJoueur();

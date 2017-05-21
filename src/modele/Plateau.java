@@ -20,7 +20,6 @@ public class Plateau {
 			for (int j = 0; j < 7; j++) {
 				allPosibleCoord.add(new Point(i, j));
 			}
-
 		}
 	}
 

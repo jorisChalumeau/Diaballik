@@ -35,4 +35,13 @@ public class JoueurHumain implements Joueur {
 		return "humain";
 	}
 
+
+
+	@Override
+	public List<MouvementIA> genererMouvementsPossibles(Noeud node, Plateau board, Point[] pieces,
+			Joueur currentPlayer) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

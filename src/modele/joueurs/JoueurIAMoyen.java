@@ -63,7 +63,7 @@ public class JoueurIAMoyen extends JoueurIA {
 
 		if (listeMvm.size() != 0) {
 			MouvementIA mouvementRandom = listeMvm.get(generator.nextInt(listeMvm.size()));
-			try {
+			try { 	
 				partie.executerAction(mouvementRandom.src, mouvementRandom.dest);
 				return mouvementRandom;
 			} catch (ExceptionMouvementIllegal e) {
@@ -81,6 +81,13 @@ public class JoueurIAMoyen extends JoueurIA {
 	@Override
 	public String getDifficulte() {
 		return difficulte;
+	}
+
+	@Override
+	public List<MouvementIA> genererMouvementsPossibles(Noeud node, Plateau board, Point[] pieces,
+			Joueur currentPlayer) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

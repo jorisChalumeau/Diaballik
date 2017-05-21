@@ -68,6 +68,8 @@ public class Regles {
 			return p.getJoueurActuel();
 		return checkCasAntijeu(p);
 	}
+	
+	
 
 	private boolean checkCasGagnant(Partie p) {
 		if (p.getNumJoueurActuel() == 1) {
@@ -79,6 +81,23 @@ public class Regles {
 		} else {
 			for (int i = 0; i < 7; i++) {
 				if (Case.PION_NOIR_AVEC_BALLON.equals(p.getPlateau().obtenirCase(new Point(0, i)))) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public boolean checkCasGagnant(Joueur j,Plateau p) {
+		if (j.getNumeroJoueur()==1) {
+			for (int i = 0; i < 7; i++) {
+				if (Case.PION_BLANC_AVEC_BALLON.equals(p.obtenirCase(new Point(6, i)))) {
+					return true;
+				}
+			}
+		} else {
+			for (int i = 0; i < 7; i++) {
+				if (Case.PION_NOIR_AVEC_BALLON.equals(p.obtenirCase(new Point(0, i)))) {
 					return true;
 				}
 			}
