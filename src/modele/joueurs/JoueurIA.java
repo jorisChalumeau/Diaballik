@@ -56,6 +56,7 @@ public abstract class JoueurIA implements Joueur {
 
 	// réimplémenté pour l'IA moyen et difficile
 	private MouvementIA jouerAction(Partie partie) {
+		//IA Facile
 		if(partie.getJoueurActuel() instanceof JoueurIAFacile){
 		List<MouvementIA> listeMvm = genererMouvementsPossibles(partie);
 		Random generator = new Random();
@@ -72,7 +73,9 @@ public abstract class JoueurIA implements Joueur {
 		else 
 			return null;
 		}
-		else{
+		
+		//IA Difficile
+		else if (partie.getJoueurActuel() instanceof JoueurIADifficile){
 			JoueurIADifficile iaDiff = ((JoueurIADifficile) partie.getJoueurActuel());
 			iaDiff.currentBoard=new Plateau(partie.getPlateau());
 			List<MouvementIA> moves = iaDiff.Play();
@@ -88,6 +91,11 @@ public abstract class JoueurIA implements Joueur {
 				}
 			}
 		}
+		
+		else {
+			//IA Moyenne
+		}
+			
 		return null;
 	}
 
