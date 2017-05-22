@@ -4,14 +4,31 @@ import controle.Controleur;
 import controle.boutonPresse;
 import controle.boutonPresseEnJeu;
 import controle.clicSurCase;
+import controle.caseSaisie;
+import controle.casePosee;
+import controle.dragDetected;
+import controle.dragOver;
+import controle.dragEntered;
+import controle.dragExited;
+import controle.dragDropped;
+import controle.dragDone;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
+import javafx.event.EventHandler;
 import javafx.geometry.*;
 import javafx.scene.shape.*;
+import javafx.scene.Node;
 
 public class Affichage {
 	public BorderPane b = new BorderPane();
@@ -22,30 +39,52 @@ public class Affichage {
 	private Label texteTourJ1, texteTourJ2;
 	private VBox menuPause;
 	private boolean enPause;
+	Color tempCouleur;
 
 	// REGLAGES RECURRENTS D OBJETS
-	public void setBoutonClassique(Button b, int numero, Controleur controleur) {
+	private void curseurInteraction(Node n){
+		n.setCursor(Cursor.HAND);
+	}
+	
+	private void curseurNormal(Node n){
+		n.setCursor(Cursor.DEFAULT);
+	}
+	
+	private void setBoutonClassique(Button b, int numero, Controleur controleur) {
 		b.setPrefSize(300, 50);
 		b.setMinSize(150, 30);
 		b.setStyle("-fx-background-color: #0497D7; -fx-text-fill: white; -fx-font-size: 15;");
 		b.setOnAction(new boutonPresse(controleur, numero));
+		b.setCursor(Cursor.HAND);
 	}
 
-	public void setBoutonDesign2(Button b, int numero, Controleur controleur) {
+	private void setBoutonDesign2(Button b, int numero, Controleur controleur) {
 		b.setMaxSize(60, 60);
 		b.setMinSize(60, 60);
 		b.setStyle(
 				"-fx-background-color: #D5D4D7; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
 		b.setOnAction(new boutonPresseEnJeu(controleur, numero));
 		b.setAlignment(Pos.CENTER);
+		b.setCursor(Cursor.HAND);
 	}
 
-	public void setBoutonDesign3(Button b, int numero, String couleur, Controleur controleur) {
+	private void setBoutonDesign3(Button b, int numero, String couleur, Controleur controleur) {
 		b.setMinSize(50, 50);
 		b.setMaxSize(77, 65);
 		b.setStyle("-fx-background-color: #" + couleur
 				+ "; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
 		b.setOnAction(new boutonPresseEnJeu(controleur, numero));
+		b.setCursor(Cursor.HAND);
+	}
+	
+	private void lierCaseAuxControles(Controleur controleur, int i){
+		plateau[i].setOnMousePressed(new clicSurCase(controleur, i, cases));
+		plateau[i].setOnDragDetected(new dragDetected(controleur,i,cases));
+		plateau[i].setOnDragOver(new dragOver(controleur,i,cases));
+		plateau[i].setOnDragEntered(new dragEntered(controleur,i,cases));
+		plateau[i].setOnDragExited(new dragExited(controleur,i,cases));
+		plateau[i].setOnDragDropped(new dragDropped(controleur,i,cases));
+		plateau[i].setOnDragDone(new dragDone(controleur,i,cases));
 	}
 
 	// COMPOSANTS (ensembles d'objets)
@@ -239,17 +278,23 @@ public class Affichage {
 
 		for (int i = 0; i < 3; i++) {
 			plateau[i] = CaseGraphique.caseBleu(cases[i]);
+			curseurInteraction(plateau[i]);
 			plateau[i + 4] = CaseGraphique.caseBleu(cases[i + 4]);
+			curseurInteraction(plateau[i + 4]);
 		}
 		plateau[3] = CaseGraphique.caseBleuBalle(cases[3]);
+		curseurInteraction(plateau[3]);
 		for (int i = 7; i < 42; i++) {
 			plateau[i] = CaseGraphique.caseVide(cases[i]);
 		}
 		for (int i = 42; i < 45; i++) {
 			plateau[i] = CaseGraphique.caseOrange(cases[i]);
+			curseurInteraction(plateau[i]);
 			plateau[i + 4] = CaseGraphique.caseOrange(cases[i + 4]);
+			curseurInteraction(plateau[i + 4]);
 		}
 		plateau[45] = CaseGraphique.caseOrangeBalle(cases[45]);
+		curseurInteraction(plateau[45]);
 
 		// On met les cases dans une grille
 		setGrille(new GridPane());
@@ -258,10 +303,11 @@ public class Affichage {
 		}
 		getGrille().setAlignment(Pos.CENTER);
 
-		// On connecte les cases au contrôleur
+		// On connecte les cases aux contrôleurs
 		for (int i = 0; i < 49; i++) {
-			plateau[i].setOnMouseClicked(new clicSurCase(controleur, i, cases));
+			lierCaseAuxControles(controleur,i);
 		}
+		
 
 		setTexteTourJ1(new Label("C'est au joueur 1 de jouer"));
 		getTexteTourJ1().setStyle("-fx-font-size: 24; -fx-text-fill: FF6500;");
@@ -274,6 +320,7 @@ public class Affichage {
 				"-fx-background-color: #FFFF33; -fx-text-fill: black; -fx-font-size: 24; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
 		finTour.setOnAction(new boutonPresseEnJeu(controleur, 10));
 		finTour.setAlignment(Pos.CENTER);
+		finTour.setCursor(Cursor.HAND);
 
 		final ImageView iconePause = new ImageView(new Image("file:Images/quitter50x50.png"));
 		Button pause = new Button("", iconePause);
@@ -397,37 +444,43 @@ public class Affichage {
 	public void deplacementOrange(int n1, int n2, Controleur c) {
 		plateau[n2] = CaseGraphique.caseOrange(cases[n2]);
 		getGrille().add(plateau[n2], n2 % 7, n2 / 7);
-		plateau[n2].setOnMouseClicked(new clicSurCase(c, n2, cases));
+		curseurInteraction(plateau[n2]);
+		lierCaseAuxControles(c,n2);
 		plateau[n1] = CaseGraphique.caseVide(cases[n1]);
 		getGrille().add(plateau[n1], n1 % 7, n1 / 7);
-		plateau[n1].setOnMouseClicked(new clicSurCase(c, n1, cases));
+		lierCaseAuxControles(c,n1);
 	}
 
 	public void deplacementBleu(int n1, int n2, Controleur c) {
 		plateau[n2] = CaseGraphique.caseBleu(cases[n2]);
 		getGrille().add(plateau[n2], n2 % 7, n2 / 7);
-		plateau[n2].setOnMouseClicked(new clicSurCase(c, n2, cases));
+		curseurInteraction(plateau[n2]);
+		lierCaseAuxControles(c,n2);
 		plateau[n1] = CaseGraphique.caseVide(cases[n1]);
 		getGrille().add(plateau[n1], n1 % 7, n1 / 7);
-		plateau[n1].setOnMouseClicked(new clicSurCase(c, n1, cases));
+		lierCaseAuxControles(c,n1);
 	}
 
 	public void passeOrange(int n1, int n2, Controleur c) {
 		plateau[n2] = CaseGraphique.caseOrangeBalle(cases[n2]);
 		getGrille().add(plateau[n2], n2 % 7, n2 / 7);
-		plateau[n2].setOnMouseClicked(new clicSurCase(c, n2, cases));
+		curseurInteraction(plateau[n2]);
+		lierCaseAuxControles(c,n2);
 		plateau[n1] = CaseGraphique.caseOrange(cases[n1]);
 		getGrille().add(plateau[n1], n1 % 7, n1 / 7);
-		plateau[n1].setOnMouseClicked(new clicSurCase(c, n1, cases));
+		curseurInteraction(plateau[n1]);
+		lierCaseAuxControles(c,n1);
 	}
 
 	public void passeBleu(int n1, int n2, Controleur c) {
 		plateau[n2] = CaseGraphique.caseBleuBalle(cases[n2]);
 		getGrille().add(plateau[n2], n2 % 7, n2 / 7);
-		plateau[n2].setOnMouseClicked(new clicSurCase(c, n2, cases));
+		curseurInteraction(plateau[n2]);
+		lierCaseAuxControles(c,n2);
 		plateau[n1] = CaseGraphique.caseBleu(cases[n1]);
 		getGrille().add(plateau[n1], n1 % 7, n1 / 7);
-		plateau[n1].setOnMouseClicked(new clicSurCase(c, n1, cases));
+		curseurInteraction(plateau[n1]);
+		lierCaseAuxControles(c,n1);
 	}
 	
 	public Label getTexteTourJ1() {
@@ -464,6 +517,14 @@ public class Affichage {
 
 	public void setMenuPause(VBox menuPause) {
 		this.menuPause = menuPause;
+	}
+	
+	public void setTempCouleur(Color c){
+		tempCouleur = c;
+	}
+	
+	public Color getTempCouleur(){
+		return tempCouleur;
 	}
 	
 	
