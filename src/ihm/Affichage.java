@@ -21,6 +21,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.event.EventHandler;
@@ -48,31 +49,91 @@ public class Affichage {
 		n.setCursor(Cursor.DEFAULT);
 	}
 	
+	private void bordReactif(Button b, String style, String styleAdditionnel){
+		b.setOnMousePressed(new EventHandler<MouseEvent>(){
+			@Override
+			public void handle(MouseEvent event){
+				b.setStyle(style+styleAdditionnel);
+			}
+		});
+		
+		b.setOnMouseReleased(new EventHandler<MouseEvent>(){
+			@Override
+			public void handle(MouseEvent event){
+				b.setStyle(style);
+			}
+		});
+	}
+	
 	private void setBoutonClassique(Button b, int numero, Controleur controleur) {
+		String style = "-fx-background-color: #0497D7; -fx-text-fill: white; -fx-font-size: 15;";
 		b.setPrefSize(300, 50);
 		b.setMinSize(150, 30);
-		b.setStyle("-fx-background-color: #0497D7; -fx-text-fill: white; -fx-font-size: 15;");
+		b.setStyle(style);
 		b.setOnAction(new boutonPresse(controleur, numero));
 		b.setCursor(Cursor.HAND);
+		bordReactif(b,style,"-fx-text-fill: #282828; -fx-background-color: #057EB2;");
+		b.setOnMouseEntered(new EventHandler<MouseEvent>
+	    () {
+
+	        @Override
+	        public void handle(MouseEvent event) {
+	        	if(event.getButton() == MouseButton.PRIMARY){
+	        		b.setStyle("-fx-background-color: #057EB2; -fx-text-fill: black; -fx-font-size: 15;");
+	        	}
+	        	else{
+	        		b.setStyle("-fx-background-color: #0497D7; -fx-text-fill: black; -fx-font-size: 15;");
+	        	} 
+	        }
+	    });
+	    b.setOnMouseExited(new EventHandler<MouseEvent>
+	    () {
+
+	        @Override
+	        public void handle(MouseEvent event) {
+	        	
+	        	if(event.getButton() == MouseButton.PRIMARY){
+	        		b.setStyle("-fx-background-color: #057EB2; -fx-text-fill: black; -fx-font-size: 15;");
+	        	}
+	        	else{
+	        		b.setStyle("-fx-background-color: #0497D7; -fx-text-fill: white; -fx-font-size: 15;");
+	        	}
+	        }
+	    });
 	}
 
 	private void setBoutonDesign2(Button b, int numero, Controleur controleur) {
+		String style = "-fx-background-color: #D5D4D7; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;";
 		b.setMaxSize(60, 60);
 		b.setMinSize(60, 60);
-		b.setStyle(
-				"-fx-background-color: #D5D4D7; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
+		b.setStyle(style);
 		b.setOnAction(new boutonPresseEnJeu(controleur, numero));
 		b.setAlignment(Pos.CENTER);
 		b.setCursor(Cursor.HAND);
+		bordReactif(b,style,"-fx-border-width:2; -fx-border-color:black;");
 	}
 
 	private void setBoutonDesign3(Button b, int numero, String couleur, Controleur controleur) {
+		String style = ("-fx-background-color: #" + couleur + "; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
 		b.setMinSize(50, 50);
 		b.setMaxSize(77, 65);
-		b.setStyle("-fx-background-color: #" + couleur
-				+ "; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
+		b.setStyle(style);
 		b.setOnAction(new boutonPresseEnJeu(controleur, numero));
 		b.setCursor(Cursor.HAND);
+		bordReactif(b,style,"-fx-border-width:2; -fx-border-color:black;");
+	}
+	
+	private Button boutonFinDeTour (Controleur controleur) {
+		String style = "-fx-background-color: #FFFF33; -fx-text-fill: black; -fx-font-size: 24; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;";
+		Button finTour = new Button("FIN DE TOUR");
+		finTour.setPrefSize(250, 50);
+		finTour.setMinSize(150, 50);
+		finTour.setStyle(style);
+		finTour.setOnAction(new boutonPresseEnJeu(controleur, 10));
+		finTour.setAlignment(Pos.CENTER);
+		finTour.setCursor(Cursor.HAND);
+		bordReactif(finTour,style,"-fx-border-width:2; -fx-border-color:black;");
+		return finTour;
 	}
 	
 	private void lierCaseAuxControles(Controleur controleur, int i){
@@ -311,14 +372,7 @@ public class Affichage {
 		getTexteTourJ1().setStyle("-fx-font-size: 24; -fx-text-fill: FF6500;");
 
 		// LES BOUTONS EN JEU
-		Button finTour = new Button("FIN DE TOUR");
-		finTour.setPrefSize(250, 50);
-		finTour.setMinSize(150, 50);
-		finTour.setStyle(
-				"-fx-background-color: #FFFF33; -fx-text-fill: black; -fx-font-size: 24; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
-		finTour.setOnAction(new boutonPresseEnJeu(controleur, 10));
-		finTour.setAlignment(Pos.CENTER);
-		finTour.setCursor(Cursor.HAND);
+		Button finTour = boutonFinDeTour(controleur);
 
 		final ImageView iconePause = new ImageView(new Image("file:Images/quitter50x50.png"));
 		Button pause = new Button("", iconePause);
@@ -345,6 +399,7 @@ public class Affichage {
 
 		Label textePassesRestantes = new Label("Passe restante : ");
 		textePassesRestantes.setStyle("-fx-font-size: 24; -fx-text-fill: black;");
+		
 
 		// LES MENU PAUSE ET FIN DE PARTIE
 		menuPause = initMenuPause(controleur);
@@ -403,7 +458,7 @@ public class Affichage {
 		Fenetre.getColumnConstraints().addAll(ctrColonne(20), ctrColonne(40), ctrColonne(20), ctrColonne(20));
 		Fenetre.getRowConstraints().addAll(ctrLigne(8), ctrLigne(7), ctrLigne(15), ctrLigne(5), ctrLigne(30),
 				ctrLigne(10), ctrLigne(5), ctrLigne(20));
-		// Fenetre.setGridLinesVisible(true);
+		//Fenetre.setGridLinesVisible(true);
 
 		// b.setCenter(new Text("Pas encore fait MDR"));
 		b.setCenter(Fenetre);
