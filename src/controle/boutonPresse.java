@@ -84,6 +84,14 @@ public class boutonPresse implements EventHandler<ActionEvent> {
 		case 17: // Bouton Reprendre
 			controleur.cacherMenuPause();
 			break;
+			
+		case 18: // Bouton Sauvegarder
+			
+			break;
+		
+		case 19: // Bouton Charger
+			
+			break;
 
 		default:
 			// faire une exception??

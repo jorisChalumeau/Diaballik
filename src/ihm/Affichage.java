@@ -34,6 +34,7 @@ public class Affichage {
 	public Stage stage;
 	public StackPane[] plateau = new StackPane[49];
 	public Rectangle[] cases = new Rectangle[49];
+	private Button[] boutonsMenuPause = new Button[5];
 	private GridPane grille;
 	private Label texteTourJ1, texteTourJ2;
 	private VBox menuPause;
@@ -65,7 +66,7 @@ public class Affichage {
 		});
 	}
 	
-	private void setBoutonClassique(Button b, int numero, Controleur controleur) {
+	public void setBoutonClassique(Button b, int numero, Controleur controleur) {
 		String style = "-fx-background-color: #0497D7; -fx-text-fill: white; -fx-font-size: 15;";
 		b.setPrefSize(300, 50);
 		b.setMinSize(150, 30);
@@ -79,10 +80,10 @@ public class Affichage {
 	        @Override
 	        public void handle(MouseEvent event) {
 	        	if(event.getButton() == MouseButton.PRIMARY){
-	        		b.setStyle("-fx-background-color: #057EB2; -fx-text-fill: black; -fx-font-size: 15;");
+	        		b.setStyle("-fx-background-color: #057EB2; -fx-text-fill: #282828; -fx-font-size: 15;");
 	        	}
 	        	else{
-	        		b.setStyle("-fx-background-color: #0497D7; -fx-text-fill: black; -fx-font-size: 15;");
+	        		b.setStyle("-fx-background-color: #0497D7; -fx-text-fill: #282828; -fx-font-size: 15;");
 	        	} 
 	        }
 	    });
@@ -93,7 +94,7 @@ public class Affichage {
 	        public void handle(MouseEvent event) {
 	        	
 	        	if(event.getButton() == MouseButton.PRIMARY){
-	        		b.setStyle("-fx-background-color: #057EB2; -fx-text-fill: black; -fx-font-size: 15;");
+	        		b.setStyle("-fx-background-color: #057EB2; -fx-text-fill: #282828; -fx-font-size: 15;");
 	        	}
 	        	else{
 	        		b.setStyle("-fx-background-color: #0497D7; -fx-text-fill: white; -fx-font-size: 15;");
@@ -159,6 +160,9 @@ public class Affichage {
 
 		Button bIA = new Button("Joueur contre Ordinateur");
 		setBoutonClassique(bIA, 2, controleur);
+		
+		Button bCharger = new Button("Charger une partie");
+		setBoutonClassique(bCharger, 19, controleur);
 
 		Button bRegles = new Button("Règles du jeu");
 		setBoutonClassique(bRegles, 3, controleur);
@@ -166,7 +170,7 @@ public class Affichage {
 		Button bQuitter = new Button("Quitter le jeu");
 		setBoutonClassique(bQuitter, 4, controleur);
 
-		vbox.getChildren().addAll(b2joueurs, bIA, bRegles, bQuitter);
+		vbox.getChildren().addAll(b2joueurs, bIA, bCharger, bRegles, bQuitter);
 		return vbox;
 	}
 
@@ -206,17 +210,25 @@ public class Affichage {
 
 		Button bReprendre = new Button("Reprendre");
 		setBoutonClassique(bReprendre, 17, controleur);
+		boutonsMenuPause[0] = bReprendre;
 
 		Button bRecommencer = new Button("Recommencer");
 		setBoutonClassique(bRecommencer, 16, controleur);
+		boutonsMenuPause[1] = bRecommencer;
 
-		Button bAbandonner = new Button("Abandonner");
+		Button bSauvegarder = new Button("Sauvegarder");
+		setBoutonClassique(bSauvegarder, 18, controleur);
+		boutonsMenuPause[2] = bSauvegarder;
+		
+		Button bAbandonner = new Button("Menu Principal");
 		setBoutonClassique(bAbandonner, 9, controleur);
+		boutonsMenuPause[3] = bAbandonner;
 
 		Button bQuitter = new Button("Quitter le jeu");
 		setBoutonClassique(bQuitter, 4, controleur);
+		boutonsMenuPause[4] = bQuitter;
 
-		vbox.getChildren().addAll(texte, bReprendre, bRecommencer, bAbandonner, bQuitter);
+		vbox.getChildren().addAll(texte, bReprendre, bRecommencer, bSauvegarder, bAbandonner, bQuitter);
 		return vbox;
 	}
 
@@ -481,6 +493,9 @@ public class Affichage {
 	}
 	
 	public void afficherMenuPause() {
+		for(Button b : boutonsMenuPause){
+			b.setStyle("-fx-background-color: #0497D7; -fx-text-fill: white; -fx-font-size: 15;");
+		}
 		menuPause.setVisible(true);
 		enPause = true;
 	}

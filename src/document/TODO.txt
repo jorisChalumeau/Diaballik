@@ -19,3 +19,33 @@
 	- dans les options : 
 		- Pouvoir enlever si on veut sur les cases possibles
 	- drag / drop (si on a le temps)
+	
+	
+	
+	TODO v2
+	
+IHM 
+-faire un écran de fin de partie 
+-faire un "grisage" des boutons annuler/refaire/montrer le tour de l'IA, peut etre avec des observateurs juste pour sucer le prof 
+-ajouter des paramètres, accessibles dès le menu (qui doivent être sauvés même si on éteint le programme, mais ça c'est modèle), genre
+ : si tu veux être les bleus ou les oranges, la vitesse de l'IA, le choix de la texture graphique. 
+-"infobulles" sur les boutons annuler/refaire/remontrer - mécanisme(s) du bouton "astuce" 
+- afficher les déplacements/passes restante dans l'IHM 
+...? 
+ 
+CONTROLE 
+-mécanismes "remontrer le tour de l'IA" appelant des fonctions de IHM et prenant de infos dans le modèle sans le modifier 
+-faire marcher "recommencer"
+-faire marcher "sauvegarder"
+-faire marcher "charger partie"
+...?
+ 
+MODELE
+IA Moyenne?
+IA Difficile 
+Annuler/refaire qui marche avec les IA 
+...? 
+  
+AUTRES (guillaume ou quentin maybe?)
+trouver des images de pions sympa
+tester le drag and drop et l'ergonomie de l'ihm en général
