@@ -28,7 +28,7 @@ public class dragDone implements EventHandler<DragEvent> {
 	
 	public void handle(DragEvent event) {
         /* the drag-and-drop gesture ended */
-        System.out.println("onDragDone");
+        //System.out.println("onDragDone");
         /* if the data was successfully moved, clear it */
         if (event.getTransferMode() == TransferMode.MOVE) {
         	//plateau[45].setText("");

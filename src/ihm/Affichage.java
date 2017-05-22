@@ -4,8 +4,6 @@ import controle.Controleur;
 import controle.boutonPresse;
 import controle.boutonPresseEnJeu;
 import controle.clicSurCase;
-import controle.caseSaisie;
-import controle.casePosee;
 import controle.dragDetected;
 import controle.dragOver;
 import controle.dragEntered;
