@@ -185,6 +185,7 @@ public class Controleur {
 				int numeroCaseSrc = pointToNumCase(action.getDest());
 				int numeroCaseDest = pointToNumCase(action.getSrc());
 				jouerActionIHM(typePionSource, numeroCaseSrc, numeroCaseDest);
+
 			} catch (ExceptionMouvementIllegal e) {
 				System.out.println("déplacement impossible");
 			}
@@ -207,10 +208,49 @@ public class Controleur {
 				int numeroCaseSrc = pointToNumCase(action.getSrc());
 				int numeroCaseDest = pointToNumCase(action.getDest());
 				jouerActionIHM(typePionSource, numeroCaseSrc, numeroCaseDest);
+
+				// si le prochain coup n'a pas ete joue par le joueur actuel
+				if (diaballik.getCptMouvement() == 2 && diaballik.isBalleLancee())
+					lancerFinDeTour();
+
 			} catch (ExceptionMouvementIllegal e) {
 				System.out.println("déplacement impossible");
 			}
 		}
+	}
+
+	public void remontrerIA() {
+		deselection();
+
+		// si le joueur a déjà fait un ou plusieurs coups, on les annule
+		while (diaballik.getCptMouvement() != 0 && diaballik.isBalleLancee()) {
+			System.out.println(diaballik.getCptMouvement() + ", " + diaballik.isBalleLancee());
+			annulerCoup();
+		}
+
+		// on repasse à l'autre joueur IA
+		lancerFinDeTour();
+
+		// on annule ses coups également
+		while (diaballik.getCptMouvement() != 0 && diaballik.isBalleLancee()) {
+			annulerCoup();
+		}
+
+		// puis on les rejoue avec un délai de 1,5s
+		PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
+		pause.setOnFinished(event -> {
+			refaireCoup();
+		});
+
+		// tant que l'ia n'a pas fini son tour, on remontre tous ses coups à
+		// un intervalle de 1,5s
+		while (!diaballik.getHistoriqueSecondaire().isEmpty()
+				&& diaballik.getHistorique().peek().getJoueur().getNumeroJoueur() == diaballik.getNumJoueurActuel())
+			pause.play();
+
+		// on repasse à l'autre joueur
+		lancerFinDeTour();
+
 	}
 
 	public Partie getDiaballik() {
@@ -250,8 +290,8 @@ public class Controleur {
 		Joueur j = diaballik.gagnantPartie();
 		if (j != null) {
 			diaballik.mettreFinALaPartie();
-			System.out.println("\n\n\n######################################\n\nLe joueur "
-					+ j.getNumeroJoueur() + " a gagné\n\n######################################");
+			System.out.println("\n\n\n######################################\n\nLe joueur " + j.getNumeroJoueur()
+					+ " a gagné\n\n######################################");
 		}
 	}
 
@@ -273,6 +313,16 @@ public class Controleur {
 		default:
 			break;
 		}
+
+		// on actualise l'affichage des boutons annulerCoup et refaireCoup
+		if (!diaballik.getHistorique().isEmpty())
+			ihm.degriserAnnulerCoup();
+		else
+			ihm.griserAnnulerCoup();
+		if (!diaballik.getHistoriqueSecondaire().isEmpty())
+			ihm.degriserRefaireCoup();
+		else
+			ihm.griserRefaireCoup();
 
 		// TODO : actualiser l'affichage du nb de déplacements / passes restants
 	}
