@@ -41,7 +41,11 @@ public class boutonPresseEnJeu implements EventHandler<ActionEvent> {
 				break;
 
 			case 14: // Bouton RemontrerIA
-
+				if (!controleur.getDiaballik().partieFinie() && !controleur.estEnPause()
+						&& !controleur.getDiaballik().tourIA()
+						&& controleur.getDiaballik().getHistoriqueSecondaire().isEmpty()) {
+					controleur.remontrerIA();
+				}
 				break;
 
 			case 15: // Bouton Refaire

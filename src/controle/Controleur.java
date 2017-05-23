@@ -5,13 +5,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;
 
-import ihm.Affichage;
-import ihm.CaseGraphique;
-import ihm.ColorateurDeRectangles;
 import javafx.animation.PauseTransition;
 import javafx.scene.paint.Color;
-import javafx.stage.WindowEvent;
 import javafx.util.Duration;
+
+import ihm.Affichage;
+import ihm.ColorateurDeRectangles;
 import modele.Case;
 import modele.Coup;
 import modele.ExceptionMouvementIllegal;
@@ -19,6 +18,7 @@ import modele.MouvementIA;
 import modele.Partie;
 import modele.Point;
 import modele.joueurs.Joueur;
+import modele.joueurs.JoueurIA;
 
 public class Controleur {
 
@@ -127,6 +127,9 @@ public class Controleur {
 	}
 
 	private void faireJouerIA() {
+		// on grise les boutons au tour de l'ia
+		actualiserCouleurBoutons();
+
 		ArrayList<MouvementIA> listeCoups = diaballik.jouerIA();
 
 		if (listeCoups == null) {
@@ -154,6 +157,9 @@ public class Controleur {
 					// fin du tour de l'ia après un délai pour qu'il ait le
 					// temps de jouer
 					lancerFinDeTour();
+
+					// on degrise les boutons après le tour de l'ia
+					actualiserCouleurBoutons();
 				}
 			});
 
@@ -164,10 +170,10 @@ public class Controleur {
 	}
 
 	private void reinitHistorique() {
-		diaballik.reinitHistoriqueSecondaire();
-
-		// TODO : griser bouton refaireCoup s'il n'est pas déjà griser =>
-		// disabledProperty
+		if (!diaballik.getHistoriqueSecondaire().isEmpty()) {
+			diaballik.reinitHistoriqueSecondaire();
+			actualiserCouleurBoutons();
+		}
 	}
 
 	public void annulerCoup() {
@@ -186,10 +192,10 @@ public class Controleur {
 				int numeroCaseDest = pointToNumCase(action.getSrc());
 				jouerActionIHM(typePionSource, numeroCaseSrc, numeroCaseDest);
 
+				actualiserCouleurBoutons();
 			} catch (ExceptionMouvementIllegal e) {
 				System.out.println("déplacement impossible");
 			}
-			actualiserCouleurBoutons();
 		}
 
 	}
@@ -210,49 +216,41 @@ public class Controleur {
 				int numeroCaseDest = pointToNumCase(action.getDest());
 				jouerActionIHM(typePionSource, numeroCaseSrc, numeroCaseDest);
 
-				// si le prochain coup n'a pas ete joue par le joueur actuel
-				if (diaballik.getCptMouvement() == 2 && diaballik.isBalleLancee())
+				// si le joueur actuel a fait tous les coups possibles
+				if ((diaballik.tourIA() && diaballik.getHistoriqueSecondaire().isEmpty())
+						|| (diaballik.getCptMouvement() == 2 && diaballik.isBalleLancee()))
 					lancerFinDeTour();
 
+				actualiserCouleurBoutons();
 			} catch (ExceptionMouvementIllegal e) {
 				System.out.println("déplacement impossible");
 			}
-			actualiserCouleurBoutons();
 		}
 	}
 
 	public void remontrerIA() {
 		deselection();
 
-		// si le joueur a déjà fait un ou plusieurs coups, on les annule
-		while (diaballik.getCptMouvement() != 0 && diaballik.isBalleLancee()) {
-			System.out.println(diaballik.getCptMouvement() + ", " + diaballik.isBalleLancee());
+		// on annule tous les coups jusqu'au début du tour précédent de l'IA
+		int numJ = diaballik.getNumJoueurActuel(); // num du joueur humain
+		while (!diaballik.getHistorique().isEmpty() && (diaballik.getNumJoueurActuel() == numJ
+				|| diaballik.getHistorique().peek().getJoueur().getNumeroJoueur() != numJ)) {
 			annulerCoup();
 		}
 
-		// on repasse à l'autre joueur IA
-		lancerFinDeTour();
-
-		// on annule ses coups également
-		while (diaballik.getCptMouvement() != 0 && diaballik.isBalleLancee()) {
-			annulerCoup();
-		}
-
-		// puis on les rejoue avec un délai de 1,5s
+		// puis on rejoue les coups de l'IA avec un délai de 1,5s
 		PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
 		pause.setOnFinished(event -> {
 			refaireCoup();
+			if (!diaballik.getHistoriqueSecondaire().isEmpty() && diaballik.getHistoriqueSecondaire().peek().getJoueur()
+					.getNumeroJoueur() == diaballik.getNumJoueurActuel())
+				pause.play();
 		});
 
 		// tant que l'ia n'a pas fini son tour, on remontre tous ses coups à
 		// un intervalle de 1,5s
-		while (!diaballik.getHistoriqueSecondaire().isEmpty()
-				&& diaballik.getHistorique().peek().getJoueur().getNumeroJoueur() == diaballik.getNumJoueurActuel())
+		if (!diaballik.getHistoriqueSecondaire().isEmpty())
 			pause.play();
-
-		// on repasse à l'autre joueur
-		lancerFinDeTour();
-
 	}
 
 	public Partie getDiaballik() {
@@ -316,9 +314,6 @@ public class Controleur {
 			break;
 		}
 
-		// on actualise l'affichage des boutons annulerCoup et refaireCoup
-		actualiserCouleurBoutons();
-		
 		// TODO : actualiser l'affichage du nb de déplacements / passes restants
 	}
 
@@ -356,10 +351,13 @@ public class Controleur {
 		if (diaballik.tourIA())
 			faireJouerIA();
 	}
-	
-	public void actualiserCouleurBoutons(){
-		ihm.setCouleurBoutonAnnuler(!diaballik.getHistorique().isEmpty());
-		ihm.setCouleurBoutonRefaire(!diaballik.getHistoriqueSecondaire().isEmpty());
+
+	public void actualiserCouleurBoutons() {
+		ihm.setCouleurBoutonAnnuler(!diaballik.getHistorique().isEmpty()
+				&& !(diaballik.tourIA() && diaballik.getHistoriqueSecondaire().isEmpty()));
+		ihm.setCouleurBoutonRefaire(!diaballik.getHistoriqueSecondaire().isEmpty()
+				&& !(diaballik.tourIA() && diaballik.getHistoriqueSecondaire().isEmpty()));
+		ihm.setCouleurBoutonRemontrerIA(diaballik.dejaJoueIA() && !diaballik.tourIA());
 	}
 
 }
