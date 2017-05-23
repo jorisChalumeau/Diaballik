@@ -189,6 +189,7 @@ public class Controleur {
 			} catch (ExceptionMouvementIllegal e) {
 				System.out.println("déplacement impossible");
 			}
+			actualiserCouleurBoutons();
 		}
 
 	}
@@ -216,6 +217,7 @@ public class Controleur {
 			} catch (ExceptionMouvementIllegal e) {
 				System.out.println("déplacement impossible");
 			}
+			actualiserCouleurBoutons();
 		}
 	}
 
@@ -315,15 +317,8 @@ public class Controleur {
 		}
 
 		// on actualise l'affichage des boutons annulerCoup et refaireCoup
-		if (!diaballik.getHistorique().isEmpty())
-			ihm.degriserAnnulerCoup();
-		else
-			ihm.griserAnnulerCoup();
-		if (!diaballik.getHistoriqueSecondaire().isEmpty())
-			ihm.degriserRefaireCoup();
-		else
-			ihm.griserRefaireCoup();
-
+		actualiserCouleurBoutons();
+		
 		// TODO : actualiser l'affichage du nb de déplacements / passes restants
 	}
 
@@ -360,6 +355,11 @@ public class Controleur {
 		// si le joueur 1 est un IA
 		if (diaballik.tourIA())
 			faireJouerIA();
+	}
+	
+	public void actualiserCouleurBoutons(){
+		ihm.setCouleurBoutonAnnuler(!diaballik.getHistorique().isEmpty());
+		ihm.setCouleurBoutonRefaire(!diaballik.getHistoriqueSecondaire().isEmpty());
 	}
 
 }

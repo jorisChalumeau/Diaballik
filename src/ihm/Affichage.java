@@ -39,6 +39,9 @@ public class Affichage {
 	private Label texteTourJ1, texteTourJ2;
 	private VBox menuPause;
 	private boolean enPause;
+	private Button annuler;
+	private Button remontrerIA;
+	private Button refaire;
 	Color tempCouleur;
 
 	// REGLAGES RECURRENTS D OBJETS
@@ -395,16 +398,16 @@ public class Affichage {
 		setBoutonDesign2(aide, 12, controleur);
 
 		final ImageView iconeAnnuler = new ImageView(new Image("file:Images/undo50x50.png"));
-		Button annuler = new Button("", iconeAnnuler);
-		setBoutonDesign3(annuler, 13, "45FCFC", controleur);
+		annuler = new Button("", iconeAnnuler);
+		setBoutonDesign3(annuler, 13, "A0A0A0", controleur);
 
 		final ImageView iconeRemontrerIA = new ImageView(new Image("file:Images/mind50x50.png"));
-		Button remontrerIA = new Button("", iconeRemontrerIA);
-		setBoutonDesign3(remontrerIA, 14, "30B264", controleur);
+		remontrerIA = new Button("", iconeRemontrerIA);
+		setBoutonDesign3(remontrerIA, 14, "A0A0A0", controleur);
 
 		final ImageView iconeRefaire = new ImageView(new Image("file:Images/redo50x50.png"));
-		Button refaire = new Button("", iconeRefaire);
-		setBoutonDesign3(refaire, 15, "45FCFC", controleur);
+		refaire = new Button("", iconeRefaire);
+		setBoutonDesign3(refaire, 15, "A0A0A0", controleur);
 
 		Label texteDeplRestants = new Label("Déplacements restants : ");
 		texteDeplRestants.setStyle("-fx-font-size: 24; -fx-text-fill: black;");
@@ -593,6 +596,33 @@ public class Affichage {
 	
 	public Color getTempCouleur(){
 		return tempCouleur;
+	}
+	
+	public void setCouleurBoutonAnnuler(boolean b){
+		if(b){
+			annuler.setStyle("-fx-background-color:#45FCFC; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
+		}
+		else{
+			annuler.setStyle("-fx-background-color:#A0A0A0; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
+		}
+	}
+	
+	public void setCouleurBoutonRefaire(boolean b){
+		if(b){
+			annuler.setStyle("-fx-background-color:#45FCFC; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
+		}
+		else{
+			annuler.setStyle("-fx-background-color:#A0A0A0; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
+		}
+	}
+	
+	public void setCouleurBoutonRemontrerIA(boolean b){
+		if(b){
+			annuler.setStyle("-fx-background-color:#30B264; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
+		}
+		else{
+			annuler.setStyle("-fx-background-color:#A0A0A0; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
+		}
 	}
 	
 	

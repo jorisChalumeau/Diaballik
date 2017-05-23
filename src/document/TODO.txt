@@ -29,7 +29,8 @@ IHM
 -faire un "grisage" des boutons annuler/refaire/montrer le tour de l'IA, peut etre avec des observateurs juste pour sucer le prof 
 -ajouter des paramètres, accessibles dès le menu (qui doivent être sauvés même si on éteint le programme, mais ça c'est modèle), genre
  : si tu veux être les bleus ou les oranges, la vitesse de l'IA, le choix de la texture graphique. 
--"infobulles" sur les boutons annuler/refaire/remontrer - mécanisme(s) du bouton "astuce" 
+-"infobulles" sur les boutons annuler/refaire/remontrer 
+- mécanisme(s) du bouton "astuce" 
 - afficher les déplacements/passes restante dans l'IHM 
 ...? 
  
