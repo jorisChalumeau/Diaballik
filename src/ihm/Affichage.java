@@ -136,7 +136,7 @@ public class Affichage {
 		b.setOnAction(new boutonPresseEnJeu(controleur, numero));
 		b.setAlignment(Pos.CENTER);
 		b.setCursor(Cursor.HAND);
-		bordReactif(b,style,"-fx-border-width:2; -fx-border-color:black;");
+		//bordReactif(b,style,"-fx-border-width:2; -fx-border-color:black;");
 	}
 
 	private void setBoutonDesign3(Button b, int numero, String couleur, Controleur controleur) {
@@ -450,17 +450,17 @@ public class Affichage {
 
 		final ImageView iconeAnnuler = new ImageView(new Image("file:Images/undo50x50.png"));
 		annuler = new Button("", iconeAnnuler);
-		setBoutonDesign3(annuler, 13, "A0A0A0", controleur);
+		setBoutonDesign3(annuler, 13, "45FCFC", controleur);
 		annuler.setDisable(true);
 
 		final ImageView iconeRemontrerIA = new ImageView(new Image("file:Images/mind50x50.png"));
 		remontrerIA = new Button("", iconeRemontrerIA);
-		setBoutonDesign3(remontrerIA, 14, "A0A0A0", controleur);
+		setBoutonDesign3(remontrerIA, 14, "30B264", controleur);
 		remontrerIA.setDisable(true);
 
 		final ImageView iconeRefaire = new ImageView(new Image("file:Images/redo50x50.png"));
 		refaire = new Button("", iconeRefaire);
-		setBoutonDesign3(refaire, 15, "A0A0A0", controleur);
+		setBoutonDesign3(refaire, 15, "45FCFC", controleur);
 		refaire.setDisable(true);
 
 		Label texteDeplRestants = new Label("Déplacements restants : ");
@@ -472,13 +472,13 @@ public class Affichage {
 		//Infobulles
 		final ImageView infobulleAnnuler = new ImageView(new Image("file:Images/infobulleAnnuler.png"));
 		infobulleAnnuler.setVisible(false);
-		setInfobulle(annuler,infobulleAnnuler);
+		//setInfobulle(annuler,infobulleAnnuler);
 		final ImageView infobulleRemontrerIA = new ImageView(new Image("file:Images/infobulleRemontrerIA.png"));
 		infobulleRemontrerIA.setVisible(false);
-		setInfobulle(remontrerIA,infobulleRemontrerIA);
+		//setInfobulle(remontrerIA,infobulleRemontrerIA);
 		final ImageView infobulleRefaire = new ImageView(new Image("file:Images/infobulleRefaire.png"));
 		infobulleRefaire.setVisible(false);
-		setInfobulle(refaire,infobulleRefaire);
+		//setInfobulle(refaire,infobulleRefaire);
 
 		// LES MENU PAUSE ET FIN DE PARTIE
 		menuPause = initMenuPause(controleur);
@@ -690,33 +690,27 @@ public class Affichage {
 	
 	public void setCouleurBoutonAnnuler(boolean b){
 		if(b){
-			annuler.setStyle("-fx-background-color:#45FCFC; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
 			annuler.setDisable(false);
 		}
 		else{
-			annuler.setStyle("-fx-background-color:#A0A0A0; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
 			annuler.setDisable(true);
 		}
 	}
 	
 	public void setCouleurBoutonRefaire(boolean b){
 		if(b){
-			refaire.setStyle("-fx-background-color:#45FCFC; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
 			refaire.setDisable(false);
 		}
 		else{
-			refaire.setStyle("-fx-background-color:#A0A0A0; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
 			refaire.setDisable(true);
 		}
 	}
 	
 	public void setCouleurBoutonRemontrerIA(boolean b){
 		if(b){
-			remontrerIA.setStyle("-fx-background-color:#30B264; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
 			remontrerIA.setDisable(false);
 		}
 		else{
-			remontrerIA.setStyle("-fx-background-color:#A0A0A0; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
 			remontrerIA.setDisable(true);
 		}
 	}
