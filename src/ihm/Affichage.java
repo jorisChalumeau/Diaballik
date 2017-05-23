@@ -451,14 +451,17 @@ public class Affichage {
 		final ImageView iconeAnnuler = new ImageView(new Image("file:Images/undo50x50.png"));
 		annuler = new Button("", iconeAnnuler);
 		setBoutonDesign3(annuler, 13, "A0A0A0", controleur);
+		annuler.setDisable(true);
 
 		final ImageView iconeRemontrerIA = new ImageView(new Image("file:Images/mind50x50.png"));
 		remontrerIA = new Button("", iconeRemontrerIA);
 		setBoutonDesign3(remontrerIA, 14, "A0A0A0", controleur);
+		remontrerIA.setDisable(true);
 
 		final ImageView iconeRefaire = new ImageView(new Image("file:Images/redo50x50.png"));
 		refaire = new Button("", iconeRefaire);
 		setBoutonDesign3(refaire, 15, "A0A0A0", controleur);
+		refaire.setDisable(true);
 
 		Label texteDeplRestants = new Label("Déplacements restants : ");
 		texteDeplRestants.setStyle("-fx-font-size: 24; -fx-text-fill: black;");

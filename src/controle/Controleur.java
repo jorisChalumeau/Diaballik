@@ -84,6 +84,7 @@ public class Controleur {
 			int numeroCaseSrc = pointToNumCase(pointPionSelectionne);
 			reinitHistorique();
 			jouerActionIHM(typePionSource, numeroCaseSrc, numero);
+			actualiserCouleurBoutons();
 		} catch (Exception e) {
 			System.out.println("déplacement impossible");
 		}
@@ -290,6 +291,7 @@ public class Controleur {
 		Joueur j = diaballik.gagnantPartie();
 		if (j != null) {
 			diaballik.mettreFinALaPartie();
+			ihm.afficherMenuFinPartie(j.getNumeroJoueur());
 			System.out.println("\n\n\n######################################\n\nLe joueur " + j.getNumeroJoueur()
 					+ " a gagné\n\n######################################");
 		}
