@@ -38,10 +38,12 @@ public class Affichage {
 	private GridPane grille;
 	private Label texteTourJ1, texteTourJ2;
 	private VBox menuPause;
+	private VBox menuFinPartie;
 	private boolean enPause;
 	private Button annuler;
 	private Button remontrerIA;
 	private Button refaire;
+	private Label messageVictoire;
 	Color tempCouleur;
 
 	// REGLAGES RECURRENTS D OBJETS
@@ -57,7 +59,8 @@ public class Affichage {
 		b.setOnMousePressed(new EventHandler<MouseEvent>(){
 			@Override
 			public void handle(MouseEvent event){
-				b.setStyle(style+styleAdditionnel);
+				if(!enPause)
+					b.setStyle(style+styleAdditionnel);
 			}
 		});
 		
@@ -232,6 +235,35 @@ public class Affichage {
 		boutonsMenuPause[4] = bQuitter;
 
 		vbox.getChildren().addAll(texte, bReprendre, bRecommencer, bSauvegarder, bAbandonner, bQuitter);
+		return vbox;
+	}
+	
+	public VBox initMenuFinPartie(Controleur controleur) {
+		VBox vbox = new VBox();
+		vbox.setMinSize(100, 25);
+		vbox.setPadding(new Insets(15, 12, 15, 12));
+		vbox.setSpacing(20);
+		vbox.setAlignment(Pos.CENTER);
+		vbox.setStyle("-fx-background-color: #D5D4D7; -fx-border-color:black;");
+
+		messageVictoire = new Label("");
+		messageVictoire.setStyle("-fx-font-size: 30; -fx-text-fill: black;");
+
+
+		Button bRecommencer = new Button("Recommencer");
+		setBoutonClassique(bRecommencer, 16, controleur);
+		boutonsMenuPause[1] = bRecommencer;
+
+		
+		Button bAbandonner = new Button("Menu Principal");
+		setBoutonClassique(bAbandonner, 9, controleur);
+		boutonsMenuPause[3] = bAbandonner;
+
+		Button bQuitter = new Button("Quitter le jeu");
+		setBoutonClassique(bQuitter, 4, controleur);
+		boutonsMenuPause[4] = bQuitter;
+
+		vbox.getChildren().addAll(messageVictoire, bRecommencer, bAbandonner, bQuitter);
 		return vbox;
 	}
 
@@ -419,6 +451,8 @@ public class Affichage {
 		// LES MENU PAUSE ET FIN DE PARTIE
 		menuPause = initMenuPause(controleur);
 		menuPause.setVisible(false);
+		menuFinPartie = initMenuFinPartie(controleur);
+		menuFinPartie.setVisible(false);
 
 		// On met tous les composants graphiques dans une grille "Fenêtre"
 		GridPane Fenetre = new GridPane();
@@ -468,7 +502,10 @@ public class Affichage {
 		GridPane.setHalignment(finTour, HPos.CENTER);
 
 		// MENUS PAUSE ET FIN DE PARTIE
-		Fenetre.add(getMenuPause(), 1, 2, 2, 4);
+		Fenetre.add(menuPause, 1, 2, 2, 4);
+		Fenetre.add(menuFinPartie, 1, 2, 2, 4);
+		
+		
 
 		Fenetre.getColumnConstraints().addAll(ctrColonne(20), ctrColonne(40), ctrColonne(20), ctrColonne(20));
 		Fenetre.getRowConstraints().addAll(ctrLigne(8), ctrLigne(7), ctrLigne(15), ctrLigne(5), ctrLigne(30),
@@ -510,6 +547,12 @@ public class Affichage {
 	
 	public Boolean estEnPause() {
 		return enPause;
+	}
+	
+	public void afficherMenuFinPartie(int j) {
+		menuFinPartie.setVisible(true);
+		enPause = true;
+		messageVictoire.setText("Le joueur "+j+" a gagné");
 	}
 	
 	public void deplacementOrange(int n1, int n2, Controleur c) {
@@ -609,19 +652,19 @@ public class Affichage {
 	
 	public void setCouleurBoutonRefaire(boolean b){
 		if(b){
-			annuler.setStyle("-fx-background-color:#45FCFC; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
+			refaire.setStyle("-fx-background-color:#45FCFC; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
 		}
 		else{
-			annuler.setStyle("-fx-background-color:#A0A0A0; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
+			refaire.setStyle("-fx-background-color:#A0A0A0; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
 		}
 	}
 	
 	public void setCouleurBoutonRemontrerIA(boolean b){
 		if(b){
-			annuler.setStyle("-fx-background-color:#30B264; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
+			remontrerIA.setStyle("-fx-background-color:#30B264; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
 		}
 		else{
-			annuler.setStyle("-fx-background-color:#A0A0A0; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
+			remontrerIA.setStyle("-fx-background-color:#A0A0A0; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
 		}
 	}
 	
