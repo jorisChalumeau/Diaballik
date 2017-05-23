@@ -554,7 +554,7 @@ public class Affichage {
 		Fenetre.getColumnConstraints().addAll(ctrColonne(20), ctrColonne(40), ctrColonne(20), ctrColonne(20));
 		Fenetre.getRowConstraints().addAll(ctrLigne(8), ctrLigne(7), ctrLigne(15), ctrLigne(5), ctrLigne(30),
 				ctrLigne(10), ctrLigne(5), ctrLigne(20));
-		Fenetre.setGridLinesVisible(true);
+		//Fenetre.setGridLinesVisible(true);
 
 		// b.setCenter(new Text("Pas encore fait MDR"));
 		b.setCenter(Fenetre);
