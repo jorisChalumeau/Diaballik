@@ -335,8 +335,6 @@ public class Partie {
 
 		return listeCoups;
 	}
-	
-	
 
 	public void finDeTour() {
 		changerJoueur();
@@ -350,7 +348,7 @@ public class Partie {
 	public Joueur gagnantPartie() {
 		return r.checkGameIsOver(this);
 	}
-	
+
 	public boolean partieFinie() {
 		return partieFinie;
 	}
@@ -450,8 +448,16 @@ public class Partie {
 	}
 
 	public void reinitHistoriqueSecondaire() {
-		if (!historiqueSecondaire.isEmpty())
-			this.historiqueSecondaire = new Stack<Coup>();
+		this.historiqueSecondaire = new Stack<Coup>();
+	}
+
+	public boolean dejaJoueIA() {
+		Coup[] histo = new Coup[this.historique.size()];
+		this.historique.copyInto(histo);
+		for (Coup c : histo)
+			if (c.getJoueur() instanceof JoueurIA)
+				return true;
+		return false;
 	}
 
 }

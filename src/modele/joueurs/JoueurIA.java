@@ -15,8 +15,8 @@ public abstract class JoueurIA implements Joueur {
 	int numJoueur;
 	String difficulte;
 
-	public JoueurIA(int numJoueur) {
-		this.numJoueur = numJoueur;
+	public JoueurIA() {
+		
 	}
 
 	public static Joueur creerIA(int i, String difficulte) {
@@ -77,8 +77,8 @@ public abstract class JoueurIA implements Joueur {
 		//IA Difficile
 		else if (partie.getJoueurActuel() instanceof JoueurIADifficile){
 			JoueurIADifficile iaDiff = ((JoueurIADifficile) partie.getJoueurActuel());
-			iaDiff.currentBoard=new Plateau(partie.getPlateau());
-			List<MouvementIA> moves = iaDiff.Play();
+			iaDiff.plateauActuel=new Plateau(partie.getPlateau());
+			List<MouvementIA> moves = iaDiff.Jouer(partie);
 			for (MouvementIA move:moves)
 			{
 				try

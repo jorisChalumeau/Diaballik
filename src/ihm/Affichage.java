@@ -688,27 +688,33 @@ public class Affichage {
 	public void setCouleurBoutonAnnuler(boolean b){
 		if(b){
 			annuler.setStyle("-fx-background-color:#45FCFC; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
+			annuler.setDisable(false);
 		}
 		else{
 			annuler.setStyle("-fx-background-color:#A0A0A0; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
+			annuler.setDisable(true);
 		}
 	}
 	
 	public void setCouleurBoutonRefaire(boolean b){
 		if(b){
 			refaire.setStyle("-fx-background-color:#45FCFC; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
+			refaire.setDisable(false);
 		}
 		else{
 			refaire.setStyle("-fx-background-color:#A0A0A0; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
+			refaire.setDisable(true);
 		}
 	}
 	
 	public void setCouleurBoutonRemontrerIA(boolean b){
 		if(b){
 			remontrerIA.setStyle("-fx-background-color:#30B264; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
+			remontrerIA.setDisable(false);
 		}
 		else{
 			remontrerIA.setStyle("-fx-background-color:#A0A0A0; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
+			remontrerIA.setDisable(true);
 		}
 	}
 	

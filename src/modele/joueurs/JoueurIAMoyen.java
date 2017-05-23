@@ -10,7 +10,7 @@ import modele.tests.Regles;
 public class JoueurIAMoyen extends JoueurIA {
 
 	public JoueurIAMoyen(int numJoueur) {
-		super(numJoueur);
+		this.numJoueur = numJoueur;
 		this.difficulte = "moyen";
 	}
 
