@@ -225,6 +225,7 @@ public class Partie {
 
 		return partie;
 	}
+	
 
 	public Case getCase(Point position) {
 		return p.obtenirCase(position);

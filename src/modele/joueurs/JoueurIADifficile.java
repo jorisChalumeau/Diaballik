@@ -15,33 +15,31 @@ import modele.tests.Regles;
 
 public class JoueurIADifficile extends JoueurIA {
 	int numJoueur;
-	public Plateau currentBoard;
-	public Plateau getCurrentBoard() {
-		return currentBoard;
-	}
+	public Plateau plateauActuel;
+	
 
-	Arbre gameTree;
-	Regles rulebook;
-	List<MouvementIA> moves;
-	List<Point> piecesPositions;
-	Point ballPosition;
+	Arbre arbre;
+	Regles regles;
+	List<MouvementIA> coupIA;
+	List<Point> positionsPions;
+	Point positionBalle;
 	List<Point> allPosibleCoord;
 	Random generator;
-	public int depth;
-	final int WIN = 10000;
-	final int LOSS = -10000;
+	public int profondeur;
+	final int VICTOIRE = 10000;
+	final int DEFAITE = -10000;
 	List<MouvementIA> last3;
 
 	public JoueurIADifficile(int numJoueur) {
-		super(numJoueur);
+		this.numJoueur=numJoueur;
 		this.difficulte = "difficile";
-		moves = new ArrayList<>();
+		coupIA = new ArrayList<>();
 		last3 = new ArrayList<>();
-		rulebook = new Regles();
-		piecesPositions = new ArrayList<>();
+		regles = new Regles();
+		positionsPions = new ArrayList<>();
 		allPosibleCoord = new ArrayList<>();
 		generator = new Random();
-		depth = 1;
+		profondeur = 1;
 
 
 		for (int i = 0; i < 7; i++)
@@ -54,11 +52,11 @@ public class JoueurIADifficile extends JoueurIA {
 		}
 	}
 	
-	private Point[] getPlayerPiecesPositions(Plateau plateau)
+	private Point[] obtenirPositionDesPions(Plateau plateau)
 	{
 		Point[] tmpPieceList = new Point[7];
 		int i = 0;
-		if (this.difficulte=="difficile")
+		if (this.numJoueur==2)
 		{
 			for (Point x : allPosibleCoord)
 			{
@@ -86,78 +84,78 @@ public class JoueurIADifficile extends JoueurIA {
 		return tmpPieceList;
 	}
 	
-	public void GenerateGameTree(Noeud node, Plateau board, Point[] pieces, int depth, Joueur currentPlayer)
+	public void genererArbreDeJeu(Noeud n, Plateau p, Point[] pions, int prof, Joueur joueurActuel, Partie partie)
 	{
-		if (depth <= 0) return;
+		if (prof <= 0) return;
 		Noeud tmp = new Noeud();
-		if (node.ia != currentPlayer)
+		if (n.ia != joueurActuel)
 		{
 			tmp.moves = 0;
 			tmp.passed = false;
+			
 		} else
 		{
-			tmp.moves = node.moves;
-			tmp.passed = node.passed;
+			tmp.moves = n.moves;
+			tmp.passed = n.passed;
+			
 		}
-		for (MouvementIA move : genererMouvementsPossibles(tmp, board, pieces, currentPlayer))
+		for (MouvementIA move : genererMouvementsPossibles(tmp, p, pions, joueurActuel))
 		{
-
-			if (node.parent.ia == currentPlayer)
+			if (n.parent.ia == joueurActuel)
 			{
-				if (move.type == TypeMouvement.PASSE || node.passed)
-					node.enfants.add(new Noeud(move, true, node, node.moves, currentPlayer));
+				if (move.type == TypeMouvement.PASSE || n.passed)
+					n.enfants.add(new Noeud(move, true, n, n.moves, joueurActuel));
 				else
-					node.enfants.add(new Noeud(move, false, node, node.moves + 1, currentPlayer));
+					n.enfants.add(new Noeud(move, false, n, n.moves + 1, joueurActuel));
 			} else if (move.type == TypeMouvement.PASSE)
-				node.enfants.add(new Noeud(move, true, node, node.moves, currentPlayer));
+				n.enfants.add(new Noeud(move, true, n, n.moves, joueurActuel));
 			else
-				node.enfants.add(new Noeud(move, false, node, node.moves + 1, currentPlayer));
+				n.enfants.add(new Noeud(move, false, n, n.moves + 1, joueurActuel));
 
 		}
-		Collections.shuffle(node.enfants, new Random(System.currentTimeMillis()));
-		depth--;
-		if (depth % 3 == 0)
-			currentPlayer = ChangePlayer(currentPlayer);
-		for (Noeud next : node.enfants)
+		Collections.shuffle(n.enfants, new Random(System.currentTimeMillis()));
+		prof--;
+		if (prof % 3 == 0)
+			joueurActuel = changerJoueur(joueurActuel, partie);
+		for (Noeud next : n.enfants)
 		{
 
-			Plateau newBoard = new Plateau(board);
-			if (node.mouvement != null)
-				newBoard.actualiser(node.mouvement.src, node.mouvement.dest);
-			GenerateGameTree(next, new Plateau(newBoard), getPlayerPiecesPositions(newBoard), depth, currentPlayer);
+			Plateau newBoard = new Plateau(p);
+			if (n.mouvement != null)
+				newBoard.actualiser(n.mouvement.src, n.mouvement.dest);
+			genererArbreDeJeu(next, new Plateau(newBoard), obtenirPositionDesPions(newBoard), prof, joueurActuel, partie);
 
 		}
 	}
 
-
-
-	private Joueur ChangePlayer(Joueur currentPlayer) {
-		// TODO Auto-generated method stub
-		return null;
+	private Joueur changerJoueur(Joueur joueurActuel, Partie partie) {
+		if (joueurActuel.getNumeroJoueur() == partie.getJ1().getNumeroJoueur())
+			return partie.getJ2();
+		else return partie.getJ1();
 	}
 
 	@Override
-	public List<MouvementIA> genererMouvementsPossibles(Noeud node, Plateau board, Point[] pieces, Joueur currentPlayer){
+	public List<MouvementIA> genererMouvementsPossibles(Noeud n, Plateau plateau, Point[] pions, Joueur joueurActuel){
 		List<MouvementIA> pMoves = new ArrayList<>();
 		for (int i = 0; i < 7; i++)
 		{
-			if (node.moves < 2)
+			if (n.moves < 2)
 				for (int j = -1; j < 2; j = j + 2)
 				{
-					if (pieces[i].changeColumn(j).getColumn() > 0 && pieces[i].changeColumn(j).getColumn() < 7)
+					if (pions[i].changeColumn(j).getColumn() > 0 && pions[i].changeColumn(j).getColumn() < 7)
 					{
-						if (rulebook.obtenirActionDuJoueurSiActionPossible(board, pieces[i], pieces[i].changeColumn(j), currentPlayer) == TypeMouvement.DEPLACEMENT)
+						if (regles.obtenirActionDuJoueurSiActionPossible(plateau, pions[i], pions[i].changeColumn(j), joueurActuel) == TypeMouvement.DEPLACEMENT)
 						{
-							MouvementIA tmp = new MouvementIA(pieces[i], pieces[i].changeColumn(j), TypeMouvement.DEPLACEMENT);
+							MouvementIA tmp = new MouvementIA(pions[i], pions[i].changeColumn(j), TypeMouvement.DEPLACEMENT, plateau.obtenirCase(pions[i]));
 							pMoves.add(tmp);
 						}
 					}
 
-					if (pieces[i].changeRow(j).getRow() >= 0 && pieces[i].changeRow(j).getRow() < 7)
+					if (pions[i].changeRow(j).getRow() >= 0 && pions[i].changeRow(j).getRow() < 7)
 					{
-						if (rulebook.obtenirActionDuJoueurSiActionPossible(board, pieces[i], pieces[i].changeRow(j), currentPlayer) == TypeMouvement.DEPLACEMENT)
+						if (regles.obtenirActionDuJoueurSiActionPossible(plateau, pions[i], pions[i].changeRow(j), joueurActuel) == TypeMouvement.DEPLACEMENT)
 						{
-							MouvementIA tmp = new MouvementIA(pieces[i], pieces[i].changeRow(j), TypeMouvement.DEPLACEMENT);
+							MouvementIA tmp = new MouvementIA(pions[i], pions[i].changeRow(j), TypeMouvement.DEPLACEMENT, plateau.obtenirCase(pions[i]));
 							pMoves.add(tmp);
 
 						}
@@ -165,22 +163,22 @@ public class JoueurIADifficile extends JoueurIA {
 
 
 				}
-			if (!node.passed)
-				if (rulebook.obtenirActionDuJoueurSiActionPossible(board, pieces[6], pieces[i], currentPlayer) == TypeMouvement.PASSE)
+			if (!n.passed)
+				if (regles.obtenirActionDuJoueurSiActionPossible(plateau, pions[6], pions[i], joueurActuel) == TypeMouvement.PASSE)
 				{
-					MouvementIA tmp = new MouvementIA(pieces[6], pieces[i], TypeMouvement.PASSE);
+					MouvementIA tmp = new MouvementIA(pions[6], pions[i], TypeMouvement.PASSE, plateau.obtenirCase(pions[6]));
 					pMoves.add(tmp);
 				}
 		}
-		if (node.parent != null && node.parent.ia == currentPlayer)
+		if (n.parent != null && n.parent.ia == joueurActuel)
 		{
-			pMoves.remove(node.parent.mouvement);
-			pMoves.remove(new MouvementIA(node.parent.mouvement.dest, node.parent.mouvement.src, node.parent.mouvement.type));
-			if (node.parent.parent != null && node.parent.parent.ia == currentPlayer)
+			pMoves.remove(n.parent.mouvement);
+			pMoves.remove(new MouvementIA(n.parent.mouvement.dest, n.parent.mouvement.src, n.parent.mouvement.type));
+			if (n.parent.parent != null && n.parent.parent.ia == joueurActuel)
 			{
-				pMoves.remove(node.parent.parent.mouvement);
-				pMoves.remove(new MouvementIA(node.parent.parent.mouvement.dest,
-						node.parent.parent.mouvement.src, node.parent.parent.mouvement.type));
+				pMoves.remove(n.parent.parent.mouvement);
+				pMoves.remove(new MouvementIA(n.parent.parent.mouvement.dest,
+						n.parent.parent.mouvement.src, n.parent.parent.mouvement.type));
 			}
 		}
 		pMoves.removeAll(last3);
@@ -188,25 +186,29 @@ public class JoueurIADifficile extends JoueurIA {
 		return pMoves;
 	}
 	
-	public int MinMax(Noeud node, Plateau board, int depth, boolean maximizing)
+	public int MinMax(Noeud noeud, Plateau plateau, int profondeur, boolean maximiser)
 	{
-
-		if (depth == 0 || node.enfants.isEmpty())
-		{
-			return maximizing ? EvaluateMove(board, node, maximizing) : (-EvaluateMove(board, node, maximizing));
+		
+		
+		if (profondeur == 0 || noeud.enfants.isEmpty())
+		{		
+			
+			return maximiser ? evaluerAction(plateau, noeud, maximiser) : (-evaluerAction(plateau, noeud, maximiser)) ;
 		}
-		if (depth % 3 == 0)
+		if (profondeur % 3 == 0)
 		{
-			maximizing = !maximizing;
+			maximiser = !maximiser;
 		}
-		if (maximizing)
+		
+		
+		if (maximiser)
 		{
 			int bestValue = -999999;
-			for (Noeud tmpNode : node.enfants)
+			for (Noeud tmpNode : noeud.enfants)
 			{
-				Plateau nextBoard = new Plateau(board);
+				Plateau nextBoard = new Plateau(plateau);
 				nextBoard.actualiser(tmpNode.mouvement.src, tmpNode.mouvement.dest);
-				tmpNode.grade = MinMax(tmpNode, nextBoard, depth - 1, maximizing);
+				tmpNode.grade = MinMax(tmpNode, nextBoard, profondeur - 1, maximiser);
 				if (tmpNode.grade > bestValue) bestValue = tmpNode.grade;
 
 			}
@@ -216,12 +218,12 @@ public class JoueurIADifficile extends JoueurIA {
 		else
 		{
 			int bestValue = 999999;
-			for (Noeud tmpNode : node.enfants)
+			for (Noeud tmpNode : noeud.enfants)
 			{
-				Plateau nextBoard = new Plateau(board);
+				Plateau nextBoard = new Plateau(plateau);
 				nextBoard.actualiser(tmpNode.mouvement.src, tmpNode.mouvement.dest);
-				tmpNode.grade = MinMax(tmpNode, nextBoard, --depth, maximizing);
-				//bestValue = gameTree.FindWorstMove(tmpNode).grade;
+				tmpNode.grade = MinMax(tmpNode, nextBoard, --profondeur, maximiser);
+				bestValue = arbre.FindWorstMove(tmpNode).grade;
 				if (tmpNode.grade < bestValue) bestValue = tmpNode.grade;
 
 			}
@@ -229,17 +231,17 @@ public class JoueurIADifficile extends JoueurIA {
 		}
 	}
 	
-	public List<MouvementIA> Move()
+	public List<MouvementIA> Coup()
 	{
-		moves.clear();
-		Noeud move1, move2, move3;
-		move1 = gameTree.FindBestMove(gameTree.root);
-		move2 = gameTree.FindBestMove(move1);
-		move3 = gameTree.FindBestMove(move2);
-		moves.add(move1.mouvement);
-		moves.add(move2.mouvement);
-		moves.add(move3.mouvement);
-		last3 = new ArrayList<>(moves);
+		coupIA.clear();
+		Noeud coup1, coup2, coup3;
+		coup1 = arbre.FindBestMove(arbre.root);
+		coup2 = arbre.FindBestMove(coup1);
+		coup3 = arbre.FindBestMove(coup2);
+		coupIA.add(coup1.mouvement);
+		coupIA.add(coup2.mouvement);
+		coupIA.add(coup3.mouvement);
+		last3 = new ArrayList<>(coupIA);
 		try
 		{
 			last3.forEach(MouvementIA::revenir);
@@ -248,49 +250,50 @@ public class JoueurIADifficile extends JoueurIA {
 		{
 
 		}
-		return moves;
+		return coupIA;
 	}
 	
-	public int EvaluateMove(Plateau board, Noeud move, boolean maximizing)
+	public int evaluerAction(Plateau plateau, Noeud noeud, boolean maximiser)
 	{
 		int tmpGrade = 0;
 		int p1Start = 0;
 		int p2Start = 6;
-		Joueur currentPlayer = move.ia;
-		board.actualiser(move.mouvement.src, move.mouvement.dest);
-		if (rulebook.checkCasGagnant(currentPlayer, board) && currentPlayer == this)
-			return WIN;
-		else if (rulebook.checkCasGagnant(currentPlayer, board) && currentPlayer != this)
-			return LOSS;
-		board.actualiser(move.mouvement.dest, move.mouvement.src);
+		Joueur currentPlayer = noeud.ia;
+		plateau.actualiser(noeud.mouvement.src, noeud.mouvement.dest);
+		if (regles.checkCasGagnant(currentPlayer, plateau) && currentPlayer == this){
+			System.out.println("VICTOIRE");
+			return VICTOIRE;
+		}
+		else if (regles.checkCasGagnant(currentPlayer, plateau) && currentPlayer != this)
+			return DEFAITE;
+		plateau.actualiser(noeud.mouvement.dest, noeud.mouvement.src);
 
-		if (move.ia == this)
+		if (noeud.ia == this)
 		{
-			if (move.mouvement.dest.getRow() == p1Start)
+			if (noeud.mouvement.dest.getRow() == p1Start)
 				tmpGrade += 200;
 			else
-				tmpGrade += ((7 - move.mouvement.dest.getRow()) * 10);
+				tmpGrade += ((7 - noeud.mouvement.dest.getRow()) * 10);
 		} else
 		{
-			if (move.mouvement.dest.getRow() == p2Start)
+			if (noeud.mouvement.dest.getRow() == p2Start)
 				tmpGrade += 200;
 			else
-				tmpGrade += ((move.mouvement.dest.getRow()) * 10);
+				tmpGrade += ((noeud.mouvement.dest.getRow()) * 10);
 		}
-
 		return tmpGrade;
 	}
 	
-	public List<MouvementIA> Play()
+	public List<MouvementIA> Jouer(Partie partie)
 	{
 
-		gameTree = new Arbre();
-		gameTree.root = new Noeud();
-		gameTree.root.parent = gameTree.root;
-		gameTree.root.ia = this;
-		GenerateGameTree(gameTree.root, new Plateau(currentBoard), getPlayerPiecesPositions(currentBoard), depth * 3, this);
-		gameTree.root.grade = MinMax(gameTree.root, new Plateau(currentBoard), depth * 3, false);
-		return Move();
+		arbre = new Arbre();
+		arbre.root = new Noeud();
+		arbre.root.parent = arbre.root;
+		arbre.root.ia = this;
+		genererArbreDeJeu(arbre.root, new Plateau(plateauActuel), obtenirPositionDesPions(plateauActuel), profondeur * 3, this, partie);
+		arbre.root.grade = MinMax(arbre.root, new Plateau(plateauActuel), profondeur * 3, false);
+		return Coup();
 	}
 	
 	private MouvementIA jouerAction(Partie partie) {
@@ -308,4 +311,7 @@ public class JoueurIADifficile extends JoueurIA {
 		return "difficile";
 	}
 
+	public Plateau getCurrentBoard() {
+		return plateauActuel;
+	}
 }
