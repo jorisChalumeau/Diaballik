@@ -72,6 +72,25 @@ public class Affichage {
 		});
 	}
 	
+	private void setInfobulle(Button b, ImageView i){
+		b.setOnMouseEntered(new EventHandler<MouseEvent>
+	    () {
+
+	        @Override
+	        public void handle(MouseEvent event) {
+	        	i.setVisible(true);
+	        }
+	    });
+	    b.setOnMouseExited(new EventHandler<MouseEvent>
+	    () {
+
+	        @Override
+	        public void handle(MouseEvent event) {
+	        	i.setVisible(false);
+	        }
+	    });
+	}
+	
 	public void setBoutonClassique(Button b, int numero, Controleur controleur) {
 		String style = "-fx-background-color: #0497D7; -fx-text-fill: white; -fx-font-size: 15;";
 		b.setPrefSize(300, 50);
@@ -447,6 +466,16 @@ public class Affichage {
 		Label textePassesRestantes = new Label("Passe restante : ");
 		textePassesRestantes.setStyle("-fx-font-size: 24; -fx-text-fill: black;");
 		
+		//Infobulles
+		final ImageView infobulleAnnuler = new ImageView(new Image("file:Images/infobulleAnnuler.png"));
+		infobulleAnnuler.setVisible(false);
+		setInfobulle(annuler,infobulleAnnuler);
+		final ImageView infobulleRemontrerIA = new ImageView(new Image("file:Images/infobulleRemontrerIA.png"));
+		infobulleRemontrerIA.setVisible(false);
+		setInfobulle(remontrerIA,infobulleRemontrerIA);
+		final ImageView infobulleRefaire = new ImageView(new Image("file:Images/infobulleRefaire.png"));
+		infobulleRefaire.setVisible(false);
+		setInfobulle(refaire,infobulleRefaire);
 
 		// LES MENU PAUSE ET FIN DE PARTIE
 		menuPause = initMenuPause(controleur);
@@ -490,16 +519,31 @@ public class Affichage {
 		Fenetre.add(annuler, 2, 5, 2, 2);
 		GridPane.setHalignment(annuler, HPos.CENTER);
 		GridPane.setMargin(annuler, new Insets(0, annuler.getMaxWidth() * 2 + 10, 0, 0));
+		
+		Fenetre.add(infobulleAnnuler, 2, 4, 2, 1);
+		GridPane.setHalignment(infobulleAnnuler, HPos.CENTER);
+		GridPane.setValignment(infobulleAnnuler, VPos.BOTTOM);
+		GridPane.setMargin(infobulleAnnuler, new Insets(0, annuler.getMaxWidth() * 2 + 10, 0, 0));
 
 		Fenetre.add(remontrerIA, 2, 5, 2, 2);
 		GridPane.setHalignment(remontrerIA, HPos.CENTER);
+		
+		Fenetre.add(infobulleRemontrerIA, 2, 4, 2, 1);
+		GridPane.setHalignment(infobulleRemontrerIA, HPos.CENTER);
+		GridPane.setValignment(infobulleRemontrerIA, VPos.BOTTOM);
 
 		Fenetre.add(refaire, 2, 5, 2, 2);
 		GridPane.setHalignment(refaire, HPos.CENTER);
 		GridPane.setMargin(refaire, new Insets(0, 0, 0, refaire.getMaxWidth() * 2 + 10));
+		
+		Fenetre.add(infobulleRefaire, 2, 4, 2, 1);
+		GridPane.setHalignment(infobulleRefaire, HPos.CENTER);
+		GridPane.setValignment(infobulleRefaire, VPos.BOTTOM);
+		GridPane.setMargin(infobulleRefaire, new Insets(0, 0, 0, refaire.getMaxWidth() * 2 + 10));
 
 		Fenetre.add(finTour, 2, 5, 2, 3);
 		GridPane.setHalignment(finTour, HPos.CENTER);
+		
 
 		// MENUS PAUSE ET FIN DE PARTIE
 		Fenetre.add(menuPause, 1, 2, 2, 4);
@@ -510,7 +554,7 @@ public class Affichage {
 		Fenetre.getColumnConstraints().addAll(ctrColonne(20), ctrColonne(40), ctrColonne(20), ctrColonne(20));
 		Fenetre.getRowConstraints().addAll(ctrLigne(8), ctrLigne(7), ctrLigne(15), ctrLigne(5), ctrLigne(30),
 				ctrLigne(10), ctrLigne(5), ctrLigne(20));
-		//Fenetre.setGridLinesVisible(true);
+		Fenetre.setGridLinesVisible(true);
 
 		// b.setCenter(new Text("Pas encore fait MDR"));
 		b.setCenter(Fenetre);
