@@ -12,7 +12,7 @@ public class Noeud {
 	public int grade;
 	public boolean passed;
 	public List<Noeud> enfants;
-	public Joueur ia;
+	public Joueur joueur;
 	public Noeud parent;
 	public int moves;
 	
@@ -30,7 +30,7 @@ public class Noeud {
 		this.parent = parent;
 		enfants = new ArrayList<>();
 		moves = cnt;
-		ia = currentPlayer;
+		joueur = currentPlayer;
 	}
 
 	public Noeud(){enfants = new ArrayList<>();}

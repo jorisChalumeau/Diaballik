@@ -88,7 +88,7 @@ public class JoueurIADifficile extends JoueurIA {
 	{
 		if (prof <= 0) return;
 		Noeud tmp = new Noeud();
-		if (n.ia != joueurActuel)
+		if (n.joueur != joueurActuel)
 		{
 			tmp.moves = 0;
 			tmp.passed = false;
@@ -101,7 +101,7 @@ public class JoueurIADifficile extends JoueurIA {
 		}
 		for (MouvementIA move : genererMouvementsPossibles(tmp, p, pions, joueurActuel))
 		{
-			if (n.parent.ia == joueurActuel)
+			if (n.parent.joueur == joueurActuel)
 			{
 				if (move.type == TypeMouvement.PASSE || n.passed)
 					n.enfants.add(new Noeud(move, true, n, n.moves, joueurActuel));
@@ -124,7 +124,6 @@ public class JoueurIADifficile extends JoueurIA {
 			if (n.mouvement != null)
 				newBoard.actualiser(n.mouvement.src, n.mouvement.dest);
 			genererArbreDeJeu(next, new Plateau(newBoard), obtenirPositionDesPions(newBoard), prof, joueurActuel, partie);
-
 		}
 	}
 
@@ -170,11 +169,11 @@ public class JoueurIADifficile extends JoueurIA {
 					pMoves.add(tmp);
 				}
 		}
-		if (n.parent != null && n.parent.ia == joueurActuel)
+		if (n.parent != null && n.parent.joueur == joueurActuel)
 		{
 			pMoves.remove(n.parent.mouvement);
 			pMoves.remove(new MouvementIA(n.parent.mouvement.dest, n.parent.mouvement.src, n.parent.mouvement.type));
-			if (n.parent.parent != null && n.parent.parent.ia == joueurActuel)
+			if (n.parent.parent != null && n.parent.parent.joueur == joueurActuel)
 			{
 				pMoves.remove(n.parent.parent.mouvement);
 				pMoves.remove(new MouvementIA(n.parent.parent.mouvement.dest,
@@ -195,6 +194,7 @@ public class JoueurIADifficile extends JoueurIA {
 			
 			return maximiser ? evaluerAction(plateau, noeud, maximiser) : (-evaluerAction(plateau, noeud, maximiser)) ;
 		}
+		
 		if (profondeur % 3 == 0)
 		{
 			maximiser = !maximiser;
@@ -213,7 +213,6 @@ public class JoueurIADifficile extends JoueurIA {
 
 			}
 			return bestValue;
-
 		}
 		else
 		{
@@ -229,6 +228,50 @@ public class JoueurIADifficile extends JoueurIA {
 			}
 			return bestValue;
 		}
+	}
+	
+
+	public int evaluerAction(Plateau plateau, Noeud noeud, boolean maximiser)
+	{
+		int tmpGrade = 0;
+		int p1Start = 0;
+		int p2Start = 6;
+		Joueur currentPlayer = noeud.joueur;
+		plateau.actualiser(noeud.mouvement.src, noeud.mouvement.dest);
+		if (regles.checkCasGagnant(currentPlayer, plateau) && currentPlayer == this){
+			System.out.println("VICTOIRE");
+			return VICTOIRE;
+		}
+		else if (regles.checkCasGagnant(currentPlayer, plateau) && currentPlayer != this)
+			return DEFAITE;
+		plateau.actualiser(noeud.mouvement.dest, noeud.mouvement.src);
+
+		if (noeud.joueur == this)
+		{
+			if (noeud.mouvement.dest.getRow() == p1Start)
+				tmpGrade += 200;
+			else
+				tmpGrade += ((7 - noeud.mouvement.dest.getRow()) * 10);
+		} else
+		{
+			if (noeud.mouvement.dest.getRow() == p2Start)
+				tmpGrade += 200;
+			else
+				tmpGrade += ((noeud.mouvement.dest.getRow()) * 10);
+		}
+		return tmpGrade;
+	}
+	
+	public List<MouvementIA> Jouer(Partie partie)
+	{
+
+		arbre = new Arbre();
+		arbre.root = new Noeud();
+		arbre.root.parent = arbre.root;
+		arbre.root.joueur = this;
+		genererArbreDeJeu(arbre.root, new Plateau(plateauActuel), obtenirPositionDesPions(plateauActuel), profondeur * 3, this, partie);
+		arbre.root.grade = MinMax(arbre.root, new Plateau(plateauActuel), profondeur * 3, false);
+		return Coup();
 	}
 	
 	public List<MouvementIA> Coup()
@@ -251,49 +294,6 @@ public class JoueurIADifficile extends JoueurIA {
 
 		}
 		return coupIA;
-	}
-	
-	public int evaluerAction(Plateau plateau, Noeud noeud, boolean maximiser)
-	{
-		int tmpGrade = 0;
-		int p1Start = 0;
-		int p2Start = 6;
-		Joueur currentPlayer = noeud.ia;
-		plateau.actualiser(noeud.mouvement.src, noeud.mouvement.dest);
-		if (regles.checkCasGagnant(currentPlayer, plateau) && currentPlayer == this){
-			System.out.println("VICTOIRE");
-			return VICTOIRE;
-		}
-		else if (regles.checkCasGagnant(currentPlayer, plateau) && currentPlayer != this)
-			return DEFAITE;
-		plateau.actualiser(noeud.mouvement.dest, noeud.mouvement.src);
-
-		if (noeud.ia == this)
-		{
-			if (noeud.mouvement.dest.getRow() == p1Start)
-				tmpGrade += 200;
-			else
-				tmpGrade += ((7 - noeud.mouvement.dest.getRow()) * 10);
-		} else
-		{
-			if (noeud.mouvement.dest.getRow() == p2Start)
-				tmpGrade += 200;
-			else
-				tmpGrade += ((noeud.mouvement.dest.getRow()) * 10);
-		}
-		return tmpGrade;
-	}
-	
-	public List<MouvementIA> Jouer(Partie partie)
-	{
-
-		arbre = new Arbre();
-		arbre.root = new Noeud();
-		arbre.root.parent = arbre.root;
-		arbre.root.ia = this;
-		genererArbreDeJeu(arbre.root, new Plateau(plateauActuel), obtenirPositionDesPions(plateauActuel), profondeur * 3, this, partie);
-		arbre.root.grade = MinMax(arbre.root, new Plateau(plateauActuel), profondeur * 3, false);
-		return Coup();
 	}
 	
 	private MouvementIA jouerAction(Partie partie) {
