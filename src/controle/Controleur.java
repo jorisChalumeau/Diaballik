@@ -1,9 +1,18 @@
 package controle;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 
 import javafx.animation.PauseTransition;
 import javafx.scene.paint.Color;
@@ -17,8 +26,10 @@ import modele.ExceptionMouvementIllegal;
 import modele.MouvementIA;
 import modele.Partie;
 import modele.Point;
+import modele.joueurs.InterfaceAdapter;
 import modele.joueurs.Joueur;
 import modele.joueurs.JoueurIA;
+import modele.tests.Test;
 
 public class Controleur {
 
@@ -323,26 +334,64 @@ public class Controleur {
 		ihm.fermerAplication();
 	}
 
-	// exemple : sauvegarderApplication("./sauvegardes/test.txt");
-	public void sauvegarderApplication(String filepath) {
-		File file = new File(filepath);
+	public void sauvegarderApplication(File file) {
+		if (file != null && file.getPath().endsWith(".json")) {
+			System.out.println(file.getPath());
+			JsonWriter writer = null;
 
-		// on sauvegarde la partie
-		Partie.sauvegarder(diaballik, file);
+			try {
+				// on ouvre le fichier en ecriture
+				writer = new JsonWriter(new FileWriter(file));
+				Gson gson = new GsonBuilder().registerTypeAdapter(Joueur.class, new InterfaceAdapter<Joueur>())
+						.registerTypeAdapter(Test.class, new InterfaceAdapter<Test>()).create();
 
-		// on sauvegarde l'ihm
-		// Affichage.sauvegarder(ihm, file);
+				// Partie to json => on l'ecrit dans le fichier
+				gson.toJson(this.diaballik, Partie.class, writer);
+				writer.flush();
+				writer.close();
+				
+				// on reprend la partie
+				cacherMenuPause();
+			} catch (IOException e) {
+				System.out.println("impossible d'ecrire dans le fichier");
+			}
+		}
 	}
 
-	public void chargerApplication(String filepath) {
-		File file = new File(filepath);
+	public void chargerApplication(File file) {
+		if (file != null && file.getPath().endsWith(".json") && file.exists()) {
+			JsonReader reader = null;
 
-		// on charge la partie
-		diaballik = Partie.charger(file);
-		diaballik.getPlateau().Afficher();
+			try {
+				// on ouvre le fichier en lecture
+				reader = new JsonReader(new FileReader(file));
 
-		// on charge l'ihm
-		// ihm = Affichage.charger(ihm, filepath);
+				Gson gson = new GsonBuilder().registerTypeAdapter(Joueur.class, new InterfaceAdapter<Joueur>())
+						.registerTypeAdapter(Test.class, new InterfaceAdapter<Test>()).create();
+
+				// on lit dans le fichier => json to Partie
+				this.diaballik = gson.fromJson(reader, Partie.class);
+
+				// on charge ensuite l'ihm de la partie
+				chargerFenetreJeu();
+			} catch (FileNotFoundException e) {
+				System.out.println("fichier introuvable");
+			}
+		}
+	}
+
+	private void chargerFenetreJeu() {
+		// on lance l'ihm du jeu
+		lancerFenetreJeu();
+		// on replace les pions où il faut
+		ihm.replacerPionsJeu(diaballik.getPlateau().obtenirPlateau());
+		
+		// TODO : recharger la vitesse et autres réglages également (stockés dans la partie)
+		
+		// on actualise la couleur des boutons
+		actualiserCouleurBoutons();
+		// test si la partie est finie
+		testFinal();
 	}
 
 	public void lancerFenetreJeu() {
@@ -361,8 +410,8 @@ public class Controleur {
 				&& !(diaballik.tourIA() && diaballik.getHistoriqueSecondaire().isEmpty()));
 		ihm.setCouleurBoutonRemontrerIA(diaballik.dejaJoueIA() && !diaballik.tourIA());
 	}
-	
-	public void recommencerPartie(){
+
+	public void recommencerPartie() {
 		diaballik = diaballik.relancerPartie();
 	}
 

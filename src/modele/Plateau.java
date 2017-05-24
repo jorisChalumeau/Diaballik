@@ -23,51 +23,12 @@ public class Plateau {
 		}
 	}
 
-	public Plateau(JSONObject jsonPlat) {
-		allPosibleCoord = new ArrayList<>();
-		initialiserTerrain(jsonPlat);
-		for (int i = 0; i < 7; i++) {
-			for (int j = 0; j < 7; j++) {
-				allPosibleCoord.add(new Point(i, j));
-			}
-
-		}
-	}
-
 	public Plateau(Plateau p) {
 		this.terrain = new Case[7][7];
 
 		for (int i = 0; i < 7; i++) {
 			for (int j = 0; j < 7; j++) {
 				this.terrain[i][j] = p.terrain[i][j];
-			}
-		}
-	}
-
-	public void initialiserTerrain(JSONObject jsonPlat) {
-		terrain = new Case[TAILLE][TAILLE];
-		int val;
-
-		for (int i = 0; i < TAILLE; i++) {
-			for (int j = 0; j < TAILLE; j++) {
-				val = Integer.parseInt(jsonPlat.get("" + (7 * i + j)).toString());
-
-				switch (val) {
-				case 1:
-					this.terrain[i][j] = Case.PION_BLANC;
-					break;
-				case 2:
-					this.terrain[i][j] = Case.PION_BLANC_AVEC_BALLON;
-					break;
-				case 3:
-					this.terrain[i][j] = Case.PION_NOIR;
-					break;
-				case 4:
-					this.terrain[i][j] = Case.PION_NOIR_AVEC_BALLON;
-					break;
-				default:
-					this.terrain[i][j] = Case.LIBRE;
-				}
 			}
 		}
 	}

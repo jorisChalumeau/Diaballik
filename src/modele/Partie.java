@@ -188,44 +188,6 @@ public class Partie {
 		p.actualiser(src, dest);
 	}
 
-	public static void sauvegarder(Partie partie, File file) {
-		JsonWriter writer = null;
-
-		try {
-			// on ouvre le fichier en ecriture
-			writer = new JsonWriter(new FileWriter(file));
-			Gson gson = new GsonBuilder().registerTypeAdapter(Joueur.class, new InterfaceAdapter<Joueur>())
-					.registerTypeAdapter(Test.class, new InterfaceAdapter<Test>()).create();
-
-			// Partie to json => on l'ecrit dans le fichier
-			gson.toJson(partie, Partie.class, writer);
-			writer.flush();
-			writer.close();
-		} catch (IOException e) {
-			System.out.println("impossible d'ecrire dans le fichier");
-		}
-	}
-
-	public static Partie charger(File file) {
-		Partie partie = null;
-		JsonReader reader = null;
-
-		try {
-			// on ouvre le fichier en lecture
-			reader = new JsonReader(new FileReader(file));
-
-			Gson gson = new GsonBuilder().registerTypeAdapter(Joueur.class, new InterfaceAdapter<Joueur>())
-					.registerTypeAdapter(Test.class, new InterfaceAdapter<Test>()).create();
-
-			// on lit dans le fichier => json to Partie
-			partie = gson.fromJson(reader, Partie.class);
-		} catch (FileNotFoundException e) {
-			System.out.println("fichier introuvable");
-		}
-
-		return partie;
-	}
-
 	public Case getCase(Point position) {
 		return p.obtenirCase(position);
 	}

@@ -1,6 +1,12 @@
 package controle;
 
 import javafx.event.EventHandler;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+
+import java.io.File;
+
+import ihm.FenetreSauvegarde;
 import javafx.event.ActionEvent;
 
 public class boutonPresse implements EventHandler<ActionEvent> {
@@ -88,11 +94,13 @@ public class boutonPresse implements EventHandler<ActionEvent> {
 			break;
 			
 		case 18: // Bouton Sauvegarder
-			
+			File saveFile = FenetreSauvegarde.sauvegarder(controleur.getIhm().stage);
+			controleur.sauvegarderApplication(saveFile);
 			break;
 		
 		case 19: // Bouton Charger
-			
+			File openFile = FenetreSauvegarde.charger(controleur.getIhm().stage);
+			controleur.chargerApplication(openFile);
 			break;
 
 		default:

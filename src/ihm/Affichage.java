@@ -12,6 +12,7 @@ import controle.dragDropped;
 import controle.dragDone;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import modele.Case;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.Cursor;
@@ -713,6 +714,10 @@ public class Affichage {
 		else{
 			remontrerIA.setDisable(true);
 		}
+	}
+
+	public void replacerPionsJeu(Case[][] obtenirPlateau) {
+		// TODO utilise le plateau en paramètre pour replacer les pions sur l'ihm
 	}
 	
 	
