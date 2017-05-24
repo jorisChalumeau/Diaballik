@@ -77,8 +77,10 @@ public class boutonPresse implements EventHandler<ActionEvent> {
 			break;
 
 		case 16: // Bouton Recommencer
+			controleur.recommencerPartie();
 			// Regarder type de partie dans modèle + éventuelle config
 			// Lancer une nouvelle partie
+			controleur.lancerFenetreJeu();
 			break;
 
 		case 17: // Bouton Reprendre

@@ -60,13 +60,13 @@ public class Partie {
 		this.joueurActuel = joueur1;
 	}
 
-	public Partie(int inv, String difficulte) {
+	public Partie(boolean inv, String difficulte) {
 		this.p = new Plateau();
 		this.r = new Regles();
 		this.historique = new Stack<Coup>();
 		this.historiqueSecondaire = new Stack<Coup>();
 
-		if (inv == -1) {
+		if (inv) {
 			this.joueur1 = JoueurIA.creerIA(1, difficulte);
 			this.joueur2 = new JoueurHumain(2);
 		} else {
@@ -449,6 +449,23 @@ public class Partie {
 
 	public void reinitHistoriqueSecondaire() {
 		this.historiqueSecondaire = new Stack<Coup>();
+	}
+	
+	public Partie relancerPartie(){
+		// IA vs IA
+		if(joueur1 instanceof JoueurIA && joueur2 instanceof JoueurIA)
+			return new Partie(joueur1.getDifficulte(), joueur2.getDifficulte());
+		// IA vs humain
+		if(joueur1 instanceof JoueurIA && !(joueur2 instanceof JoueurIA))
+			return new Partie(true, joueur2.getDifficulte());
+		// humain vs IA
+		if(!(joueur1 instanceof JoueurIA) && joueur2 instanceof JoueurIA)
+			return new Partie(joueur2.getDifficulte());
+		// 2 joueur humains
+		if(!(joueur1 instanceof JoueurIA) && !(joueur2 instanceof JoueurIA))
+			return new Partie();
+		
+		return null;
 	}
 
 	public boolean dejaJoueIA() {

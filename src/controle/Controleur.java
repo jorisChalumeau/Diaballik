@@ -144,8 +144,8 @@ public class Controleur {
 			pause.setOnFinished(event -> {
 				// déclenché à la fin du timer de 2s
 				MouvementIA mvt = it.next();
-				int numeroSrc = pointToNumCase(mvt.src);
-				int numeroDest = pointToNumCase(mvt.dest);
+				int numeroSrc = pointToNumCase(mvt.dest);
+				int numeroDest = pointToNumCase(mvt.src);
 
 				jouerActionIHM(mvt.caseSrc, numeroSrc, numeroDest);
 
@@ -360,6 +360,10 @@ public class Controleur {
 		ihm.setCouleurBoutonRefaire(!diaballik.getHistoriqueSecondaire().isEmpty()
 				&& !(diaballik.tourIA() && diaballik.getHistoriqueSecondaire().isEmpty()));
 		ihm.setCouleurBoutonRemontrerIA(diaballik.dejaJoueIA() && !diaballik.tourIA());
+	}
+	
+	public void recommencerPartie(){
+		diaballik = diaballik.relancerPartie();
 	}
 
 }
