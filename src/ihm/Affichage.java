@@ -47,6 +47,8 @@ public class Affichage {
 	private Button refaire;
 	private Label messageVictoire;
 	Color tempCouleur;
+	private Label texteDeplRestants;
+	private Label textePassesRestantes;
 
 	// REGLAGES RECURRENTS D OBJETS
 	private void curseurInteraction(Node n) {
@@ -132,7 +134,7 @@ public class Affichage {
 		b.setOnAction(new boutonPresseEnJeu(controleur, numero));
 		b.setAlignment(Pos.CENTER);
 		b.setCursor(Cursor.HAND);
-		// bordReactif(b,style,"-fx-border-width:2; -fx-border-color:black;");
+		bordReactif(b,style,"-fx-border-width:2; -fx-border-color:black;");
 	}
 
 	private void setBoutonDesign3(Button b, int numero, String couleur, Controleur controleur) {
@@ -457,22 +459,22 @@ public class Affichage {
 		setBoutonDesign3(refaire, 15, "45FCFC", controleur);
 		refaire.setDisable(true);
 
-		Label texteDeplRestants = new Label("Déplacements restants : ");
+		texteDeplRestants = new Label("Déplacements restants : ");
 		texteDeplRestants.setStyle("-fx-font-size: 24; -fx-text-fill: black;");
 
-		Label textePassesRestantes = new Label("Passe restante : ");
+		textePassesRestantes = new Label("Passe restante : ");
 		textePassesRestantes.setStyle("-fx-font-size: 24; -fx-text-fill: black;");
 
 		// Infobulles
 		final ImageView infobulleAnnuler = new ImageView(new Image("file:Images/infobulleAnnuler.png"));
 		infobulleAnnuler.setVisible(false);
-		// setInfobulle(annuler,infobulleAnnuler);
+		setInfobulle(annuler,infobulleAnnuler);
 		final ImageView infobulleRemontrerIA = new ImageView(new Image("file:Images/infobulleRemontrerIA.png"));
 		infobulleRemontrerIA.setVisible(false);
-		// setInfobulle(remontrerIA,infobulleRemontrerIA);
+		setInfobulle(remontrerIA,infobulleRemontrerIA);
 		final ImageView infobulleRefaire = new ImageView(new Image("file:Images/infobulleRefaire.png"));
 		infobulleRefaire.setVisible(false);
-		// setInfobulle(refaire,infobulleRefaire);
+		setInfobulle(refaire,infobulleRefaire);
 
 		// LES MENU PAUSE ET FIN DE PARTIE
 		menuPause = initMenuPause(controleur);
@@ -740,6 +742,17 @@ public class Affichage {
 				lierCaseAuxControles(c, num);
 			}
 
+	}
+	
+	public void actualiserPasseDeplacementsRestants(int deplacements, boolean passeFaite){
+		texteDeplRestants.setText("Déplacements restants : "+deplacements);
+		
+		if(passeFaite){
+			textePassesRestantes.setText("Passe restante : 0");
+		}
+		else{
+			textePassesRestantes.setText("Passe restante : 1");
+		}
 	}
 
 }
