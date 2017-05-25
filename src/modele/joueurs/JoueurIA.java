@@ -58,56 +58,9 @@ public abstract class JoueurIA implements Joueur {
 		return listeCoups;
 	}
 
-	private ArrayList<MouvementIA> jouerActionIADiff(Partie partie) {
-		JoueurIADifficile iaDiff = ((JoueurIADifficile) partie.getJoueurActuel());
-		iaDiff.plateauActuel=new Plateau(partie.getPlateau());
-		List<MouvementIA> moves = iaDiff.Jouer(partie);
-		Iterator<MouvementIA> iter = moves.iterator();
-		
-		while (iter.hasNext()){
-			MouvementIA move = iter.next();
-			try
-			{
-				if(move != null){
-					System.out.println(move.src.getRow() + " " + move.src.getColumn());
-					System.out.println(move.dest.getRow() + " " + move.dest.getColumn());
-					partie.executerAction(move.src, move.dest);}
-				else iter.remove();
+	public abstract ArrayList<MouvementIA> jouerActionIADiff(Partie partie);
 
-			}
-			catch (ExceptionMouvementIllegal e) {
-				iter.remove();
-			}
-		}
-		
-		return (ArrayList<MouvementIA>) moves;
-	}
-
-	// réimplémenté pour l'IA moyen et difficile
-	private MouvementIA jouerAction(Partie partie) {
-		//IA Facile
-		if(partie.getJoueurActuel() instanceof JoueurIAFacile){
-		List<MouvementIA> listeMvm = genererMouvementsPossibles(partie);
-		Random generator = new Random();
-
-		if (listeMvm.size() != 0) {
-			MouvementIA mouvementRandom = listeMvm.get(generator.nextInt(listeMvm.size()));
-			try {
-				partie.executerAction(mouvementRandom.src, mouvementRandom.dest);
-				return mouvementRandom;
-			} catch (ExceptionMouvementIllegal e) {
-				return null;
-			}
-		}
-		else 
-			return null;
-		}
-		else {
-			//IA Moyenne
-		}
-			
-		return null;
-	}
+	public abstract MouvementIA jouerAction(Partie partie);
 
 	public List<MouvementIA> genererMouvementsPossibles(Noeud node, Plateau board, Point[] pieces,
 			JoueurIADifficile p) {

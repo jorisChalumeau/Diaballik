@@ -56,7 +56,7 @@ public class JoueurIAMoyen extends JoueurIA {
 	}
 
 	// à modifier pour effectuer le coup gagnant s'il est évident
-	private MouvementIA jouerAction(Partie partie) {
+	public MouvementIA jouerAction(Partie partie) {
 		System.out.println("coucou");
 		List<MouvementIA> listeMvm = genererMouvementsPossibles(partie);
 		Random generator = new Random();
@@ -89,5 +89,12 @@ public class JoueurIAMoyen extends JoueurIA {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public ArrayList<MouvementIA> jouerActionIADiff(Partie partie) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

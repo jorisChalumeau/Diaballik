@@ -2,10 +2,12 @@ package modele.joueurs;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
 import modele.Case;
+import modele.ExceptionMouvementIllegal;
 import modele.MouvementIA;
 import modele.Partie;
 import modele.Plateau;
@@ -288,9 +290,29 @@ public class JoueurIADifficile extends JoueurIA {
 		return coupIA;
 	}
 	
-	private MouvementIA jouerAction(Partie partie) {
-		// TODO : IA difficile
-		return null;
+	public ArrayList<MouvementIA> jouerActionIADiff(Partie partie) {
+		JoueurIADifficile iaDiff = ((JoueurIADifficile) partie.getJoueurActuel());
+		iaDiff.plateauActuel=new Plateau(partie.getPlateau());
+		List<MouvementIA> moves = iaDiff.Jouer(partie);
+		Iterator<MouvementIA> iter = moves.iterator();
+		
+		while (iter.hasNext()){
+			MouvementIA move = iter.next();
+			try
+			{
+				if(move != null){
+					System.out.println(move.src.getRow() + " " + move.src.getColumn());
+					System.out.println(move.dest.getRow() + " " + move.dest.getColumn());
+					partie.executerAction(move.src, move.dest);}
+				else iter.remove();
+
+			}
+			catch (ExceptionMouvementIllegal e) {
+				iter.remove();
+			}
+		}
+		
+		return (ArrayList<MouvementIA>) moves;
 	}
 
 	@Override
@@ -305,5 +327,11 @@ public class JoueurIADifficile extends JoueurIA {
 
 	public Plateau getCurrentBoard() {
 		return plateauActuel;
+	}
+
+	@Override
+	public MouvementIA jouerAction(Partie partie) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

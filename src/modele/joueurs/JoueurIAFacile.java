@@ -2,6 +2,7 @@ package modele.joueurs;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import modele.*;
 import modele.tests.Regles;
@@ -68,6 +69,29 @@ public class JoueurIAFacile extends JoueurIA {
 	public List<MouvementIA> genererMouvementsPossibles(Noeud node, Plateau board, Point[] pieces,
 			Joueur currentPlayer) {
 		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public MouvementIA jouerAction(Partie partie) {
+			List<MouvementIA> listeMvm = genererMouvementsPossibles(partie);
+			Random generator = new Random();
+
+			if (listeMvm.size() != 0) {
+				MouvementIA mouvementRandom = listeMvm.get(generator.nextInt(listeMvm.size()));
+				try {
+					partie.executerAction(mouvementRandom.src, mouvementRandom.dest);
+					return mouvementRandom;
+				} catch (ExceptionMouvementIllegal e) {
+					return null;
+				}
+			}
+			else 
+				return null;
+	}
+	
+	
+	public ArrayList<MouvementIA> jouerActionIADiff(Partie partie) {
 		return null;
 	}
 
