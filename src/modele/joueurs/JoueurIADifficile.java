@@ -264,6 +264,7 @@ public class JoueurIADifficile extends JoueurIA {
 					tmpGrade += (noeud.mouvement.dest.getRow() * 400);
 				else 
 					tmpGrade += (noeud.mouvement.dest.getRow() * 10);
+				
 			}
 		}
 		return tmpGrade;
