@@ -21,6 +21,7 @@ import controle.Controleur;
 import modele.joueurs.Joueur;
 import modele.joueurs.JoueurHumain;
 import modele.joueurs.JoueurIA;
+import modele.joueurs.JoueurIADifficile;
 import modele.joueurs.InterfaceAdapter;
 import modele.joueurs.PionBloqueException;
 import modele.tests.Regles;
@@ -288,7 +289,7 @@ public class Partie {
 	public ArrayList<MouvementIA> jouerIA() {
 		ArrayList<MouvementIA> listeCoups = null;
 
-		if (joueurActuel instanceof JoueurIA) {
+		if (joueurActuel instanceof JoueurIADifficile) {
 			try {
 				listeCoups = ((JoueurIA) joueurActuel).jouerCoup(this);
 			} catch (PionBloqueException | InterruptedException e) {

@@ -38,7 +38,9 @@ public abstract class JoueurIA implements Joueur {
 	@Override
 	public ArrayList<MouvementIA> jouerCoup(Partie partie) throws PionBloqueException, InterruptedException {
 		ArrayList<MouvementIA> listeCoups = new ArrayList<MouvementIA>();
-
+		if(partie.getJoueurActuel() instanceof JoueurIADifficile)
+			listeCoups=jouerActionIADiff(partie);
+		else{
 		for (int nbMvt = 0; nbMvt < 3; nbMvt++) {
 			MouvementIA mvt = jouerAction(partie);
 			if (mvt != null) {
@@ -51,7 +53,25 @@ public abstract class JoueurIA implements Joueur {
 			}
 		}
 
+		}
 		return listeCoups;
+	}
+
+	private ArrayList<MouvementIA> jouerActionIADiff(Partie partie) {
+		JoueurIADifficile iaDiff = ((JoueurIADifficile) partie.getJoueurActuel());
+		iaDiff.plateauActuel=new Plateau(partie.getPlateau());
+		List<MouvementIA> moves = iaDiff.Jouer(partie);
+		for (MouvementIA move:moves)
+		{
+			try
+			{
+				partie.executerAction(move.src, move.dest);
+			}
+			catch (ExceptionMouvementIllegal e) {
+				return null;
+			}
+		}
+		return (ArrayList<MouvementIA>) moves;
 	}
 
 	// réimplémenté pour l'IA moyen et difficile
@@ -73,25 +93,6 @@ public abstract class JoueurIA implements Joueur {
 		else 
 			return null;
 		}
-		
-		//IA Difficile
-		else if (partie.getJoueurActuel() instanceof JoueurIADifficile){
-			JoueurIADifficile iaDiff = ((JoueurIADifficile) partie.getJoueurActuel());
-			iaDiff.plateauActuel=new Plateau(partie.getPlateau());
-			List<MouvementIA> moves = iaDiff.Jouer(partie);
-			for (MouvementIA move:moves)
-			{
-				try
-				{
-					partie.executerAction(move.src, move.dest);
-					return move;
-				}
-				catch (ExceptionMouvementIllegal e) {
-					return null;
-				}
-			}
-		}
-		
 		else {
 			//IA Moyenne
 		}

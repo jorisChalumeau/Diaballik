@@ -191,7 +191,6 @@ public class JoueurIADifficile extends JoueurIA {
 		
 		if (profondeur == 0 || noeud.enfants.isEmpty())
 		{		
-			
 			return maximiser ? evaluerAction(plateau, noeud, maximiser) : (-evaluerAction(plateau, noeud, maximiser)) ;
 		}
 		
@@ -250,14 +249,22 @@ public class JoueurIADifficile extends JoueurIA {
 		{
 			if (noeud.mouvement.dest.getRow() == p1Start)
 				tmpGrade += 200;
-			else
-				tmpGrade += ((7 - noeud.mouvement.dest.getRow()) * 10);
+			else{
+				if (noeud.mouvement.type == TypeMouvement.PASSE)
+					tmpGrade += ((7 - noeud.mouvement.dest.getRow()) * 400);
+				else 
+					tmpGrade += ((7 - noeud.mouvement.dest.getRow()) * 10);
+			}			
 		} else
 		{
 			if (noeud.mouvement.dest.getRow() == p2Start)
 				tmpGrade += 200;
-			else
-				tmpGrade += ((noeud.mouvement.dest.getRow()) * 10);
+			else{
+				if (noeud.mouvement.type == TypeMouvement.PASSE)
+					tmpGrade += (noeud.mouvement.dest.getRow() * 400);
+				else 
+					tmpGrade += (noeud.mouvement.dest.getRow() * 10);
+			}
 		}
 		return tmpGrade;
 	}
@@ -276,11 +283,18 @@ public class JoueurIADifficile extends JoueurIA {
 	
 	public List<MouvementIA> Coup()
 	{
+		System.out.println("APPEL");
 		coupIA.clear();
 		Noeud coup1, coup2, coup3;
 		coup1 = arbre.FindBestMove(arbre.root);
+		System.out.println(coup1.mouvement.type);
+		System.out.println(coup1.grade);
 		coup2 = arbre.FindBestMove(coup1);
+		System.out.println(coup2.mouvement.type);
+		System.out.println(coup2.grade);
 		coup3 = arbre.FindBestMove(coup2);
+		System.out.println(coup3.mouvement.type);
+		System.out.println(coup3.grade);
 		coupIA.add(coup1.mouvement);
 		coupIA.add(coup2.mouvement);
 		coupIA.add(coup3.mouvement);
