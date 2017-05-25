@@ -124,6 +124,8 @@ public class Controleur {
 
 			diaballik.finDeTour();
 			afficherMessageTourDuJoueur(diaballik.getNumJoueurActuel());
+			//diaballik.getJoueurActuel();
+			ihm.actualiserPasseDeplacementsRestants(diaballik.getCptMouvement(), diaballik.isBalleLancee());
 		}
 	}
 
@@ -330,7 +332,9 @@ public class Controleur {
 			break;
 		}
 
-		// TODO : actualiser l'affichage du nb de déplacements / passes restants
+		//diaballik.getJoueurActuel();
+		ihm.actualiserPasseDeplacementsRestants(diaballik.getCptMouvement(), diaballik.isBalleLancee());
+		
 	}
 
 	public void fermerAplication() {
