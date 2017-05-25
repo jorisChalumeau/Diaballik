@@ -122,7 +122,7 @@ public class Controleur {
 
 			diaballik.finDeTour();
 			afficherMessageTourDuJoueur(diaballik.getNumJoueurActuel());
-			ihm.actualiserPasseDeplacementsRestants(diaballik.getCptMouvement(), diaballik.isBalleLancee());
+			ihm.actualiserPasseDeplacementsRestants(diaballik.getCptMouvement(), diaballik.isBalleLancee(), diaballik.getNumJoueurActuel());
 		}
 	}
 
@@ -195,7 +195,7 @@ public class Controleur {
 			if (action.getJoueur().getNumeroJoueur() != diaballik.getNumJoueurActuel()) {
 				lancerFinDeTour();
 				diaballik.ajusterCompteurs();
-				ihm.actualiserPasseDeplacementsRestants(diaballik.getCptMouvement(), diaballik.isBalleLancee());
+				ihm.actualiserPasseDeplacementsRestants(diaballik.getCptMouvement(), diaballik.isBalleLancee(), diaballik.getNumJoueurActuel());
 			}
 
 			try {
@@ -331,7 +331,7 @@ public class Controleur {
 			break;
 		}
 
-		ihm.actualiserPasseDeplacementsRestants(diaballik.getCptMouvement(), diaballik.isBalleLancee());
+		ihm.actualiserPasseDeplacementsRestants(diaballik.getCptMouvement(), diaballik.isBalleLancee(), diaballik.getNumJoueurActuel());
 	}
 
 	public void fermerAplication() {
@@ -412,7 +412,7 @@ public class Controleur {
 		ihm.afficherFenetreJeu(this);
 
 		ihm.afficherMessageTourDuJoueur(diaballik.getNumJoueurActuel());
-		ihm.actualiserPasseDeplacementsRestants(diaballik.getCptMouvement(), diaballik.isBalleLancee());
+		ihm.actualiserPasseDeplacementsRestants(diaballik.getCptMouvement(), diaballik.isBalleLancee(), diaballik.getNumJoueurActuel());
 
 		cacherMenuPause(); // s'assurer que la partie n'est pas en pause
 

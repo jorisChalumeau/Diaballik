@@ -20,8 +20,12 @@ import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.event.EventHandler;
 import javafx.geometry.*;
 import javafx.scene.shape.*;
@@ -43,8 +47,10 @@ public class Affichage {
 	private Button refaire;
 	private Label messageVictoire;
 	Color tempCouleur;
-	private Label texteDeplRestants;
-	private Label textePassesRestantes;
+	private Label texteDeplRestantsJ1;
+	private Label textePassesRestantesJ1;
+	private Label texteDeplRestantsJ2;
+	private Label textePassesRestantesJ2;
 
 	// REGLAGES RECURRENTS D OBJETS
 	private void curseurInteraction(Node n) {
@@ -174,6 +180,7 @@ public class Affichage {
 		vbox.setPadding(new Insets(15, 12, 15, 12));
 		vbox.setSpacing(20);
 		vbox.setAlignment(Pos.CENTER);
+		vbox.setStyle("-fx-background-color: #DEDCE2;");
 
 		Button b2joueurs = new Button("Joueur contre Joueur");
 		setBoutonClassique(b2joueurs, 1, controleur);
@@ -189,8 +196,13 @@ public class Affichage {
 
 		Button bQuitter = new Button("Quitter le jeu");
 		setBoutonClassique(bQuitter, 4, controleur);
+		
+		final ImageView iconeReglages = new ImageView(new Image("file:Images/reglages50x50.png"));
+		Button reglages = new Button("", iconeReglages);
+		setBoutonDesign2(reglages, 42, controleur);
+		reglages.setOnAction(new boutonPresse(controleur, 20));
 
-		vbox.getChildren().addAll(b2joueurs, bIA, bCharger, bRegles, bQuitter);
+		vbox.getChildren().addAll(b2joueurs, bIA, bCharger, bRegles, bQuitter,reglages);
 		return vbox;
 	}
 
@@ -286,7 +298,7 @@ public class Affichage {
 		vbox.setAlignment(Pos.CENTER);
 		// vbox.setStyle("-fx-background-color:white");
 
-		Image logo = new Image("file:Images/u10.png");
+		Image logo = new Image("file:Images/logoDiaballik.png");
 
 		Label labelLogo = new Label("", new ImageView(logo));
 		// label1.setAlignment(Pos.CENTER);
@@ -363,8 +375,9 @@ public class Affichage {
 		b.setCenter(menu2);
 		b.setTop(null);
 	}
-
+	
 	public void afficherRegles(Controleur controleur) {
+		
 		VBox titre = titreRegles();
 		VBox regles = texteRegles();
 		VBox retour = boxRetour(controleur);
@@ -373,7 +386,18 @@ public class Affichage {
 		b.setBottom(retour);
 	}
 
+	public void afficherReglages(Controleur controleur) {
+		Label oui = new Label("pas encore fait mdr");
+		VBox retour = boxRetour(controleur);
+		b.setTop(null);
+		b.setCenter(oui);
+		b.setBottom(retour);
+	}
+
+
 	public void afficherMenuPrincipal(Controleur controleur) {
+		enPause = false;
+		
 		VBox menu1 = initMenu1(controleur);
 		VBox enTete = initEnTete();
 
@@ -454,12 +478,20 @@ public class Affichage {
 		refaire = new Button("", iconeRefaire);
 		setBoutonDesign3(refaire, 15, "45FCFC", controleur);
 		refaire.setDisable(true);
+		
+		String styleTexte = "-fx-font-size: 19; -fx-text-fill: black;";
+		
+		texteDeplRestantsJ1 = new Label("Déplacements restants : 4");
+		texteDeplRestantsJ1.setStyle(styleTexte);
 
-		texteDeplRestants = new Label("Déplacements restants : ");
-		texteDeplRestants.setStyle("-fx-font-size: 24; -fx-text-fill: black;");
+		textePassesRestantesJ1 = new Label("Passe restante : 4");
+		textePassesRestantesJ1.setStyle(styleTexte);
+		
+		texteDeplRestantsJ2 = new Label("Déplacements restants : 4");
+		texteDeplRestantsJ2.setStyle(styleTexte);
 
-		textePassesRestantes = new Label("Passe restante : ");
-		textePassesRestantes.setStyle("-fx-font-size: 24; -fx-text-fill: black;");
+		textePassesRestantesJ2 = new Label("Passe restante : 4");
+		textePassesRestantesJ2.setStyle(styleTexte);
 
 		// Infobulles
 		final ImageView infobulleAnnuler = new ImageView(new Image("file:Images/infobulleAnnuler.png"));
@@ -496,59 +528,67 @@ public class Affichage {
 		// COLONNE 2
 		Fenetre.add(pause, 2, 0, 2, 2);
 		GridPane.setHalignment(pause, HPos.RIGHT);
-		// GridPane.setValignment(pause, VPos.CENTER);
 		GridPane.setMargin(pause, new Insets(0, 30, 0, 0));
 
 		Fenetre.add(aide, 2, 0, 2, 2);
 		GridPane.setHalignment(aide, HPos.RIGHT);
 		GridPane.setMargin(aide, new Insets(pause.getMaxHeight() * 2 + 15, 30, 0, 0));
 
-		Fenetre.add(texteDeplRestants, 2, 4, 2, 1);
-		GridPane.setValignment(texteDeplRestants, VPos.TOP);
-		GridPane.setMargin(texteDeplRestants, new Insets(0, 0, 0, 0));
+		Fenetre.add(texteDeplRestantsJ2, 2, 0, 2, 1);
+		GridPane.setValignment(texteDeplRestantsJ2, VPos.BOTTOM);
 
-		Fenetre.add(textePassesRestantes, 2, 4, 2, 1);
-		GridPane.setValignment(textePassesRestantes, VPos.TOP);
-		GridPane.setMargin(textePassesRestantes, new Insets(50, 0, 0, 0));
+		Fenetre.add(textePassesRestantesJ2, 2, 1, 2, 1);
+		GridPane.setValignment(textePassesRestantesJ2, VPos.TOP);
+		
+		Fenetre.add(texteDeplRestantsJ1, 2, 6, 2, 1);
+		GridPane.setValignment(texteDeplRestantsJ1, VPos.BOTTOM);
 
-		Fenetre.add(annuler, 2, 5, 2, 2);
+		Fenetre.add(textePassesRestantesJ1, 2, 7, 2, 1);
+		GridPane.setValignment(textePassesRestantesJ1, VPos.TOP);
+
+		Fenetre.add(annuler, 2, 3, 2, 1);
 		GridPane.setHalignment(annuler, HPos.CENTER);
-		GridPane.setMargin(annuler, new Insets(0, annuler.getMaxWidth() * 2 + 10, 0, 0));
+		GridPane.setValignment(annuler, VPos.BOTTOM);
+		GridPane.setMargin(annuler, new Insets(0, annuler.getMaxWidth() * 2 + 10, 5, 0));
 
-		Fenetre.add(infobulleAnnuler, 2, 4, 2, 1);
+		Fenetre.add(infobulleAnnuler, 2, 3, 2, 1);
 		GridPane.setHalignment(infobulleAnnuler, HPos.CENTER);
-		GridPane.setValignment(infobulleAnnuler, VPos.BOTTOM);
+		GridPane.setValignment(infobulleAnnuler, VPos.TOP);
 		GridPane.setMargin(infobulleAnnuler, new Insets(0, annuler.getMaxWidth() * 2 + 10, 0, 0));
 
-		Fenetre.add(remontrerIA, 2, 5, 2, 2);
+		Fenetre.add(remontrerIA, 2, 3, 2, 1);
 		GridPane.setHalignment(remontrerIA, HPos.CENTER);
+		GridPane.setValignment(remontrerIA, VPos.BOTTOM);
+		GridPane.setMargin(remontrerIA, new Insets(0, 0, 5, 0));
 
-		Fenetre.add(infobulleRemontrerIA, 2, 4, 2, 1);
+		Fenetre.add(infobulleRemontrerIA, 2, 3, 2, 1);
 		GridPane.setHalignment(infobulleRemontrerIA, HPos.CENTER);
-		GridPane.setValignment(infobulleRemontrerIA, VPos.BOTTOM);
+		GridPane.setValignment(infobulleRemontrerIA, VPos.TOP);
 
-		Fenetre.add(refaire, 2, 5, 2, 2);
+		Fenetre.add(refaire, 2, 3, 2, 1);
 		GridPane.setHalignment(refaire, HPos.CENTER);
-		GridPane.setMargin(refaire, new Insets(0, 0, 0, refaire.getMaxWidth() * 2 + 10));
+		GridPane.setValignment(refaire, VPos.BOTTOM);
+		GridPane.setMargin(refaire, new Insets(0, 0, 5, refaire.getMaxWidth() * 2 + 10));
 
-		Fenetre.add(infobulleRefaire, 2, 4, 2, 1);
+		Fenetre.add(infobulleRefaire, 2, 3, 2, 1);
 		GridPane.setHalignment(infobulleRefaire, HPos.CENTER);
-		GridPane.setValignment(infobulleRefaire, VPos.BOTTOM);
+		GridPane.setValignment(infobulleRefaire, VPos.TOP);
 		GridPane.setMargin(infobulleRefaire, new Insets(0, 0, 0, refaire.getMaxWidth() * 2 + 10));
 
-		Fenetre.add(finTour, 2, 5, 2, 3);
+		Fenetre.add(finTour, 2, 4, 2, 1);
 		GridPane.setHalignment(finTour, HPos.CENTER);
+		GridPane.setValignment(finTour, VPos.TOP);
+		GridPane.setMargin(finTour, new Insets(5, 0, 0, 0));
 
 		// MENUS PAUSE ET FIN DE PARTIE
 		Fenetre.add(menuPause, 1, 2, 2, 4);
 		Fenetre.add(menuFinPartie, 1, 2, 2, 4);
 
-		Fenetre.getColumnConstraints().addAll(ctrColonne(20), ctrColonne(40), ctrColonne(20), ctrColonne(20));
-		Fenetre.getRowConstraints().addAll(ctrLigne(8), ctrLigne(7), ctrLigne(15), ctrLigne(5), ctrLigne(30),
+		Fenetre.getColumnConstraints().addAll(ctrColonne(20), ctrColonne(40), ctrColonne(25), ctrColonne(15));
+		Fenetre.getRowConstraints().addAll(ctrLigne(8), ctrLigne(7), ctrLigne(7), ctrLigne(21), ctrLigne(22),
 				ctrLigne(10), ctrLigne(5), ctrLigne(20));
-		// Fenetre.setGridLinesVisible(true);
+		//Fenetre.setGridLinesVisible(true);
 
-		// b.setCenter(new Text("Pas encore fait MDR"));
 		b.setCenter(Fenetre);
 		b.setBottom(null);
 		b.setTop(null);
@@ -561,10 +601,18 @@ public class Affichage {
 	public void afficherMessageTourDuJoueur(int joueur) {
 		if (joueur == 1) {
 			texteTourJ1.setVisible(true);
+			texteDeplRestantsJ1.setVisible(true);
+			textePassesRestantesJ1.setVisible(true);
 			texteTourJ2.setVisible(false);
+			texteDeplRestantsJ2.setVisible(false);
+			textePassesRestantesJ2.setVisible(false);
 		} else {
 			texteTourJ1.setVisible(false);
+			texteDeplRestantsJ1.setVisible(false);
+			textePassesRestantesJ1.setVisible(false);
 			texteTourJ2.setVisible(true);
+			texteDeplRestantsJ2.setVisible(true);
+			textePassesRestantesJ2.setVisible(true);
 		}
 	}
 
@@ -740,13 +788,24 @@ public class Affichage {
 
 	}
 
-	public void actualiserPasseDeplacementsRestants(int deplacements, boolean passeFaite) {
-		texteDeplRestants.setText("Déplacements restants : " + (2 - deplacements));
-
-		if (passeFaite) {
-			textePassesRestantes.setText("Passe restante : 0");
-		} else {
-			textePassesRestantes.setText("Passe restante : 1");
+	public void actualiserPasseDeplacementsRestants(int deplacements, boolean passeFaite, int joueur) {
+		if(joueur == 1){
+			texteDeplRestantsJ1.setText("Déplacements restants : " + (2 - deplacements));
+	
+			if (passeFaite) {
+				textePassesRestantesJ1.setText("Passe restante : 0");
+			} else {
+				textePassesRestantesJ1.setText("Passe restante : 1");
+			}
+		}
+		else{
+			texteDeplRestantsJ2.setText("Déplacements restants : " + (2 - deplacements));
+	
+			if (passeFaite) {
+				textePassesRestantesJ2.setText("Passe restante : 0");
+			} else {
+				textePassesRestantesJ2.setText("Passe restante : 1");
+			}
 		}
 	}
 
