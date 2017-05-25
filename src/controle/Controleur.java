@@ -77,7 +77,6 @@ public class Controleur {
 		int num;
 		Point point = numCaseToPoint(numero);
 		ArrayList<Point> listePoints = diaballik.obtenirActionsPossibles(point);
-
 		if (listePoints != null) {
 			for (Point p : listePoints) {
 				num = pointToNumCase(p);
@@ -155,8 +154,8 @@ public class Controleur {
 			pause.setOnFinished(event -> {
 				// déclenché à la fin du timer de 2s
 				MouvementIA mvt = it.next();
-				int numeroSrc = pointToNumCase(mvt.dest);
-				int numeroDest = pointToNumCase(mvt.src);
+				int numeroSrc = pointToNumCase(mvt.src);
+				int numeroDest = pointToNumCase(mvt.dest);
 
 				jouerActionIHM(mvt.caseSrc, numeroSrc, numeroDest);
 
@@ -290,7 +289,11 @@ public class Controleur {
 	}
 
 	public int pointToNumCase(Point src) {
-		return 48 - (src.getRow() * 7 + src.getColumn());
+		return coordToNumCase(src.getRow(), src.getColumn());
+	}
+
+	public int coordToNumCase(int ligne, int col) {
+		return 48 - (ligne * 7 + col);
 	}
 
 	public Point numCaseToPoint(int numCase) {
@@ -335,8 +338,7 @@ public class Controleur {
 	}
 
 	public void sauvegarderApplication(File file) {
-		if (file != null && file.getPath().endsWith(".json")) {
-			System.out.println(file.getPath());
+		if (file != null && file.getPath().endsWith(".dblk")) {
 			JsonWriter writer = null;
 
 			try {
@@ -349,17 +351,21 @@ public class Controleur {
 				gson.toJson(this.diaballik, Partie.class, writer);
 				writer.flush();
 				writer.close();
-				
+
+				System.out.println("sauvegarde reussie");
+
 				// on reprend la partie
 				cacherMenuPause();
 			} catch (IOException e) {
 				System.out.println("impossible d'ecrire dans le fichier");
 			}
+		} else {
+			System.out.println("fichier incorrect ou inexistant");
 		}
 	}
 
 	public void chargerApplication(File file) {
-		if (file != null && file.getPath().endsWith(".json") && file.exists()) {
+		if (file != null && file.getPath().endsWith(".dblk") && file.exists()) {
 			JsonReader reader = null;
 
 			try {
@@ -370,13 +376,19 @@ public class Controleur {
 						.registerTypeAdapter(Test.class, new InterfaceAdapter<Test>()).create();
 
 				// on lit dans le fichier => json to Partie
-				this.diaballik = gson.fromJson(reader, Partie.class);
+				diaballik = gson.fromJson(reader, Partie.class);
+
+				// on reinstancie le joueur actuel pour le debugger
+				diaballik.actualiserJoueur();
 
 				// on charge ensuite l'ihm de la partie
 				chargerFenetreJeu();
+				System.out.println("chargement reussi");
 			} catch (FileNotFoundException e) {
 				System.out.println("fichier introuvable");
 			}
+		} else {
+			System.out.println("fichier incorrect ou inexistant");
 		}
 	}
 
@@ -384,10 +396,11 @@ public class Controleur {
 		// on lance l'ihm du jeu
 		lancerFenetreJeu();
 		// on replace les pions où il faut
-		ihm.replacerPionsJeu(diaballik.getPlateau().obtenirPlateau());
-		
-		// TODO : recharger la vitesse et autres réglages également (stockés dans la partie)
-		
+		ihm.replacerPionsJeu(this, diaballik.getPlateau().obtenirPlateau());
+
+		// TODO : recharger la vitesse et autres réglages également (stockés
+		// dans la partie)
+
 		// on actualise la couleur des boutons
 		actualiserCouleurBoutons();
 		// test si la partie est finie
@@ -395,8 +408,8 @@ public class Controleur {
 	}
 
 	public void lancerFenetreJeu() {
-		this.ihm.afficherFenetreJeu(this);
-		this.cacherMenuPause(); // s'assurer que la partie n'est pas en pause
+		ihm.afficherFenetreJeu(this);
+		cacherMenuPause(); // s'assurer que la partie n'est pas en pause
 
 		// si le joueur 1 est un IA
 		if (diaballik.tourIA())
