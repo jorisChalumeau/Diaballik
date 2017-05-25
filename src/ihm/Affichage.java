@@ -51,6 +51,10 @@ public class Affichage {
 	private Label textePassesRestantesJ1;
 	private Label texteDeplRestantsJ2;
 	private Label textePassesRestantesJ2;
+	private int charteGraphique = 0;
+	private String spritePionOrange = "file:Images/rien.png";
+	private String spritePionBleu = "file:Images/rien.png";
+	private String spriteBalle = "file:Images/rien.png";
 
 	// REGLAGES RECURRENTS D OBJETS
 	private void curseurInteraction(Node n) {
@@ -400,6 +404,7 @@ public class Affichage {
 		
 		VBox menu1 = initMenu1(controleur);
 		VBox enTete = initEnTete();
+		
 
 		b.setCenter(menu1);
 		b.setTop(enTete);
@@ -419,23 +424,23 @@ public class Affichage {
 		}
 
 		for (int i = 0; i < 3; i++) {
-			plateau[i] = CaseGraphique.caseBleu(cases[i]);
+			plateau[i] = CaseGraphique.caseBleu(cases[i], spritePionBleu);
 			curseurInteraction(plateau[i]);
-			plateau[i + 4] = CaseGraphique.caseBleu(cases[i + 4]);
+			plateau[i + 4] = CaseGraphique.caseBleu(cases[i + 4], spritePionBleu);
 			curseurInteraction(plateau[i + 4]);
 		}
-		plateau[3] = CaseGraphique.caseBleuBalle(cases[3]);
+		plateau[3] = CaseGraphique.caseBleuBalle(cases[3], spritePionBleu, spriteBalle);
 		curseurInteraction(plateau[3]);
 		for (int i = 7; i < 42; i++) {
 			plateau[i] = CaseGraphique.caseVide(cases[i]);
 		}
 		for (int i = 42; i < 45; i++) {
-			plateau[i] = CaseGraphique.caseOrange(cases[i]);
+			plateau[i] = CaseGraphique.caseOrange(cases[i], spritePionOrange);
 			curseurInteraction(plateau[i]);
-			plateau[i + 4] = CaseGraphique.caseOrange(cases[i + 4]);
+			plateau[i + 4] = CaseGraphique.caseOrange(cases[i + 4], spritePionOrange);
 			curseurInteraction(plateau[i + 4]);
 		}
-		plateau[45] = CaseGraphique.caseOrangeBalle(cases[45]);
+		plateau[45] = CaseGraphique.caseOrangeBalle(cases[45], spritePionOrange, spriteBalle);
 		curseurInteraction(plateau[45]);
 
 		// On met les cases dans une grille
@@ -593,6 +598,20 @@ public class Affichage {
 		b.setBottom(null);
 		b.setTop(null);
 	}
+	
+	public void changerCharteGraphique(int charte) {
+		charteGraphique = charte;
+		if(charte == 0){
+			spritePionOrange = "file:Images/rien.png";
+			spritePionBleu = "file:Images/rien.png";
+			spriteBalle = "file:Images/rien.png";
+		}
+		if(charte == 1){
+			spritePionOrange = "file:Images/pionDrapeauFrance.png";
+			spritePionBleu = "file:Images/pionDrapeauBresil.png";
+			spriteBalle = "file:Images/balleFoot.png";
+		}
+	}
 
 	public void fermerAplication() {
 		stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
@@ -640,7 +659,7 @@ public class Affichage {
 	}
 
 	public void deplacementOrange(int n1, int n2, Controleur c) {
-		plateau[n2] = CaseGraphique.caseOrange(cases[n2]);
+		plateau[n2] = CaseGraphique.caseOrange(cases[n2], spritePionOrange);
 		getGrille().add(plateau[n2], n2 % 7, n2 / 7);
 		curseurInteraction(plateau[n2]);
 		lierCaseAuxControles(c, n2);
@@ -650,7 +669,7 @@ public class Affichage {
 	}
 
 	public void deplacementBleu(int n1, int n2, Controleur c) {
-		plateau[n2] = CaseGraphique.caseBleu(cases[n2]);
+		plateau[n2] = CaseGraphique.caseBleu(cases[n2], spritePionBleu);
 		getGrille().add(plateau[n2], n2 % 7, n2 / 7);
 		curseurInteraction(plateau[n2]);
 		lierCaseAuxControles(c, n2);
@@ -660,25 +679,40 @@ public class Affichage {
 	}
 
 	public void passeOrange(int n1, int n2, Controleur c) {
-		plateau[n2] = CaseGraphique.caseOrangeBalle(cases[n2]);
+		plateau[n2] = CaseGraphique.caseOrangeBalle(cases[n2], spritePionOrange, spriteBalle);
 		getGrille().add(plateau[n2], n2 % 7, n2 / 7);
 		curseurInteraction(plateau[n2]);
 		lierCaseAuxControles(c, n2);
-		plateau[n1] = CaseGraphique.caseOrange(cases[n1]);
+		plateau[n1] = CaseGraphique.caseOrange(cases[n1], spritePionOrange);
 		getGrille().add(plateau[n1], n1 % 7, n1 / 7);
 		curseurInteraction(plateau[n1]);
 		lierCaseAuxControles(c, n1);
 	}
 
 	public void passeBleu(int n1, int n2, Controleur c) {
-		plateau[n2] = CaseGraphique.caseBleuBalle(cases[n2]);
+		plateau[n2] = CaseGraphique.caseBleuBalle(cases[n2], spritePionBleu, spriteBalle);
 		getGrille().add(plateau[n2], n2 % 7, n2 / 7);
 		curseurInteraction(plateau[n2]);
 		lierCaseAuxControles(c, n2);
-		plateau[n1] = CaseGraphique.caseBleu(cases[n1]);
+		plateau[n1] = CaseGraphique.caseBleu(cases[n1], spritePionBleu);
 		getGrille().add(plateau[n1], n1 % 7, n1 / 7);
 		curseurInteraction(plateau[n1]);
 		lierCaseAuxControles(c, n1);
+	}
+	
+	public int getCharteGraphique(){
+		return charteGraphique;
+	}
+	
+	public String getSpritePion(int joueur){
+		if(joueur == 1)
+			return spritePionOrange;
+		else
+			return spritePionBleu;
+	}
+	
+	public String getSpriteBalle(){
+		return spriteBalle;
 	}
 
 	public Label getTexteTourJ1() {
@@ -759,22 +793,22 @@ public class Affichage {
 
 				switch (obtenirPlateau[ligne][col]) {
 				case PION_BLANC:
-					plateau[num] = CaseGraphique.caseOrange(cases[num]);
+					plateau[num] = CaseGraphique.caseOrange(cases[num], spritePionOrange);
 					getGrille().add(plateau[num], num % 7, num / 7);
 					curseurInteraction(plateau[num]);
 					break;
 				case PION_BLANC_AVEC_BALLON:
-					plateau[num] = CaseGraphique.caseOrangeBalle(cases[num]);
+					plateau[num] = CaseGraphique.caseOrangeBalle(cases[num], spritePionOrange, spriteBalle);
 					getGrille().add(plateau[num], num % 7, num / 7);
 					curseurInteraction(plateau[num]);
 					break;
 				case PION_NOIR:
-					plateau[num] = CaseGraphique.caseBleu(cases[num]);
+					plateau[num] = CaseGraphique.caseBleu(cases[num], spritePionBleu);
 					getGrille().add(plateau[num], num % 7, num / 7);
 					curseurInteraction(plateau[num]);
 					break;
 				case PION_NOIR_AVEC_BALLON:
-					plateau[num] = CaseGraphique.caseBleuBalle(cases[num]);
+					plateau[num] = CaseGraphique.caseBleuBalle(cases[num], spritePionBleu, spriteBalle);
 					getGrille().add(plateau[num], num % 7, num / 7);
 					curseurInteraction(plateau[num]);
 					break;

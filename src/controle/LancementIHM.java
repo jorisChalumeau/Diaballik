@@ -21,9 +21,12 @@ public class LancementIHM extends Application {
 		controleur.setIhm(app);
 		app.stage = stage;
 
+		//TODO : A ENLEVER à terme
+		app.changerCharteGraphique(1);
+		
 		app.stage.setTitle("Test IHM Diaballik");
 		app.stage.setMinHeight(645);
-		stage.setMinWidth(720);
+		stage.setMinWidth(775);
 
 		app.b.setStyle("-fx-background-color: #E6E3EE");
 
