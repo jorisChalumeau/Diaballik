@@ -141,7 +141,7 @@ public class Controleur {
 		actualiserCouleurBoutons();
 
 		ArrayList<MouvementIA> listeCoups = diaballik.jouerIA();
-
+		System.out.println(listeCoups);
 		if (listeCoups == null) {
 			System.out.println("l'IA n'a pas trouvé de coup");
 			triggerFinTour();
