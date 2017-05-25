@@ -1,8 +1,6 @@
 package controle;
 
 import javafx.event.EventHandler;
-import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
 
 import java.io.File;
 

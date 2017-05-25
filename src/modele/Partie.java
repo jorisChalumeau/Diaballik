@@ -1,31 +1,13 @@
 package modele;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Stack;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
-
-import controle.Controleur;
 import modele.joueurs.Joueur;
 import modele.joueurs.JoueurHumain;
 import modele.joueurs.JoueurIA;
-import modele.joueurs.JoueurIADifficile;
-import modele.joueurs.InterfaceAdapter;
 import modele.joueurs.PionBloqueException;
 import modele.tests.Regles;
-import modele.tests.Test;
 
 public class Partie {
 
@@ -37,7 +19,7 @@ public class Partie {
 	private Joueur joueur2;
 	private int cptMouvement = 0;
 	private Regles r;
-	private double vitesseIA = 10;
+	private double vitesseIA = 2;
 	private Stack<Coup> historique;
 	private Stack<Coup> historiqueSecondaire;
 

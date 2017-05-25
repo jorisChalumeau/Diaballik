@@ -141,7 +141,7 @@ public class Controleur {
 		actualiserCouleurBoutons();
 
 		ArrayList<MouvementIA> listeCoups = diaballik.jouerIA();
-		System.out.println(listeCoups);
+
 		if (listeCoups == null) {
 			System.out.println("l'IA n'a pas trouvé de coup");
 			triggerFinTour();
@@ -153,10 +153,12 @@ public class Controleur {
 			pause.setOnFinished(event -> {
 				// déclenché à la fin du timer de 2s
 				MouvementIA mvt = it.next();
-				int numeroSrc = pointToNumCase(mvt.src);
-				int numeroDest = pointToNumCase(mvt.dest);
+				if (mvt != null) {
+					int numeroSrc = pointToNumCase(mvt.src);
+					int numeroDest = pointToNumCase(mvt.dest);
 
-				jouerActionIHM(mvt.caseSrc, numeroSrc, numeroDest);
+					jouerActionIHM(mvt.caseSrc, numeroSrc, numeroDest);
+				}
 
 				if (it.hasNext())
 					pause.play();
@@ -420,11 +422,11 @@ public class Controleur {
 	}
 
 	public void actualiserCouleurBoutons() {
-		ihm.setCouleurBoutonAnnuler(!diaballik.getHistorique().isEmpty()
+		ihm.setCouleurBoutonAnnuler(!diaballik.getHistorique().isEmpty() && !diaballik.partieFinie()
 				&& !(diaballik.tourIA() && diaballik.getHistoriqueSecondaire().isEmpty()));
-		ihm.setCouleurBoutonRefaire(!diaballik.getHistoriqueSecondaire().isEmpty()
+		ihm.setCouleurBoutonRefaire(!diaballik.getHistoriqueSecondaire().isEmpty() && !diaballik.partieFinie()
 				&& !(diaballik.tourIA() && diaballik.getHistoriqueSecondaire().isEmpty()));
-		ihm.setCouleurBoutonRemontrerIA(diaballik.dejaJoueIA() && !diaballik.tourIA());
+		ihm.setCouleurBoutonRemontrerIA(diaballik.dejaJoueIA() && !diaballik.tourIA() && !diaballik.partieFinie());
 	}
 
 	public void recommencerPartie() {

@@ -10,11 +10,10 @@ import modele.tests.Regles;
 public class JoueurIAFacile extends JoueurIA {
 
 	public JoueurIAFacile(int numJoueur) {
-		this.numJoueur=numJoueur;
+		this.numJoueur = numJoueur;
 		this.difficulte = "facile";
 	}
 
-	@Override
 	public List<MouvementIA> genererMouvementsPossibles(Partie partie) {
 		List<MouvementIA> mouvementsJoueur = new ArrayList<>();
 		Plateau p = partie.getPlateau();
@@ -55,6 +54,40 @@ public class JoueurIAFacile extends JoueurIA {
 		return mouvementsJoueur;
 	}
 
+	public MouvementIA jouerAction(Partie partie) {
+		List<MouvementIA> listeMvm = genererMouvementsPossibles(partie);
+		Random generator = new Random();
+
+		if (listeMvm.size() != 0) {
+			MouvementIA mouvementRandom = listeMvm.get(generator.nextInt(listeMvm.size()));
+			try {
+				partie.executerAction(mouvementRandom.src, mouvementRandom.dest);
+				return mouvementRandom;
+			} catch (ExceptionMouvementIllegal e) {
+				return null;
+			}
+		} else
+			return null;
+	}
+
+	@Override
+	public ArrayList<MouvementIA> jouerCoup(Partie partie) throws PionBloqueException, InterruptedException {
+		ArrayList<MouvementIA> listeCoups = new ArrayList<MouvementIA>();
+
+		for (int nbMvt = 0; nbMvt < 3; nbMvt++) {
+			MouvementIA mvt = jouerAction(partie);
+			if (mvt != null) {
+				listeCoups.add(mvt);
+
+				// après chaque coup on vérifie si la partie est finie
+				if (partie.partieFinie())
+					break;
+			}
+		}
+
+		return listeCoups;
+	}
+
 	@Override
 	public int getNumeroJoueur() {
 		return numJoueur;
@@ -63,36 +96,6 @@ public class JoueurIAFacile extends JoueurIA {
 	@Override
 	public String getDifficulte() {
 		return difficulte;
-	}
-
-	@Override
-	public List<MouvementIA> genererMouvementsPossibles(Noeud node, Plateau board, Point[] pieces,
-			Joueur currentPlayer) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public MouvementIA jouerAction(Partie partie) {
-			List<MouvementIA> listeMvm = genererMouvementsPossibles(partie);
-			Random generator = new Random();
-
-			if (listeMvm.size() != 0) {
-				MouvementIA mouvementRandom = listeMvm.get(generator.nextInt(listeMvm.size()));
-				try {
-					partie.executerAction(mouvementRandom.src, mouvementRandom.dest);
-					return mouvementRandom;
-				} catch (ExceptionMouvementIllegal e) {
-					return null;
-				}
-			}
-			else 
-				return null;
-	}
-	
-	
-	public ArrayList<MouvementIA> jouerActionIADiff(Partie partie) {
-		return null;
 	}
 
 }

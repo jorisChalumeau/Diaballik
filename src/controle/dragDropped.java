@@ -1,17 +1,8 @@
 package controle;
 
-import javafx.application.Application;
 import javafx.event.EventHandler;
-import javafx.scene.Cursor;
-import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.input.*;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 
 public class dragDropped implements EventHandler<DragEvent> {

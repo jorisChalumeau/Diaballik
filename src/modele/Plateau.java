@@ -3,8 +3,6 @@ package modele;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.simple.JSONObject;
-
 import modele.joueurs.Joueur;
 
 public class Plateau {
