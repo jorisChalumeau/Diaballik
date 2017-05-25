@@ -248,17 +248,16 @@ public class JoueurIADifficile extends JoueurIA {
 
 		if (noeud.joueur == this)
 		{
-			if (noeud.mouvement.dest.getRow() == p1Start)
-				tmpGrade += 200;
+			if (noeud.mouvement.src.getRow() == p1Start &&  noeud.mouvement.dest.getRow()>p1Start)
+				tmpGrade += 0;
 			else
-				tmpGrade += ((7 - noeud.mouvement.dest.getRow()) * 10);
+				tmpGrade += ((noeud.mouvement.src.getRow() - noeud.mouvement.dest.getRow()) * 10);
 		} else
 		{
-			if (noeud.mouvement.dest.getRow() == p2Start )
-				tmpGrade += 200;
+			if (noeud.mouvement.src.getRow() == p2Start &&  noeud.mouvement.dest.getRow()<p2Start )
+				tmpGrade += 0;
 			else 
-				tmpGrade += ((noeud.mouvement.dest.getRow()) * 10);
-				
+				tmpGrade += ((noeud.mouvement.dest.getRow()- noeud.mouvement.src.getRow()) * 10);
 		}
 		return tmpGrade;
 	}
