@@ -1,50 +1,22 @@
+IHM
+ajouter des paramètres, accessibles dès le menu (qui doivent être sauvés même si on éteint le programme, mais ça c'est modèle), genre
+ -si le joueur 1 ou 2 commence (les couleurs ne changent pas)
+ -la vitesse de l'IA
+ -le choix de la texture graphique. 
+mécanisme(s) du bouton "astuce" 
 
-
-* MODELE :
-	- niveau modèle / controleur :- annuler coup(Humain)/tour(IA) => historique coups
-	- IA Moyen : une IA comme l'IA Facile, mais "qui essaye d'avancer vers la ligne adverse", 
-		et "qui joue les coups gagnants s'ils sont évidents". Eventuellement aussi essayer de
-		bloquer les coups gagnant de son adversaire
-	- IA Difficile : ... MEGA TRYHARD => regarder le min-max
-	
-	
-* IHM :
-	- ajouter les boutons :
-		- augmenter/reduire vitesse IA (on le cachera si il n'y a pas d'ia) (à mettre au dessus des boutons annuler/refaire coup)
-		- molette pour les réglages
-		- boutons Sauvegarder et charger a part
-	- mettre tous les boutons qui sont en bas à droite au milieu à droite
-	- duppliquer la zone de texte avec les "deplacements restants" et "passe restante"
-		 et en mettre une en haut à coté du texte joueur 2 et une en bas à coté du texte joueur 1
-	- dans les options : 
-		- Pouvoir enlever si on veut sur les cases possibles
-	- drag / drop (si on a le temps)
-	
-	
-	
-	TODO v2
-	
-IHM 
--faire un écran de fin de partie 
--ajouter des paramètres, accessibles dès le menu (qui doivent être sauvés même si on éteint le programme, mais ça c'est modèle), genre
- : si tu veux être les bleus ou les oranges, la vitesse de l'IA, le choix de la texture graphique. 
-- mécanisme(s) du bouton "astuce" 
-- afficher les déplacements/passes restante dans l'IHM 
-...? 
- 
 CONTROLE 
--mécanismes "remontrer le tour de l'IA" appelant des fonctions de IHM et prenant de infos dans le modèle sans le modifier 
--faire marcher "recommencer"
--faire marcher "sauvegarder"
--faire marcher "charger partie"
-...?
- 
+"remontrer IA" bouton enablé que quand c'est le dernier tour que l'IA ait joué
+
 MODELE
-IA Moyenne?
-IA Difficile 
-Annuler/refaire qui marche avec les IA 
-...? 
-  
-AUTRES (guillaume ou quentin maybe?)
+Paramètres qui subsistent (stockés disque dur) -> Properties? Jsonjsaispasquoi?
+ -si le joueur 1 ou 2 commence (les couleurs ne changent pas)
+ -la vitesse de l'IA
+ -le choix de la texture graphique. 
+IA Moyenne/difficile
+
+TOUT
 trouver des images de pions sympa
 tester le drag and drop et l'ergonomie de l'ihm en général
+ -l'organisation des objets (centré) est-elle agréable
+ -l'affichage des coups possibles te gene t'il?
