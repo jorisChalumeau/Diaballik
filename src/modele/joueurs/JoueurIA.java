@@ -69,7 +69,7 @@ public abstract class JoueurIA implements Joueur {
 				if (move!=null){
 					System.out.println(move.src.getRow() + " " + move.src.getColumn());
 					System.out.println(move.dest.getRow() + " " + move.dest.getColumn() + " " + move.type.toString());
-					partie.executerAction(move.dest, move.src);
+					partie.executerAction(move.src, move.dest);
 				}
 			}
 			catch (ExceptionMouvementIllegal e) {

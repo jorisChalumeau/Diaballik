@@ -284,15 +284,7 @@ public class JoueurIADifficile extends JoueurIA {
 		coupIA.add(coup1.mouvement);
 		coupIA.add(coup2.mouvement);
 		coupIA.add(coup3.mouvement);
-		last3 = new ArrayList<>(coupIA);
-		try
-		{
-			last3.forEach(MouvementIA::revenir);
-		}
-		catch(Exception e)
-		{
-
-		}
+		
 		return coupIA;
 	}
 	
