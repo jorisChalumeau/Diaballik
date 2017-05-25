@@ -8,9 +8,9 @@ import javafx.stage.Window;
 
 public class FenetreSauvegarde {
 	
-	final static String REPERTOIRE_JEU = "./sauvegardes";
-	final static String EXTENSION_COMPLETE = "Fichiers diaballik";
-	final static String EXTENSION_COURTE = "*.dblk";
+	private final static String REPERTOIRE_JEU = "./sauvegardes";
+	private final static String EXTENSION_COMPLETE = "Fichiers diaballik";
+	private final static String EXTENSION_COURTE = "*.dblk";
 
 	public static File sauvegarder(Window fenetre) {
 		final FileChooser saveDialog = new FileChooser();

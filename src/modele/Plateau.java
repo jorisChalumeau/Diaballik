@@ -10,7 +10,7 @@ import modele.joueurs.Joueur;
 public class Plateau {
 
 	private Case[][] terrain;
-	final static int TAILLE = 7;
+	public final static int TAILLE = 7;
 	List<Point> allPosibleCoord;
 
 	public Plateau() {

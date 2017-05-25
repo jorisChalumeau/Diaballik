@@ -13,6 +13,7 @@ import controle.dragDone;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import modele.Case;
+import modele.Plateau;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.Cursor;
@@ -48,50 +49,48 @@ public class Affichage {
 	Color tempCouleur;
 
 	// REGLAGES RECURRENTS D OBJETS
-	private void curseurInteraction(Node n){
+	private void curseurInteraction(Node n) {
 		n.setCursor(Cursor.HAND);
 	}
-	
-	private void curseurNormal(Node n){
+
+	private void curseurNormal(Node n) {
 		n.setCursor(Cursor.DEFAULT);
 	}
-	
-	private void bordReactif(Button b, String style, String styleAdditionnel){
-		b.setOnMousePressed(new EventHandler<MouseEvent>(){
+
+	private void bordReactif(Button b, String style, String styleAdditionnel) {
+		b.setOnMousePressed(new EventHandler<MouseEvent>() {
 			@Override
-			public void handle(MouseEvent event){
-				if(!enPause)
-					b.setStyle(style+styleAdditionnel);
+			public void handle(MouseEvent event) {
+				if (!enPause)
+					b.setStyle(style + styleAdditionnel);
 			}
 		});
-		
-		b.setOnMouseReleased(new EventHandler<MouseEvent>(){
+
+		b.setOnMouseReleased(new EventHandler<MouseEvent>() {
 			@Override
-			public void handle(MouseEvent event){
+			public void handle(MouseEvent event) {
 				b.setStyle(style);
 			}
 		});
 	}
-	
-	private void setInfobulle(Button b, ImageView i){
-		b.setOnMouseEntered(new EventHandler<MouseEvent>
-	    () {
 
-	        @Override
-	        public void handle(MouseEvent event) {
-	        	i.setVisible(true);
-	        }
-	    });
-	    b.setOnMouseExited(new EventHandler<MouseEvent>
-	    () {
+	private void setInfobulle(Button b, ImageView i) {
+		b.setOnMouseEntered(new EventHandler<MouseEvent>() {
 
-	        @Override
-	        public void handle(MouseEvent event) {
-	        	i.setVisible(false);
-	        }
-	    });
+			@Override
+			public void handle(MouseEvent event) {
+				i.setVisible(true);
+			}
+		});
+		b.setOnMouseExited(new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				i.setVisible(false);
+			}
+		});
 	}
-	
+
 	public void setBoutonClassique(Button b, int numero, Controleur controleur) {
 		String style = "-fx-background-color: #0497D7; -fx-text-fill: white; -fx-font-size: 15;";
 		b.setPrefSize(300, 50);
@@ -99,34 +98,30 @@ public class Affichage {
 		b.setStyle(style);
 		b.setOnAction(new boutonPresse(controleur, numero));
 		b.setCursor(Cursor.HAND);
-		bordReactif(b,style,"-fx-text-fill: #282828; -fx-background-color: #057EB2;");
-		b.setOnMouseEntered(new EventHandler<MouseEvent>
-	    () {
+		bordReactif(b, style, "-fx-text-fill: #282828; -fx-background-color: #057EB2;");
+		b.setOnMouseEntered(new EventHandler<MouseEvent>() {
 
-	        @Override
-	        public void handle(MouseEvent event) {
-	        	if(event.getButton() == MouseButton.PRIMARY){
-	        		b.setStyle("-fx-background-color: #057EB2; -fx-text-fill: #282828; -fx-font-size: 15;");
-	        	}
-	        	else{
-	        		b.setStyle("-fx-background-color: #0497D7; -fx-text-fill: #282828; -fx-font-size: 15;");
-	        	} 
-	        }
-	    });
-	    b.setOnMouseExited(new EventHandler<MouseEvent>
-	    () {
+			@Override
+			public void handle(MouseEvent event) {
+				if (event.getButton() == MouseButton.PRIMARY) {
+					b.setStyle("-fx-background-color: #057EB2; -fx-text-fill: #282828; -fx-font-size: 15;");
+				} else {
+					b.setStyle("-fx-background-color: #0497D7; -fx-text-fill: #282828; -fx-font-size: 15;");
+				}
+			}
+		});
+		b.setOnMouseExited(new EventHandler<MouseEvent>() {
 
-	        @Override
-	        public void handle(MouseEvent event) {
-	        	
-	        	if(event.getButton() == MouseButton.PRIMARY){
-	        		b.setStyle("-fx-background-color: #057EB2; -fx-text-fill: #282828; -fx-font-size: 15;");
-	        	}
-	        	else{
-	        		b.setStyle("-fx-background-color: #0497D7; -fx-text-fill: white; -fx-font-size: 15;");
-	        	}
-	        }
-	    });
+			@Override
+			public void handle(MouseEvent event) {
+
+				if (event.getButton() == MouseButton.PRIMARY) {
+					b.setStyle("-fx-background-color: #057EB2; -fx-text-fill: #282828; -fx-font-size: 15;");
+				} else {
+					b.setStyle("-fx-background-color: #0497D7; -fx-text-fill: white; -fx-font-size: 15;");
+				}
+			}
+		});
 	}
 
 	private void setBoutonDesign2(Button b, int numero, Controleur controleur) {
@@ -137,20 +132,21 @@ public class Affichage {
 		b.setOnAction(new boutonPresseEnJeu(controleur, numero));
 		b.setAlignment(Pos.CENTER);
 		b.setCursor(Cursor.HAND);
-		//bordReactif(b,style,"-fx-border-width:2; -fx-border-color:black;");
+		// bordReactif(b,style,"-fx-border-width:2; -fx-border-color:black;");
 	}
 
 	private void setBoutonDesign3(Button b, int numero, String couleur, Controleur controleur) {
-		String style = ("-fx-background-color: #" + couleur + "; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
+		String style = ("-fx-background-color: #" + couleur
+				+ "; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;");
 		b.setMinSize(50, 50);
 		b.setMaxSize(77, 65);
 		b.setStyle(style);
 		b.setOnAction(new boutonPresseEnJeu(controleur, numero));
 		b.setCursor(Cursor.HAND);
-		bordReactif(b,style,"-fx-border-width:2; -fx-border-color:black;");
+		bordReactif(b, style, "-fx-border-width:2; -fx-border-color:black;");
 	}
-	
-	private Button boutonFinDeTour (Controleur controleur) {
+
+	private Button boutonFinDeTour(Controleur controleur) {
 		String style = "-fx-background-color: #FFFF33; -fx-text-fill: black; -fx-font-size: 24; -fx-border-color:black; -fx-background-radius: 1em; -fx-border-radius: 1em;";
 		Button finTour = new Button("FIN DE TOUR");
 		finTour.setPrefSize(250, 50);
@@ -159,18 +155,18 @@ public class Affichage {
 		finTour.setOnAction(new boutonPresseEnJeu(controleur, 10));
 		finTour.setAlignment(Pos.CENTER);
 		finTour.setCursor(Cursor.HAND);
-		bordReactif(finTour,style,"-fx-border-width:2; -fx-border-color:black;");
+		bordReactif(finTour, style, "-fx-border-width:2; -fx-border-color:black;");
 		return finTour;
 	}
-	
-	private void lierCaseAuxControles(Controleur controleur, int i){
+
+	private void lierCaseAuxControles(Controleur controleur, int i) {
 		plateau[i].setOnMousePressed(new clicSurCase(controleur, i, cases));
-		plateau[i].setOnDragDetected(new dragDetected(controleur,i,cases));
-		plateau[i].setOnDragOver(new dragOver(controleur,i,cases));
-		plateau[i].setOnDragEntered(new dragEntered(controleur,i,cases));
-		plateau[i].setOnDragExited(new dragExited(controleur,i,cases));
-		plateau[i].setOnDragDropped(new dragDropped(controleur,i,cases));
-		plateau[i].setOnDragDone(new dragDone(controleur,i,cases));
+		plateau[i].setOnDragDetected(new dragDetected(controleur, i, cases));
+		plateau[i].setOnDragOver(new dragOver(controleur, i, cases));
+		plateau[i].setOnDragEntered(new dragEntered(controleur, i, cases));
+		plateau[i].setOnDragExited(new dragExited(controleur, i, cases));
+		plateau[i].setOnDragDropped(new dragDropped(controleur, i, cases));
+		plateau[i].setOnDragDone(new dragDone(controleur, i, cases));
 	}
 
 	// COMPOSANTS (ensembles d'objets)
@@ -186,7 +182,7 @@ public class Affichage {
 
 		Button bIA = new Button("Joueur contre Ordinateur");
 		setBoutonClassique(bIA, 2, controleur);
-		
+
 		Button bCharger = new Button("Charger une partie");
 		setBoutonClassique(bCharger, 19, controleur);
 
@@ -245,7 +241,7 @@ public class Affichage {
 		Button bSauvegarder = new Button("Sauvegarder");
 		setBoutonClassique(bSauvegarder, 18, controleur);
 		boutonsMenuPause[2] = bSauvegarder;
-		
+
 		Button bAbandonner = new Button("Menu Principal");
 		setBoutonClassique(bAbandonner, 9, controleur);
 		boutonsMenuPause[3] = bAbandonner;
@@ -257,7 +253,7 @@ public class Affichage {
 		vbox.getChildren().addAll(texte, bReprendre, bRecommencer, bSauvegarder, bAbandonner, bQuitter);
 		return vbox;
 	}
-	
+
 	public VBox initMenuFinPartie(Controleur controleur) {
 		VBox vbox = new VBox();
 		vbox.setMinSize(100, 25);
@@ -269,12 +265,10 @@ public class Affichage {
 		messageVictoire = new Label("");
 		messageVictoire.setStyle("-fx-font-size: 30; -fx-text-fill: black;");
 
-
 		Button bRecommencer = new Button("Recommencer");
 		setBoutonClassique(bRecommencer, 16, controleur);
 		boutonsMenuPause[1] = bRecommencer;
 
-		
 		Button bAbandonner = new Button("Menu Principal");
 		setBoutonClassique(bAbandonner, 9, controleur);
 		boutonsMenuPause[3] = bAbandonner;
@@ -431,9 +425,8 @@ public class Affichage {
 
 		// On connecte les cases aux contrôleurs
 		for (int i = 0; i < 49; i++) {
-			lierCaseAuxControles(controleur,i);
+			lierCaseAuxControles(controleur, i);
 		}
-		
 
 		setTexteTourJ1(new Label("C'est au joueur 1 de jouer"));
 		getTexteTourJ1().setStyle("-fx-font-size: 24; -fx-text-fill: FF6500;");
@@ -469,17 +462,17 @@ public class Affichage {
 
 		Label textePassesRestantes = new Label("Passe restante : ");
 		textePassesRestantes.setStyle("-fx-font-size: 24; -fx-text-fill: black;");
-		
-		//Infobulles
+
+		// Infobulles
 		final ImageView infobulleAnnuler = new ImageView(new Image("file:Images/infobulleAnnuler.png"));
 		infobulleAnnuler.setVisible(false);
-		//setInfobulle(annuler,infobulleAnnuler);
+		// setInfobulle(annuler,infobulleAnnuler);
 		final ImageView infobulleRemontrerIA = new ImageView(new Image("file:Images/infobulleRemontrerIA.png"));
 		infobulleRemontrerIA.setVisible(false);
-		//setInfobulle(remontrerIA,infobulleRemontrerIA);
+		// setInfobulle(remontrerIA,infobulleRemontrerIA);
 		final ImageView infobulleRefaire = new ImageView(new Image("file:Images/infobulleRefaire.png"));
 		infobulleRefaire.setVisible(false);
-		//setInfobulle(refaire,infobulleRefaire);
+		// setInfobulle(refaire,infobulleRefaire);
 
 		// LES MENU PAUSE ET FIN DE PARTIE
 		menuPause = initMenuPause(controleur);
@@ -523,7 +516,7 @@ public class Affichage {
 		Fenetre.add(annuler, 2, 5, 2, 2);
 		GridPane.setHalignment(annuler, HPos.CENTER);
 		GridPane.setMargin(annuler, new Insets(0, annuler.getMaxWidth() * 2 + 10, 0, 0));
-		
+
 		Fenetre.add(infobulleAnnuler, 2, 4, 2, 1);
 		GridPane.setHalignment(infobulleAnnuler, HPos.CENTER);
 		GridPane.setValignment(infobulleAnnuler, VPos.BOTTOM);
@@ -531,7 +524,7 @@ public class Affichage {
 
 		Fenetre.add(remontrerIA, 2, 5, 2, 2);
 		GridPane.setHalignment(remontrerIA, HPos.CENTER);
-		
+
 		Fenetre.add(infobulleRemontrerIA, 2, 4, 2, 1);
 		GridPane.setHalignment(infobulleRemontrerIA, HPos.CENTER);
 		GridPane.setValignment(infobulleRemontrerIA, VPos.BOTTOM);
@@ -539,7 +532,7 @@ public class Affichage {
 		Fenetre.add(refaire, 2, 5, 2, 2);
 		GridPane.setHalignment(refaire, HPos.CENTER);
 		GridPane.setMargin(refaire, new Insets(0, 0, 0, refaire.getMaxWidth() * 2 + 10));
-		
+
 		Fenetre.add(infobulleRefaire, 2, 4, 2, 1);
 		GridPane.setHalignment(infobulleRefaire, HPos.CENTER);
 		GridPane.setValignment(infobulleRefaire, VPos.BOTTOM);
@@ -547,29 +540,26 @@ public class Affichage {
 
 		Fenetre.add(finTour, 2, 5, 2, 3);
 		GridPane.setHalignment(finTour, HPos.CENTER);
-		
 
 		// MENUS PAUSE ET FIN DE PARTIE
 		Fenetre.add(menuPause, 1, 2, 2, 4);
 		Fenetre.add(menuFinPartie, 1, 2, 2, 4);
-		
-		
 
 		Fenetre.getColumnConstraints().addAll(ctrColonne(20), ctrColonne(40), ctrColonne(20), ctrColonne(20));
 		Fenetre.getRowConstraints().addAll(ctrLigne(8), ctrLigne(7), ctrLigne(15), ctrLigne(5), ctrLigne(30),
 				ctrLigne(10), ctrLigne(5), ctrLigne(20));
-		//Fenetre.setGridLinesVisible(true);
+		// Fenetre.setGridLinesVisible(true);
 
 		// b.setCenter(new Text("Pas encore fait MDR"));
 		b.setCenter(Fenetre);
 		b.setBottom(null);
 		b.setTop(null);
 	}
-	
+
 	public void fermerAplication() {
 		stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
 	}
-	
+
 	public void afficherMessageTourDuJoueur(int joueur) {
 		if (joueur == 1) {
 			texteTourJ1.setVisible(true);
@@ -579,72 +569,72 @@ public class Affichage {
 			texteTourJ2.setVisible(true);
 		}
 	}
-	
+
 	public void afficherMenuPause() {
-		for(Button b : boutonsMenuPause){
+		for (Button b : boutonsMenuPause) {
 			b.setStyle("-fx-background-color: #0497D7; -fx-text-fill: white; -fx-font-size: 15;");
 		}
 		menuPause.setVisible(true);
 		enPause = true;
 	}
-	
+
 	public void cacherMenuPause() {
 		menuPause.setVisible(false);
 		enPause = false;
 	}
-	
+
 	public Boolean estEnPause() {
 		return enPause;
 	}
-	
+
 	public void afficherMenuFinPartie(int j) {
 		menuFinPartie.setVisible(true);
 		enPause = true;
-		messageVictoire.setText("Le joueur "+j+" a gagné");
+		messageVictoire.setText("Le joueur " + j + " a gagné");
 	}
-	
+
 	public void deplacementOrange(int n1, int n2, Controleur c) {
 		plateau[n2] = CaseGraphique.caseOrange(cases[n2]);
 		getGrille().add(plateau[n2], n2 % 7, n2 / 7);
 		curseurInteraction(plateau[n2]);
-		lierCaseAuxControles(c,n2);
+		lierCaseAuxControles(c, n2);
 		plateau[n1] = CaseGraphique.caseVide(cases[n1]);
 		getGrille().add(plateau[n1], n1 % 7, n1 / 7);
-		lierCaseAuxControles(c,n1);
+		lierCaseAuxControles(c, n1);
 	}
 
 	public void deplacementBleu(int n1, int n2, Controleur c) {
 		plateau[n2] = CaseGraphique.caseBleu(cases[n2]);
 		getGrille().add(plateau[n2], n2 % 7, n2 / 7);
 		curseurInteraction(plateau[n2]);
-		lierCaseAuxControles(c,n2);
+		lierCaseAuxControles(c, n2);
 		plateau[n1] = CaseGraphique.caseVide(cases[n1]);
 		getGrille().add(plateau[n1], n1 % 7, n1 / 7);
-		lierCaseAuxControles(c,n1);
+		lierCaseAuxControles(c, n1);
 	}
 
 	public void passeOrange(int n1, int n2, Controleur c) {
 		plateau[n2] = CaseGraphique.caseOrangeBalle(cases[n2]);
 		getGrille().add(plateau[n2], n2 % 7, n2 / 7);
 		curseurInteraction(plateau[n2]);
-		lierCaseAuxControles(c,n2);
+		lierCaseAuxControles(c, n2);
 		plateau[n1] = CaseGraphique.caseOrange(cases[n1]);
 		getGrille().add(plateau[n1], n1 % 7, n1 / 7);
 		curseurInteraction(plateau[n1]);
-		lierCaseAuxControles(c,n1);
+		lierCaseAuxControles(c, n1);
 	}
 
 	public void passeBleu(int n1, int n2, Controleur c) {
 		plateau[n2] = CaseGraphique.caseBleuBalle(cases[n2]);
 		getGrille().add(plateau[n2], n2 % 7, n2 / 7);
 		curseurInteraction(plateau[n2]);
-		lierCaseAuxControles(c,n2);
+		lierCaseAuxControles(c, n2);
 		plateau[n1] = CaseGraphique.caseBleu(cases[n1]);
 		getGrille().add(plateau[n1], n1 % 7, n1 / 7);
 		curseurInteraction(plateau[n1]);
-		lierCaseAuxControles(c,n1);
+		lierCaseAuxControles(c, n1);
 	}
-	
+
 	public Label getTexteTourJ1() {
 		return texteTourJ1;
 	}
@@ -672,54 +662,84 @@ public class Affichage {
 	public VBox getMenuPause() {
 		return menuPause;
 	}
-	
-	public Rectangle getCase(int i){
+
+	public Rectangle getCase(int i) {
 		return cases[i];
 	}
 
 	public void setMenuPause(VBox menuPause) {
 		this.menuPause = menuPause;
 	}
-	
-	public void setTempCouleur(Color c){
+
+	public void setTempCouleur(Color c) {
 		tempCouleur = c;
 	}
-	
-	public Color getTempCouleur(){
+
+	public Color getTempCouleur() {
 		return tempCouleur;
 	}
-	
-	public void setCouleurBoutonAnnuler(boolean b){
-		if(b){
+
+	public void setCouleurBoutonAnnuler(boolean b) {
+		if (b) {
 			annuler.setDisable(false);
-		}
-		else{
+		} else {
 			annuler.setDisable(true);
 		}
 	}
-	
-	public void setCouleurBoutonRefaire(boolean b){
-		if(b){
+
+	public void setCouleurBoutonRefaire(boolean b) {
+		if (b) {
 			refaire.setDisable(false);
-		}
-		else{
+		} else {
 			refaire.setDisable(true);
 		}
 	}
-	
-	public void setCouleurBoutonRemontrerIA(boolean b){
-		if(b){
+
+	public void setCouleurBoutonRemontrerIA(boolean b) {
+		if (b) {
 			remontrerIA.setDisable(false);
-		}
-		else{
+		} else {
 			remontrerIA.setDisable(true);
 		}
 	}
 
-	public void replacerPionsJeu(Case[][] obtenirPlateau) {
-		// TODO utilise le plateau en paramètre pour replacer les pions sur l'ihm
+	public void replacerPionsJeu(Controleur c, Case[][] obtenirPlateau) {
+		int num;
+
+		// on replace les pions lors du chargement de la partie
+		for (int ligne = 0; ligne < Plateau.TAILLE; ligne++)
+			for (int col = 0; col < Plateau.TAILLE; col++) {
+				num = c.coordToNumCase(ligne, col);
+
+				switch (obtenirPlateau[ligne][col]) {
+				case PION_BLANC:
+					plateau[num] = CaseGraphique.caseOrange(cases[num]);
+					getGrille().add(plateau[num], num % 7, num / 7);
+					curseurInteraction(plateau[num]);
+					break;
+				case PION_BLANC_AVEC_BALLON:
+					plateau[num] = CaseGraphique.caseOrangeBalle(cases[num]);
+					getGrille().add(plateau[num], num % 7, num / 7);
+					curseurInteraction(plateau[num]);
+					break;
+				case PION_NOIR:
+					plateau[num] = CaseGraphique.caseBleu(cases[num]);
+					getGrille().add(plateau[num], num % 7, num / 7);
+					curseurInteraction(plateau[num]);
+					break;
+				case PION_NOIR_AVEC_BALLON:
+					plateau[num] = CaseGraphique.caseBleuBalle(cases[num]);
+					getGrille().add(plateau[num], num % 7, num / 7);
+					curseurInteraction(plateau[num]);
+					break;
+				default:
+					plateau[num] = CaseGraphique.caseVide(cases[num]);
+					getGrille().add(plateau[num], num % 7, num / 7);
+				}
+
+				lierCaseAuxControles(c, num);
+			}
+
 	}
-	
-	
 
 }

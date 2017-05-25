@@ -106,9 +106,6 @@ public class Partie {
 		else
 			listePoints = getMouvementsPossibles(src);
 
-		if (listePoints == null)
-			return null;
-
 		for (Point dest : listePoints) {
 			if (!r.obtenirActionDuJoueurSiActionPossible(p, src, dest, joueurActuel)
 					.equals(TypeMouvement.MOUVEMENT_ILLEGAL))
@@ -413,21 +410,21 @@ public class Partie {
 	public void reinitHistoriqueSecondaire() {
 		this.historiqueSecondaire = new Stack<Coup>();
 	}
-	
-	public Partie relancerPartie(){
+
+	public Partie relancerPartie() {
 		// IA vs IA
-		if(joueur1 instanceof JoueurIA && joueur2 instanceof JoueurIA)
+		if (joueur1 instanceof JoueurIA && joueur2 instanceof JoueurIA)
 			return new Partie(joueur1.getDifficulte(), joueur2.getDifficulte());
 		// IA vs humain
-		if(joueur1 instanceof JoueurIA && !(joueur2 instanceof JoueurIA))
+		if (joueur1 instanceof JoueurIA && !(joueur2 instanceof JoueurIA))
 			return new Partie(true, joueur2.getDifficulte());
 		// humain vs IA
-		if(!(joueur1 instanceof JoueurIA) && joueur2 instanceof JoueurIA)
+		if (!(joueur1 instanceof JoueurIA) && joueur2 instanceof JoueurIA)
 			return new Partie(joueur2.getDifficulte());
 		// 2 joueur humains
-		if(!(joueur1 instanceof JoueurIA) && !(joueur2 instanceof JoueurIA))
+		if (!(joueur1 instanceof JoueurIA) && !(joueur2 instanceof JoueurIA))
 			return new Partie();
-		
+
 		return null;
 	}
 
@@ -438,6 +435,16 @@ public class Partie {
 			if (c.getJoueur() instanceof JoueurIA)
 				return true;
 		return false;
+	}
+
+	public void actualiserJoueur() {
+		switch (getNumJoueurActuel()) {
+		case 2:
+			joueurActuel = joueur2;
+			break;
+		default:
+			joueurActuel = joueur1;
+		}
 	}
 
 }
