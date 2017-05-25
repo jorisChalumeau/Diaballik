@@ -7,7 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Stack;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -28,7 +27,6 @@ import modele.Partie;
 import modele.Point;
 import modele.joueurs.InterfaceAdapter;
 import modele.joueurs.Joueur;
-import modele.joueurs.JoueurIA;
 import modele.tests.Test;
 
 public class Controleur {
@@ -124,7 +122,6 @@ public class Controleur {
 
 			diaballik.finDeTour();
 			afficherMessageTourDuJoueur(diaballik.getNumJoueurActuel());
-			//diaballik.getJoueurActuel();
 			ihm.actualiserPasseDeplacementsRestants(diaballik.getCptMouvement(), diaballik.isBalleLancee());
 		}
 	}
@@ -147,7 +144,7 @@ public class Controleur {
 
 		if (listeCoups == null) {
 			System.out.println("l'IA n'a pas trouvé de coup");
-			lancerFinDeTour();
+			triggerFinTour();
 		} else {
 			Iterator<MouvementIA> it = listeCoups.iterator();
 
@@ -156,8 +153,8 @@ public class Controleur {
 			pause.setOnFinished(event -> {
 				// déclenché à la fin du timer de 2s
 				MouvementIA mvt = it.next();
-				int numeroSrc = pointToNumCase(mvt.dest);
-				int numeroDest = pointToNumCase(mvt.src);
+				int numeroSrc = pointToNumCase(mvt.src);
+				int numeroDest = pointToNumCase(mvt.dest);
 
 				jouerActionIHM(mvt.caseSrc, numeroSrc, numeroDest);
 
@@ -166,11 +163,8 @@ public class Controleur {
 				else {
 					// test si l'IA a gagné la partie
 					testFinal();
-
-					// fin du tour de l'ia après un délai pour qu'il ait le
-					// temps de jouer
-					lancerFinDeTour();
-
+					// fin du tour de l'ia
+					triggerFinTour();
 					// on degrise les boutons après le tour de l'ia
 					actualiserCouleurBoutons();
 				}
@@ -196,8 +190,11 @@ public class Controleur {
 			Coup action = diaballik.getHistorique().peek();
 
 			// si le dernier coup n'a pas ete joue par le joueur actuel
-			if (action.getJoueur().getNumeroJoueur() != diaballik.getNumJoueurActuel())
+			if (action.getJoueur().getNumeroJoueur() != diaballik.getNumJoueurActuel()) {
 				lancerFinDeTour();
+				diaballik.ajusterCompteurs();
+				ihm.actualiserPasseDeplacementsRestants(diaballik.getCptMouvement(), diaballik.isBalleLancee());
+			}
 
 			try {
 				Case typePionSource = diaballik.annulerAction();
@@ -332,9 +329,7 @@ public class Controleur {
 			break;
 		}
 
-		//diaballik.getJoueurActuel();
 		ihm.actualiserPasseDeplacementsRestants(diaballik.getCptMouvement(), diaballik.isBalleLancee());
-		
 	}
 
 	public void fermerAplication() {
@@ -413,6 +408,10 @@ public class Controleur {
 
 	public void lancerFenetreJeu() {
 		ihm.afficherFenetreJeu(this);
+
+		ihm.afficherMessageTourDuJoueur(diaballik.getNumJoueurActuel());
+		ihm.actualiserPasseDeplacementsRestants(diaballik.getCptMouvement(), diaballik.isBalleLancee());
+
 		cacherMenuPause(); // s'assurer que la partie n'est pas en pause
 
 		// si le joueur 1 est un IA

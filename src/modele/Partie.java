@@ -270,7 +270,7 @@ public class Partie {
 			return caseSrc;
 		case PASSE:
 			balleLancee = true;
-			realiserAction(action.getDest(), action.getSrc());
+			realiserAction(action.getSrc(), action.getDest());
 			// on ajoute l'action dans l'historique des coups
 			historique.push(action);
 			return caseSrc;
@@ -286,7 +286,7 @@ public class Partie {
 	public ArrayList<MouvementIA> jouerIA() {
 		ArrayList<MouvementIA> listeCoups = null;
 
-		if (joueurActuel instanceof JoueurIADifficile) {
+		if (joueurActuel instanceof JoueurIA) {
 			try {
 				listeCoups = ((JoueurIA) joueurActuel).jouerCoup(this);
 			} catch (PionBloqueException | InterruptedException e) {
@@ -445,6 +445,33 @@ public class Partie {
 		default:
 			joueurActuel = joueur1;
 		}
+	}
+
+	public void ajusterCompteurs() {
+		int numJ = joueurActuel.getNumeroJoueur();
+		Coup[] histo = new Coup[historique.size()];
+		historique.copyInto(histo);
+		int dep = 0;
+		boolean passe = false;
+
+		if (historique == null)
+			return;
+
+		// on compte le nb de déplacements et passe effectués dans le tour
+		for (int i = historique.size() - 1; i >= 0 && histo[i].getJoueur().getNumeroJoueur() == numJ; i--) {
+			switch (histo[i].getTypeMvt()) {
+			case DEPLACEMENT:
+				dep++;
+				break;
+			case PASSE:
+				passe = true;
+				break;
+			default:
+			}
+		}
+
+		balleLancee = passe;
+		cptMouvement = dep;
 	}
 
 }
