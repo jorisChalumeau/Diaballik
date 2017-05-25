@@ -61,14 +61,16 @@ public abstract class JoueurIA implements Joueur {
 		JoueurIADifficile iaDiff = ((JoueurIADifficile) partie.getJoueurActuel());
 		iaDiff.plateauActuel=new Plateau(partie.getPlateau());
 		List<MouvementIA> moves = iaDiff.Jouer(partie);
-		System.out.println(moves);
+		
 		for (MouvementIA move:moves)
 		{
 			try
 			{
-				if (move!=null)
-					partie.executerAction(move.src, move.dest);
-				
+				if (move!=null){
+					System.out.println(move.src.getRow() + " " + move.src.getColumn());
+					System.out.println(move.dest.getRow() + " " + move.dest.getColumn() + " " + move.type.toString());
+					partie.executerAction(move.dest, move.src);
+				}
 			}
 			catch (ExceptionMouvementIllegal e) {
 				

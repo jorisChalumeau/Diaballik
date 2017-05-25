@@ -154,8 +154,8 @@ public class Controleur {
 			pause.setOnFinished(event -> {
 				// déclenché à la fin du timer de 2s
 				MouvementIA mvt = it.next();
-				int numeroSrc = pointToNumCase(mvt.src);
-				int numeroDest = pointToNumCase(mvt.dest);
+				int numeroSrc = pointToNumCase(mvt.dest);
+				int numeroDest = pointToNumCase(mvt.src);
 
 				jouerActionIHM(mvt.caseSrc, numeroSrc, numeroDest);
 

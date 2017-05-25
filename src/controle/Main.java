@@ -27,13 +27,15 @@ public class Main extends Application {
 		pointA = new Point(0, 2);
 		pointB = new Point(2, 2);
 		diaballik.executerAction(pointA, pointB);
-		
+		int i=0;
 		while(diaballik.gagnantPartie()==null){
 			diaballik.finDeTour();
 			System.out.println("TEST");
 			diaballik.jouerIA();
 			diaballik.getPlateau().Afficher();
 			diaballik.finDeTour();
+			i++;
+			System.out.println(i);
 		}
 		diaballik.getPlateau().Afficher();
 		System.out.println(diaballik.gagnantPartie().toString());
