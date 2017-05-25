@@ -1,6 +1,7 @@
 package modele.joueurs;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -61,22 +62,24 @@ public abstract class JoueurIA implements Joueur {
 		JoueurIADifficile iaDiff = ((JoueurIADifficile) partie.getJoueurActuel());
 		iaDiff.plateauActuel=new Plateau(partie.getPlateau());
 		List<MouvementIA> moves = iaDiff.Jouer(partie);
+		Iterator<MouvementIA> iter = moves.iterator();
 		
-		for (MouvementIA move:moves)
-		{
+		while (iter.hasNext()){
+			MouvementIA move = iter.next();
 			try
 			{
-				if (move!=null){
+				if(move != null){
 					System.out.println(move.src.getRow() + " " + move.src.getColumn());
 					System.out.println(move.dest.getRow() + " " + move.dest.getColumn());
-					partie.executerAction(move.src, move.dest);
-				}
+					partie.executerAction(move.src, move.dest);}
+				else iter.remove();
+
 			}
 			catch (ExceptionMouvementIllegal e) {
-				moves.remove(move);
-				return (ArrayList<MouvementIA>) moves;
+				iter.remove();
 			}
 		}
+		
 		return (ArrayList<MouvementIA>) moves;
 	}
 

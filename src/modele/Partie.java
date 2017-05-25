@@ -37,7 +37,7 @@ public class Partie {
 	private Joueur joueur2;
 	private int cptMouvement = 0;
 	private Regles r;
-	private double vitesseIA = 1;
+	private double vitesseIA = 10;
 	private Stack<Coup> historique;
 	private Stack<Coup> historiqueSecondaire;
 
