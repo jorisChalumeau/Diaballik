@@ -271,7 +271,7 @@ public class Partie {
 
 		if (joueurActuel instanceof JoueurIA) {
 			try {
-				listeCoups = (ArrayList<MouvementIA>) ((JoueurIA) joueurActuel).jouerCoup(this);
+				listeCoups = (ArrayList<MouvementIA>) joueurActuel.jouerCoup(this);
 			} catch (PionBloqueException | InterruptedException e) {
 			}
 		}
