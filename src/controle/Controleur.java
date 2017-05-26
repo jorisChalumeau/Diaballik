@@ -265,6 +265,27 @@ public class Controleur {
 			pause.play();
 	}
 
+	public void lancerAide() {
+		int numeroSrc;
+		int numeroDest;
+		
+		deselection();
+		
+		// récupérer le Coup proposé par notre IA
+		Coup coupAide = diaballik.aiderJoueur();
+		
+		if (coupAide != null) {
+			numeroSrc = pointToNumCase(coupAide.getSrc());
+			numeroDest = pointToNumCase(coupAide.getDest());
+			
+			// on sélectionne le pion source
+			selectionPion(numeroSrc);
+			
+			// TODO : lancer fonction ihm pour afficher en jaune (par exemple la case numeroDest)
+			
+		}
+	}
+
 	public Partie getDiaballik() {
 		return diaballik;
 	}

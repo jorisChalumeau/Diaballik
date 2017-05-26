@@ -265,12 +265,13 @@ public class Partie {
 		return Math.abs(dest.getRow() - src.getRow()) + Math.abs(dest.getColumn() - src.getColumn());
 	}
 
+	@SuppressWarnings("unchecked")
 	public ArrayList<MouvementIA> jouerIA() {
 		ArrayList<MouvementIA> listeCoups = null;
 
 		if (joueurActuel instanceof JoueurIA) {
 			try {
-				listeCoups = ((JoueurIA) joueurActuel).jouerCoup(this);
+				listeCoups = (ArrayList<MouvementIA>) ((JoueurIA) joueurActuel).jouerCoup(this);
 			} catch (PionBloqueException | InterruptedException e) {
 			}
 		}
@@ -280,6 +281,19 @@ public class Partie {
 
 	public void finDeTour() {
 		changerJoueur();
+	}
+
+	public Coup aiderJoueur() {
+		Coup coup = null;
+
+		if (joueurActuel instanceof JoueurHumain) {
+			try {
+				coup = (Coup) joueurActuel.jouerCoup(this);
+			} catch (PionBloqueException | InterruptedException e) {
+			}
+		}
+
+		return coup;
 	}
 
 	private void resetActionsPossibles() {
