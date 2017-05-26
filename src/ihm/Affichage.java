@@ -3,6 +3,7 @@ package ihm;
 import controle.Controleur;
 import controle.boutonPresse;
 import controle.boutonPresseEnJeu;
+import controle.boutonControleReglages;
 import controle.clicSurCase;
 import controle.dragDetected;
 import controle.dragOver;
@@ -20,16 +21,15 @@ import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
 import javafx.event.EventHandler;
 import javafx.geometry.*;
 import javafx.scene.shape.*;
 import javafx.scene.Node;
+import javafx.beans.value.*;
+import javafx.collections.FXCollections;
+
 
 public class Affichage {
 	public BorderPane b = new BorderPane();
@@ -55,6 +55,9 @@ public class Affichage {
 	private String spritePionOrange = "file:Images/rien.png";
 	private String spritePionBleu = "file:Images/rien.png";
 	private String spriteBalle = "file:Images/rien.png";
+	private int choixUtilisateurCharteGraphique;
+	private int choixUtilisateurJoueurQuiCommence;
+	private int choixUtilisateurVitesseIA;
 
 	// REGLAGES RECURRENTS D OBJETS
 	private void curseurInteraction(Node n) {
@@ -175,6 +178,13 @@ public class Affichage {
 		plateau[i].setOnDragExited(new dragExited(controleur, i, cases));
 		plateau[i].setOnDragDropped(new dragDropped(controleur, i, cases));
 		plateau[i].setOnDragDone(new dragDone(controleur, i, cases));
+	}
+	
+	private RadioButton creerRadioButton(ToggleGroup group, String nom){
+		RadioButton rb = new RadioButton(nom);
+		rb.setToggleGroup(group);
+		rb.setStyle("-fx-font-size: 20;");
+		return rb;
 	}
 
 	// COMPOSANTS (ensembles d'objets)
@@ -311,17 +321,19 @@ public class Affichage {
 		return vbox;
 	}
 
-	public VBox titreRegles() {
+	public VBox titre(String texteTitre) {
 		VBox vbox = new VBox();
 		vbox.setPadding(new Insets(10, 12, 0, 12));
 		vbox.setAlignment(Pos.TOP_CENTER);
 
-		Label titre = new Label("Règles du Diaballik");
+		Label titre = new Label(texteTitre);
 		titre.setStyle("-fx-font-size: 32; -fx-font-weight: bold;");
 
 		vbox.getChildren().addAll(titre);
 		return vbox;
 	}
+	
+	
 
 	public VBox texteRegles() {
 		VBox vbox = new VBox();
@@ -382,8 +394,9 @@ public class Affichage {
 	
 	public void afficherRegles(Controleur controleur) {
 		
-		VBox titre = titreRegles();
+		VBox titre = titre("Règles du Diaballik");
 		VBox regles = texteRegles();
+
 		VBox retour = boxRetour(controleur);
 		b.setTop(titre);
 		b.setCenter(regles);
@@ -391,11 +404,118 @@ public class Affichage {
 	}
 
 	public void afficherReglages(Controleur controleur) {
-		Label oui = new Label("pas encore fait mdr");
-		VBox retour = boxRetour(controleur);
-		b.setTop(null);
-		b.setCenter(oui);
-		b.setBottom(retour);
+		//On cree les objets graphiques
+		
+		
+		final Image charte[] = new Image[3];
+		charte[0] = new Image("file:Images/quitter50x50.png");
+		charte[1] = new Image("file:Images/reglages50x50.png");
+		ImageView iconeCharteGraphique = new ImageView(charte[this.charteGraphique]);
+		
+		
+		final ToggleGroup groupeGraphisme = new ToggleGroup();
+		RadioButton rbGraphisme[] = new RadioButton[3];
+
+		rbGraphisme[0] = creerRadioButton(groupeGraphisme,"Classique");
+		rbGraphisme[1] = creerRadioButton(groupeGraphisme,"Coupe du monde");	 
+		rbGraphisme[2] = creerRadioButton(groupeGraphisme,"J'aime les pates");
+		rbGraphisme[this.charteGraphique].setSelected(true);
+		rbGraphisme[this.charteGraphique].requestFocus();
+		
+		groupeGraphisme.selectedToggleProperty().addListener(
+			    (ObservableValue<? extends Toggle> ov, Toggle old_toggle, Toggle new_toggle) -> {
+			        if (groupeGraphisme.getSelectedToggle() != null) {
+			            if(groupeGraphisme.getSelectedToggle() == rbGraphisme[0]){
+			            	choixUtilisateurCharteGraphique = 0;
+			            	iconeCharteGraphique.setImage(charte[0]);
+			            }
+			            else if(groupeGraphisme.getSelectedToggle() == rbGraphisme[1]){
+			            	choixUtilisateurCharteGraphique = 1;
+			            	iconeCharteGraphique.setImage(charte[1]);
+			            }
+			        }
+			});
+		
+		
+		ChoiceBox choixVitesse = new ChoiceBox(FXCollections.observableArrayList(
+			    "First", "Second", "Third")
+			);
+		
+		choixVitesse.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> ov, Number old_val, Number new_val) ->{
+			choixUtilisateurVitesseIA = new_val.intValue();
+			System.out.println(new_val.intValue());
+		});
+		
+		ChoiceBox choixJoueurQuiCommence = new ChoiceBox(FXCollections.observableArrayList(
+			    "Joueur 1 (Bas)", "Joueur 2 (Haut)")
+			);
+		
+		choixJoueurQuiCommence.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> ov, Number old_val, Number new_val) ->{
+			choixUtilisateurJoueurQuiCommence = new_val.intValue() + 1;
+		});
+		
+		
+		
+		Label sousTitre1 = new Label("Graphismes");
+		sousTitre1.setStyle("-fx-font-size: 25; -fx-font-weight: bold;");
+		Label sousTitre2 = new Label("Vitesse de l'ordinateur");
+		sousTitre2.setStyle("-fx-font-size: 25; -fx-font-weight: bold;");
+		Label sousTitre3 = new Label("Joueur qui commence");
+		sousTitre3.setStyle("-fx-font-size: 25; -fx-font-weight: bold;");
+		//On place les objets dans une grille
+		GridPane grilleReglages = new GridPane();
+		
+		
+		int margeOffset = 0;
+		for(int i=2;i>=0;i--){
+			grilleReglages.add(rbGraphisme[i], 0, 0);
+			GridPane.setMargin(rbGraphisme[i], new Insets(0, 0, 30+margeOffset*4, 40));
+			GridPane.setValignment(rbGraphisme[i], VPos.BOTTOM);
+			margeOffset += 10;
+		}
+		
+		grilleReglages.add(sousTitre1, 0, 0);
+		GridPane.setMargin(sousTitre1, new Insets(0, 0, 50+margeOffset*4, 40));
+		GridPane.setValignment(sousTitre1, VPos.BOTTOM);
+		
+		grilleReglages.add(iconeCharteGraphique, 1, 0);
+		
+		grilleReglages.add(sousTitre2, 0, 1);
+		GridPane.setMargin(sousTitre2, new Insets(35, 0, 0, 40));
+		GridPane.setValignment(sousTitre2, VPos.TOP);
+		
+		grilleReglages.add(choixVitesse, 0, 1);
+		GridPane.setMargin(choixVitesse, new Insets(90, 0, 0, 100));
+		GridPane.setValignment(choixVitesse, VPos.TOP);
+		
+		grilleReglages.add(sousTitre3, 1, 1);
+		GridPane.setMargin(sousTitre3, new Insets(35, 0, 0, 40));
+		GridPane.setValignment(sousTitre3, VPos.TOP);
+		
+		grilleReglages.add(choixJoueurQuiCommence, 1, 1);
+		GridPane.setMargin(choixJoueurQuiCommence, new Insets(90, 0, 0, 100));
+		GridPane.setValignment(choixJoueurQuiCommence, VPos.TOP);
+		
+
+		grilleReglages.getColumnConstraints().addAll(ctrColonne(50), ctrColonne(50));
+		grilleReglages.getRowConstraints().addAll(ctrLigne(50), ctrLigne(50));
+		grilleReglages.setGridLinesVisible(true);
+		
+		
+		
+		
+		VBox titre = titre("Reglages");
+		VBox ok = new VBox();
+		ok.setPadding(new Insets(15, 12, 20, 12));
+		ok.setAlignment(Pos.CENTER);
+		Button bOk = new Button("OK");
+		setBoutonClassique(bOk, 9, controleur);
+		bOk.setOnAction(new boutonControleReglages(controleur, choixUtilisateurCharteGraphique, choixUtilisateurJoueurQuiCommence, choixUtilisateurVitesseIA));
+		ok.getChildren().addAll(bOk);
+		
+		b.setTop(titre);
+		b.setCenter(grilleReglages);
+		b.setBottom(ok);
 	}
 
 
@@ -703,6 +823,7 @@ public class Affichage {
 	public int getCharteGraphique(){
 		return charteGraphique;
 	}
+	
 	
 	public String getSpritePion(int joueur){
 		if(joueur == 1)
