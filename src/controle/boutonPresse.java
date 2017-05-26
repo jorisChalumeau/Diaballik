@@ -100,6 +100,9 @@ public class boutonPresse implements EventHandler<ActionEvent> {
 			File openFile = FenetreSauvegarde.charger(controleur.getIhm().stage);
 			controleur.chargerApplication(openFile);
 			break;
+		case 20: // Bouton Reglages (menu principal)
+			controleur.getIhm().afficherReglages(controleur);
+			break;
 
 		default:
 			// faire une exception??
