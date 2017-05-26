@@ -266,19 +266,19 @@ public class Affichage {
 		setBoutonClassique(bRecommencer, 16, controleur);
 		boutonsMenuPause[1] = bRecommencer;
 
-		Button bSauvegarder = new Button("Sauvegarder");
-		setBoutonClassique(bSauvegarder, 18, controleur);
-		boutonsMenuPause[2] = bSauvegarder;
-
 		Button bAbandonner = new Button("Menu Principal");
 		setBoutonClassique(bAbandonner, 9, controleur);
-		boutonsMenuPause[3] = bAbandonner;
+		boutonsMenuPause[2] = bAbandonner;
+		
+		Button bSauvegarder = new Button("Sauvegarder");
+		setBoutonClassique(bSauvegarder, 18, controleur);
+		boutonsMenuPause[3] = bSauvegarder;
 
 		Button bQuitter = new Button("Quitter le jeu");
 		setBoutonClassique(bQuitter, 4, controleur);
 		boutonsMenuPause[4] = bQuitter;
 
-		vbox.getChildren().addAll(texte, bReprendre, bRecommencer, bSauvegarder, bAbandonner, bQuitter);
+		vbox.getChildren().addAll(texte, bReprendre, bRecommencer, bAbandonner, bSauvegarder, bQuitter);
 		return vbox;
 	}
 
