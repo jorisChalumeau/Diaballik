@@ -443,7 +443,7 @@ public class Partie {
 		for (int i = historique.size() - 1; i >= 0 && histo[i].getJoueur().getNumeroJoueur() == numJ; i--) {
 			switch (histo[i].getTypeMvt()) {
 			case DEPLACEMENT:
-				dep++;
+				dep += compterMvtEffectues(histo[i].getSrc(), histo[i].getDest());
 				break;
 			case PASSE:
 				passe = true;
