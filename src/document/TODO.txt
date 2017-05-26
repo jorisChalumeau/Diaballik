@@ -1,8 +1,5 @@
 IHM
-ajouter des paramètres, accessibles dès le menu (qui doivent être sauvés même si on éteint le programme, mais ça c'est modèle), genre
- -si le joueur 1 ou 2 commence (les couleurs ne changent pas)
- -la vitesse de l'IA
- -le choix de la texture graphique. 
+ messages personnalisés en fontion de la partie (c'est à ia facile de jouer ect)
 mécanisme(s) du bouton "astuce" 
 
 CONTROLE 
@@ -13,10 +10,13 @@ Paramètres qui subsistent (stockés disque dur) -> Properties? Jsonjsaispasquoi?
  -si le joueur 1 ou 2 commence (les couleurs ne changent pas)
  -la vitesse de l'IA
  -le choix de la texture graphique. 
+ 		=> Les TODO dans boutonControleReglages
 IA Moyenne/difficile
 
 TOUT
 trouver des images de pions sympa
+faire des "images de charte"
 tester le drag and drop et l'ergonomie de l'ihm en général
- -l'organisation des objets (centré) est-elle agréable
- -l'affichage des coups possibles te gene t'il?
+	 -l'organisation des objets (centré) est-elle agréable
+	 -l'affichage des coups possibles te gene t'il?
+	 -faut il un bouton changer la vitesse de l'ia plus accessible?

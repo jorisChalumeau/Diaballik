@@ -1,38 +1,56 @@
 package controle;
 
 import javafx.event.EventHandler;
-
-import java.io.File;
-
-import ihm.FenetreSauvegarde;
 import javafx.event.ActionEvent;
+import javafx.scene.control.*;
 
 public class boutonControleReglages implements EventHandler<ActionEvent> {
 
 	Controleur controleur;
-	int choixUtilisateurCharteGraphique;
-	int choixUtilisateurVitesseIA; // de 0 à 2
-	int choixUtilisateurJoueurQuiCommence; // de 1 à 2
+	int numero;
+	ChoiceBox parametre;
+	int parametreRB;
 
-	public boutonControleReglages(Controleur c, int n1, int n2, int n3) {
+	public boutonControleReglages(Controleur c, int n, ChoiceBox p, int pRB) {
 		controleur = c;
-		choixUtilisateurCharteGraphique = n1;
-		choixUtilisateurVitesseIA = n2;
-		choixUtilisateurJoueurQuiCommence = n3;
-		
-
+		numero = n;
+		parametre = p;
+		parametreRB = pRB;
 	}
 
 	@Override
 	public void handle(ActionEvent event) {
-		controleur.getIhm().changerCharteGraphique(choixUtilisateurCharteGraphique);
-		//TODO : Changer la vitesse IA dans le modele
-		//TODO : Changer le joueur qui commence dans le modèle
-		//TODO : Changer la charte graphique dans le "disque dur"
-		//TODO : Changer la vitesse IA dans le "disque dur"
-		//TODO : Changer le joueur qui commence dans le "disque dur"
 		
-		controleur.getIhm().afficherMenuPrincipal(controleur);
+		switch(numero){
+			case 0: // Appliquer les changements
+				
+				//choixUtilisateurCharteGraphique : de 0 au nombre de chartes graphiques - 1
+				//choixUtilisateurVitesseIA : de 0 à 2
+				//choixUtilisateurJoueurQuiCommence : de 1 à 2
+				controleur.getIhm().changerCharteGraphique(controleur.getIhm().getChoixUtilisateurCharteGraphique());
+				//TODO : Changer la vitesse IA dans le modele
+				//TODO : Changer le joueur qui commence dans le modèle
+				//TODO : Changer la charte graphique dans le "disque dur"
+				//TODO : Changer la vitesse IA dans le "disque dur"
+				//TODO : Changer le joueur qui commence dans le "disque dur"
+				
+				
+				controleur.getIhm().afficherMenuPrincipal(controleur);
+				break;
+			case 1 :
+				controleur.getIhm().setChoixUtilisateurCharteGraphique(parametreRB);
+				controleur.getIhm().changerImageRB(parametreRB);
+				//System.out.println(parametreRB);
+				break;
+			case 2 :
+				controleur.getIhm().setChoixUtilisateurVitesseIA(parametre.getSelectionModel().getSelectedIndex());
+				//System.out.println(parametre.getSelectionModel().getSelectedIndex());
+				break;
+			case 3 :
+				controleur.getIhm().setChoixUtilisateurJoueurQuiCommence(parametre.getSelectionModel().getSelectedIndex() + 1);
+				//System.out.println(parametre.getSelectionModel().getSelectedIndex() + 1);
+				break;
+		}
 	}
 
 }

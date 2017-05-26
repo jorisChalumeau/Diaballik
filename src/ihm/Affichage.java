@@ -55,9 +55,13 @@ public class Affichage {
 	private String spritePionOrange = "file:Images/rien.png";
 	private String spritePionBleu = "file:Images/rien.png";
 	private String spriteBalle = "file:Images/rien.png";
-	private int choixUtilisateurCharteGraphique;
-	private int choixUtilisateurJoueurQuiCommence;
-	private int choixUtilisateurVitesseIA;
+	private GridPane grilleReglages;
+	private int choixUtilisateurCharteGraphique = 0;
+	private int choixUtilisateurJoueurQuiCommence = 1;
+	private int choixUtilisateurVitesseIA = 1;
+	private ImageView imageRB;
+	final int nombreChartesGraphiques = 3;
+	final Image charte[] = new Image[nombreChartesGraphiques];
 
 	// REGLAGES RECURRENTS D OBJETS
 	private void curseurInteraction(Node n) {
@@ -406,15 +410,14 @@ public class Affichage {
 	public void afficherReglages(Controleur controleur) {
 		//On cree les objets graphiques
 		
-		
-		final Image charte[] = new Image[3];
 		charte[0] = new Image("file:Images/quitter50x50.png");
 		charte[1] = new Image("file:Images/reglages50x50.png");
-		ImageView iconeCharteGraphique = new ImageView(charte[this.charteGraphique]);
+		charte[2] = new Image("file:Images/astuce50x50.png");
+		imageRB = new ImageView(charte[this.charteGraphique]);
 		
 		
 		final ToggleGroup groupeGraphisme = new ToggleGroup();
-		RadioButton rbGraphisme[] = new RadioButton[3];
+		RadioButton rbGraphisme[] = new RadioButton[nombreChartesGraphiques];
 
 		rbGraphisme[0] = creerRadioButton(groupeGraphisme,"Classique");
 		rbGraphisme[1] = creerRadioButton(groupeGraphisme,"Coupe du monde");	 
@@ -422,37 +425,25 @@ public class Affichage {
 		rbGraphisme[this.charteGraphique].setSelected(true);
 		rbGraphisme[this.charteGraphique].requestFocus();
 		
-		groupeGraphisme.selectedToggleProperty().addListener(
-			    (ObservableValue<? extends Toggle> ov, Toggle old_toggle, Toggle new_toggle) -> {
-			        if (groupeGraphisme.getSelectedToggle() != null) {
-			            if(groupeGraphisme.getSelectedToggle() == rbGraphisme[0]){
-			            	choixUtilisateurCharteGraphique = 0;
-			            	iconeCharteGraphique.setImage(charte[0]);
-			            }
-			            else if(groupeGraphisme.getSelectedToggle() == rbGraphisme[1]){
-			            	choixUtilisateurCharteGraphique = 1;
-			            	iconeCharteGraphique.setImage(charte[1]);
-			            }
-			        }
-			});
+		for(int i=0; i<nombreChartesGraphiques;i++){
+			rbGraphisme[i].setOnAction(new boutonControleReglages(controleur, 1, null, i));
+		}
 		
 		
 		ChoiceBox choixVitesse = new ChoiceBox(FXCollections.observableArrayList(
 			    "First", "Second", "Third")
 			);
 		
-		choixVitesse.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> ov, Number old_val, Number new_val) ->{
-			choixUtilisateurVitesseIA = new_val.intValue();
-			System.out.println(new_val.intValue());
-		});
+		choixVitesse.setOnAction(new boutonControleReglages(controleur,2,choixVitesse, -42));
+		
+		
 		
 		ChoiceBox choixJoueurQuiCommence = new ChoiceBox(FXCollections.observableArrayList(
 			    "Joueur 1 (Bas)", "Joueur 2 (Haut)")
 			);
 		
-		choixJoueurQuiCommence.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> ov, Number old_val, Number new_val) ->{
-			choixUtilisateurJoueurQuiCommence = new_val.intValue() + 1;
-		});
+		choixJoueurQuiCommence.setOnAction(new boutonControleReglages(controleur,3,choixJoueurQuiCommence, -42));
+		
 		
 		
 		
@@ -463,11 +454,11 @@ public class Affichage {
 		Label sousTitre3 = new Label("Joueur qui commence");
 		sousTitre3.setStyle("-fx-font-size: 25; -fx-font-weight: bold;");
 		//On place les objets dans une grille
-		GridPane grilleReglages = new GridPane();
+		grilleReglages = new GridPane();
 		
 		
 		int margeOffset = 0;
-		for(int i=2;i>=0;i--){
+		for(int i=nombreChartesGraphiques-1;i>=0;i--){
 			grilleReglages.add(rbGraphisme[i], 0, 0);
 			GridPane.setMargin(rbGraphisme[i], new Insets(0, 0, 30+margeOffset*4, 40));
 			GridPane.setValignment(rbGraphisme[i], VPos.BOTTOM);
@@ -478,7 +469,7 @@ public class Affichage {
 		GridPane.setMargin(sousTitre1, new Insets(0, 0, 50+margeOffset*4, 40));
 		GridPane.setValignment(sousTitre1, VPos.BOTTOM);
 		
-		grilleReglages.add(iconeCharteGraphique, 1, 0);
+		grilleReglages.add(imageRB, 1, 0);
 		
 		grilleReglages.add(sousTitre2, 0, 1);
 		GridPane.setMargin(sousTitre2, new Insets(35, 0, 0, 40));
@@ -510,7 +501,7 @@ public class Affichage {
 		ok.setAlignment(Pos.CENTER);
 		Button bOk = new Button("OK");
 		setBoutonClassique(bOk, 9, controleur);
-		bOk.setOnAction(new boutonControleReglages(controleur, choixUtilisateurCharteGraphique, choixUtilisateurJoueurQuiCommence, choixUtilisateurVitesseIA));
+		bOk.setOnAction(new boutonControleReglages(controleur, 0, null, -42));
 		ok.getChildren().addAll(bOk);
 		
 		b.setTop(titre);
@@ -963,5 +954,34 @@ public class Affichage {
 			}
 		}
 	}
+	
+	public void setChoixUtilisateurCharteGraphique(int n){
+		choixUtilisateurCharteGraphique = n;
+	}
+	public void setChoixUtilisateurJoueurQuiCommence(int n){
+		choixUtilisateurJoueurQuiCommence = n;
+	}
+		
+	public void setChoixUtilisateurVitesseIA(int n){
+		choixUtilisateurVitesseIA = n;
+	}
+	
+	public int getChoixUtilisateurCharteGraphique(){
+		return choixUtilisateurCharteGraphique;
+	}
+	public int getChoixUtilisateurJoueurQuiCommence(){
+		return choixUtilisateurJoueurQuiCommence;
+	}
+		
+	public int getChoixUtilisateurVitesseIA(){
+		return choixUtilisateurVitesseIA;
+	}
+	
+	public void changerImageRB (int numeroRB){
+		grilleReglages.getChildren().remove(imageRB);
+		imageRB = new ImageView(charte[numeroRB]);
+		grilleReglages.add(imageRB, 1, 0);
+	}
+	
 
 }
