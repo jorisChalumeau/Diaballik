@@ -2,7 +2,7 @@ package controle;
 
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
-import javafx.scene.control.*;
+import javafx.scene.control.ChoiceBox;
 
 public class boutonControleReglages implements EventHandler<ActionEvent> {
 
