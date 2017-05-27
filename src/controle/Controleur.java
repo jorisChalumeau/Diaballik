@@ -436,7 +436,7 @@ public class Controleur {
 	}
 
 	public void lancerFenetreJeu() {
-		ihm.afficherFenetreJeu(this);
+		ihm.afficherFenetreJeu(this,diaballik.getTypePartie());
 
 		ihm.afficherMessageTourDuJoueur(diaballik.getNumJoueurActuel());
 		ihm.actualiserPasseDeplacementsRestants(diaballik.getCptMouvement(), diaballik.isBalleLancee(),

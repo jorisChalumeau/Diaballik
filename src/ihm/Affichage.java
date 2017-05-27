@@ -45,6 +45,8 @@ public class Affichage {
 	private Button remontrerIA;
 	private Button refaire;
 	private Label messageVictoire;
+	private String messageVictoireJ1;
+	private String messageVictoireJ2;
 	Color tempCouleur;
 	private Label texteDeplRestantsJ1;
 	private Label textePassesRestantesJ1;
@@ -59,8 +61,8 @@ public class Affichage {
 	private int choixUtilisateurJoueurQuiCommence = 1;
 	private int choixUtilisateurVitesseIA = 1;
 	private ImageView imageRB;
-	final int nombreChartesGraphiques = 3;
-	final Image charte[] = new Image[nombreChartesGraphiques];
+	private final int nombreChartesGraphiques = 3;
+	private final Image charte[] = new Image[nombreChartesGraphiques];
 
 	// REGLAGES RECURRENTS D OBJETS
 	private void curseurInteraction(Node n) {
@@ -522,12 +524,39 @@ public class Affichage {
 		b.setBottom(null);
 	}
 
-	public void afficherFenetreJeu(Controleur controleur) {
+	public void afficherFenetreJeu(Controleur controleur, String typeDePartie) {
 
 		// Les Objets graphiques
-		setTexteTourJ2(new Label("C'est au joueur 2 de jouer"));
+		
+		if (typeDePartie.equals("joueurcontrejoueur")){
+			setTexteTourJ2(new Label("C'est au joueur 2 de jouer"));
+			setTexteTourJ1(new Label("C'est au joueur 1 de jouer"));
+			messageVictoireJ1 = "Le joueur 1 a gagné";
+			messageVictoireJ2 = "Le joueur 2 a gagné";
+		}
+		else{
+			setTexteTourJ1(new Label("C'est à vous de jouer"));
+			messageVictoireJ1 = "Vous avez gagné";
+			if(typeDePartie.equals("joueurcontreIAFacile")){
+				setTexteTourJ2(new Label("C'est à Ordinateur Facile de jouer"));
+				messageVictoireJ2 = "Ordinateur Facile a gagné";
+			}
+			else if(typeDePartie.equals("joueurcontreIAMoyenne")){
+				setTexteTourJ2(new Label("C'est à Ordinateur Moyen de jouer"));
+				messageVictoireJ2 = "Ordinateur Moyen a gagné";
+			}
+			else if(typeDePartie.equals("joueurcontreIADifficile")){
+				setTexteTourJ2(new Label("C'est à Ordinateur Difficile de jouer"));
+				messageVictoireJ2 = "Ordinateur Difficile a gagné";
+			}
+			else{
+				System.err.println("WTF (Affichage.afficherFenetreJeu) \n mauvaise chaine :"+typeDePartie);
+			}
+		}
 		getTexteTourJ2().setStyle("-fx-font-size: 24; -fx-text-fill: blue;");
 		getTexteTourJ2().setVisible(false);
+
+		getTexteTourJ1().setStyle("-fx-font-size: 24; -fx-text-fill: FF6500;");
 
 		// Initialisation des cases du Plateau
 		for (int i = 0; i < 49; i++) {
@@ -565,9 +594,7 @@ public class Affichage {
 		for (int i = 0; i < 49; i++) {
 			lierCaseAuxControles(controleur, i);
 		}
-
-		setTexteTourJ1(new Label("C'est au joueur 1 de jouer"));
-		getTexteTourJ1().setStyle("-fx-font-size: 24; -fx-text-fill: FF6500;");
+		
 
 		// LES BOUTONS EN JEU
 		Button finTour = boutonFinDeTour(controleur);
@@ -764,7 +791,12 @@ public class Affichage {
 	public void afficherMenuFinPartie(int j) {
 		menuFinPartie.setVisible(true);
 		enPause = true;
-		messageVictoire.setText("Le joueur " + j + " a gagné");
+		if(j==1){
+			messageVictoire.setText(messageVictoireJ1);
+		}
+		else{
+			messageVictoire.setText(messageVictoireJ2);
+		}
 	}
 
 	public void deplacementOrange(int n1, int n2, Controleur c) {
