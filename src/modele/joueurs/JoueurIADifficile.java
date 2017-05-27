@@ -131,8 +131,8 @@ public class JoueurIADifficile extends JoueurIA {
 							MouvementIA tmp = new MouvementIA(pions[i], pions[i].changeColumn(j),
 									TypeMouvement.DEPLACEMENT, plateau.obtenirCase(pions[i]));
 							//Marche que dans un sens
-							if (joueurActuel.getNumeroJoueur() == 2 && (tmp.src.getRow() == 0 && tmp.dest.getRow() > 0) || 
-									(joueurActuel.getNumeroJoueur() == 1 && (tmp.src.getRow() == 6 && tmp.dest.getRow() < 6)));
+							if (joueurActuel.getNumeroJoueur() == 2 && (tmp.src.getRow() == 0 && tmp.dest.getRow() >= 0) || 
+									(joueurActuel.getNumeroJoueur() == 1 && (tmp.src.getRow() == 6 && tmp.dest.getRow() <= 6)));
 							else	pMoves.add(tmp);
 						}
 					}
@@ -223,13 +223,13 @@ public class JoueurIADifficile extends JoueurIA {
 		plateau.actualiser(noeud.mouvement.dest, noeud.mouvement.src);
 
 		if (noeud.joueur == this) {
-			if (noeud.mouvement.src.getRow() == p1Start && noeud.mouvement.dest.getRow() > p1Start)
-				tmpGrade += -300;
+			if (noeud.mouvement.src.getRow() < noeud.mouvement.dest.getRow())
+				tmpGrade += -50;
 			else
 				tmpGrade += ((7-noeud.mouvement.dest.getRow()) * 10);
 		} else {
-			if (noeud.mouvement.src.getRow() == p2Start && noeud.mouvement.dest.getRow() < p2Start)
-				tmpGrade += -300;
+			if (noeud.mouvement.src.getRow() > noeud.mouvement.dest.getRow())
+				tmpGrade += -50;
 			else
 				tmpGrade += ((noeud.mouvement.dest.getRow() * 10));
 		}
