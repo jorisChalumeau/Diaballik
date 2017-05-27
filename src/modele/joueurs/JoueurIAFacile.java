@@ -80,7 +80,7 @@ public class JoueurIAFacile extends JoueurIA {
 				listeCoups.add(mvt);
 
 				// après chaque coup on vérifie si la partie est finie
-				if (partie.partieFinie())
+				if (partie.gagnantPartie() != null)
 					break;
 			}
 		}

@@ -260,25 +260,24 @@ public class JoueurIAMoyen extends JoueurIA {
 	@Override
 	public ArrayList<MouvementIA> jouerCoup(Partie partie) {
 		plateauActuel = new Plateau(partie.getPlateau());
-		ArrayList<MouvementIA> moves = jouer(partie);
-		Iterator<MouvementIA> iter = moves.iterator();
-
-		while (iter.hasNext()) {
-			MouvementIA move = iter.next();
-			try {
-				if (move != null) {
-					System.out.println(move.src.getRow() + " " + move.src.getColumn());
-					System.out.println(move.dest.getRow() + " " + move.dest.getColumn());
+		ArrayList<MouvementIA> movesTemp = jouer(partie);
+		ArrayList<MouvementIA> listeCoups = new ArrayList<MouvementIA>();
+		
+		for(MouvementIA move : movesTemp){
+			if (move != null) {
+				try {
 					partie.executerAction(move.src, move.dest);
-				} else
-					iter.remove();
-
-			} catch (ExceptionMouvementIllegal e) {
-				iter.remove();
+					listeCoups.add(move);
+					
+					// après chaque coup on vérifie si la partie est finie
+					if (partie.gagnantPartie() != null || listeCoups.size() == 3)
+						break;
+				} catch (ExceptionMouvementIllegal e) {
+				}
 			}
 		}
 
-		return moves;
+		return listeCoups;
 	}
 
 	@Override

@@ -122,7 +122,8 @@ public class Controleur {
 
 			diaballik.finDeTour();
 			afficherMessageTourDuJoueur(diaballik.getNumJoueurActuel());
-			ihm.actualiserPasseDeplacementsRestants(diaballik.getCptMouvement(), diaballik.isBalleLancee(), diaballik.getNumJoueurActuel());
+			ihm.actualiserPasseDeplacementsRestants(diaballik.getCptMouvement(), diaballik.isBalleLancee(),
+					diaballik.getNumJoueurActuel());
 		}
 	}
 
@@ -158,7 +159,9 @@ public class Controleur {
 					int numeroDest = pointToNumCase(mvt.dest);
 
 					jouerActionIHM(mvt.caseSrc, numeroSrc, numeroDest);
-				}
+				} else if (it.hasNext())
+					pause.playFrom(
+							pause.getCurrentTime().add(Duration.seconds((1.5 / diaballik.getVitesseIA()) - 0.1)));
 
 				if (it.hasNext())
 					pause.play();
@@ -195,7 +198,8 @@ public class Controleur {
 			if (action.getJoueur().getNumeroJoueur() != diaballik.getNumJoueurActuel()) {
 				lancerFinDeTour();
 				diaballik.ajusterCompteurs();
-				ihm.actualiserPasseDeplacementsRestants(diaballik.getCptMouvement(), diaballik.isBalleLancee(), diaballik.getNumJoueurActuel());
+				ihm.actualiserPasseDeplacementsRestants(diaballik.getCptMouvement(), diaballik.isBalleLancee(),
+						diaballik.getNumJoueurActuel());
 			}
 
 			try {
@@ -268,21 +272,22 @@ public class Controleur {
 	public void lancerAide() {
 		int numeroSrc;
 		int numeroDest;
-		
+
 		deselection();
-		
+
 		// récupérer le Coup proposé par notre IA
 		Coup coupAide = diaballik.aiderJoueur();
-		
+
 		if (coupAide != null) {
 			numeroSrc = pointToNumCase(coupAide.getSrc());
 			numeroDest = pointToNumCase(coupAide.getDest());
-			
+
 			// on sélectionne le pion source
 			selectionPion(numeroSrc);
-			
-			// TODO : lancer fonction ihm pour afficher en jaune (par exemple la case numeroDest)
-			
+
+			// TODO : lancer fonction ihm pour afficher en jaune (par exemple la
+			// case numeroDest)
+
 		}
 	}
 
@@ -352,7 +357,8 @@ public class Controleur {
 			break;
 		}
 
-		ihm.actualiserPasseDeplacementsRestants(diaballik.getCptMouvement(), diaballik.isBalleLancee(), diaballik.getNumJoueurActuel());
+		ihm.actualiserPasseDeplacementsRestants(diaballik.getCptMouvement(), diaballik.isBalleLancee(),
+				diaballik.getNumJoueurActuel());
 	}
 
 	public void fermerAplication() {
@@ -433,7 +439,8 @@ public class Controleur {
 		ihm.afficherFenetreJeu(this);
 
 		ihm.afficherMessageTourDuJoueur(diaballik.getNumJoueurActuel());
-		ihm.actualiserPasseDeplacementsRestants(diaballik.getCptMouvement(), diaballik.isBalleLancee(), diaballik.getNumJoueurActuel());
+		ihm.actualiserPasseDeplacementsRestants(diaballik.getCptMouvement(), diaballik.isBalleLancee(),
+				diaballik.getNumJoueurActuel());
 
 		cacherMenuPause(); // s'assurer que la partie n'est pas en pause
 
