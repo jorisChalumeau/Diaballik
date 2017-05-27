@@ -454,7 +454,8 @@ public class Controleur {
 				&& !(diaballik.tourIA() && diaballik.getHistoriqueSecondaire().isEmpty()));
 		ihm.setCouleurBoutonRefaire(!diaballik.getHistoriqueSecondaire().isEmpty() && !diaballik.partieFinie()
 				&& !(diaballik.tourIA() && diaballik.getHistoriqueSecondaire().isEmpty()));
-		ihm.setCouleurBoutonRemontrerIA(diaballik.dejaJoueIA() && !diaballik.tourIA() && !diaballik.partieFinie());
+		ihm.setCouleurBoutonRemontrerIA(diaballik.getHistoriqueSecondaire().isEmpty() && !diaballik.tourIA()
+				&& diaballik.dejaJoueIA() && !diaballik.partieFinie());
 	}
 
 	public void recommencerPartie() {

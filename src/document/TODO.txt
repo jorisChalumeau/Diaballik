@@ -2,9 +2,6 @@ IHM
  messages personnalisés en fontion de la partie (c'est à ia facile de jouer ect)
 mécanisme(s) du bouton "astuce" 
 
-CONTROLE 
-"remontrer IA" bouton enablé que quand c'est le dernier tour que l'IA ait joué
-
 MODELE
 Paramètres qui subsistent (stockés disque dur) -> Properties? Jsonjsaispasquoi?
  -si le joueur 1 ou 2 commence (les couleurs ne changent pas)
