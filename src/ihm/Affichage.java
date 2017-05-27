@@ -409,9 +409,9 @@ public class Affichage {
 	public void afficherReglages(Controleur controleur) {
 		//On cree les objets graphiques
 		
-		charte[0] = new Image("file:Images/quitter50x50.png");
-		charte[1] = new Image("file:Images/reglages50x50.png");
-		charte[2] = new Image("file:Images/astuce50x50.png");
+		charte[0] = new Image("file:Images/charteGraphiqueClassique.png");
+		charte[1] = new Image("file:Images/charteGraphiqueCoupeDuMonde.png");
+		charte[2] = new Image("file:Images/charteGraphiqueBois.png");
 		imageRB = new ImageView(charte[this.charteGraphique]);
 		
 		
@@ -469,6 +469,7 @@ public class Affichage {
 		GridPane.setValignment(sousTitre1, VPos.BOTTOM);
 		
 		grilleReglages.add(imageRB, 1, 0);
+		GridPane.setMargin(imageRB, new Insets(0, 0, 0, 40));
 		
 		grilleReglages.add(sousTitre2, 0, 1);
 		GridPane.setMargin(sousTitre2, new Insets(35, 0, 0, 40));
@@ -489,7 +490,7 @@ public class Affichage {
 
 		grilleReglages.getColumnConstraints().addAll(ctrColonne(50), ctrColonne(50));
 		grilleReglages.getRowConstraints().addAll(ctrLigne(50), ctrLigne(50));
-		grilleReglages.setGridLinesVisible(true);
+		//grilleReglages.setGridLinesVisible(true);
 		
 		
 		
@@ -575,9 +576,6 @@ public class Affichage {
 		Button pause = new Button("", iconePause);
 		setBoutonDesign2(pause, 11, controleur);
 
-		final ImageView iconeAide = new ImageView(new Image("file:Images/astuce50x50.png"));
-		Button aide = new Button("", iconeAide);
-		setBoutonDesign2(aide, 12, controleur);
 
 		final ImageView iconeAnnuler = new ImageView(new Image("file:Images/undo50x50.png"));
 		annuler = new Button("", iconeAnnuler);
@@ -645,9 +643,6 @@ public class Affichage {
 		GridPane.setHalignment(pause, HPos.RIGHT);
 		GridPane.setMargin(pause, new Insets(0, 30, 0, 0));
 
-		Fenetre.add(aide, 2, 0, 2, 2);
-		GridPane.setHalignment(aide, HPos.RIGHT);
-		GridPane.setMargin(aide, new Insets(pause.getMaxHeight() * 2 + 15, 30, 0, 0));
 
 		Fenetre.add(texteDeplRestantsJ2, 2, 0, 2, 1);
 		GridPane.setValignment(texteDeplRestantsJ2, VPos.BOTTOM);
@@ -720,6 +715,11 @@ public class Affichage {
 			spritePionOrange = "file:Images/pionDrapeauFrance.png";
 			spritePionBleu = "file:Images/pionDrapeauBresil.png";
 			spriteBalle = "file:Images/balleFoot.png";
+		}
+		if(charte == 2){
+			spritePionOrange = "file:Images/pionBoisJauneOrange.png";
+			spritePionBleu = "file:Images/pionBoisNoirBleu.png";
+			spriteBalle = "file:Images/balleBois.png";
 		}
 	}
 
@@ -980,6 +980,7 @@ public class Affichage {
 		grilleReglages.getChildren().remove(imageRB);
 		imageRB = new ImageView(charte[numeroRB]);
 		grilleReglages.add(imageRB, 1, 0);
+		GridPane.setMargin(imageRB, new Insets(0, 0, 0, 40));
 	}
 	
 
