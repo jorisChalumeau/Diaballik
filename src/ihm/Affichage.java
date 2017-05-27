@@ -557,6 +557,10 @@ public class Affichage {
 			}
 			else{
 				System.err.println("WTF (Affichage.afficherFenetreJeu) \n mauvaise chaine :"+typeDePartie);
+				setTexteTourJ2(new Label("C'est au joueur 2 de jouer"));
+				setTexteTourJ1(new Label("C'est au joueur 1 de jouer"));
+				messageVictoireJ1 = "Le joueur 1 a gagné";
+				messageVictoireJ2 = "Le joueur 2 a gagné";
 			}
 		}
 		getTexteTourJ2().setStyle("-fx-font-size: 24; -fx-text-fill: blue;");

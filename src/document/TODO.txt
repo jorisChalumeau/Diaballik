@@ -1,6 +1,3 @@
-IHM
- messages personnalisés en fontion de la partie (c'est à ia facile de jouer ect)
-mécanisme(s) du bouton "astuce" 
 
 MODELE
 Paramètres qui subsistent (stockés disque dur) -> Properties? Jsonjsaispasquoi?
@@ -8,11 +5,12 @@ Paramètres qui subsistent (stockés disque dur) -> Properties? Jsonjsaispasquoi?
  -la vitesse de l'IA
  -le choix de la texture graphique. 
  		=> Les TODO dans boutonControleReglages
+ 		
 IA Moyenne/difficile
 
+Faire que les IA puissent jouer en joueur 1 (pour la démo, ouais je sais c'est chiant)
+
 TOUT
-trouver des images de pions sympa
-faire des "images de charte"
 tester le drag and drop et l'ergonomie de l'ihm en général
 	 -l'organisation des objets (centré) est-elle agréable
 	 -l'affichage des coups possibles te gene t'il?
