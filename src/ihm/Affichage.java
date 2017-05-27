@@ -241,7 +241,7 @@ public class Affichage {
 		Button bDifficile = new Button("Difficile");
 		setBoutonClassique(bDifficile, 7, controleur);
 
-		Button bEnRab = new Button("Si on a 4 difficultés bah on a ce bouton");
+		Button bEnRab = new Button("(Pour démo) IA Moyenne VS IA DIfficile?");
 		setBoutonClassique(bEnRab, 8, controleur);
 
 		vbox.getChildren().addAll(bFacile, bNormal, bDifficile, bEnRab);
@@ -546,6 +546,12 @@ public class Affichage {
 				messageVictoireJ2 = "Ordinateur Moyen a gagné";
 			}
 			else if(typeDePartie.equals("joueurcontreIADifficile")){
+				setTexteTourJ2(new Label("C'est à Ordinateur Difficile de jouer"));
+				messageVictoireJ2 = "Ordinateur Difficile a gagné";
+			}
+			else if(typeDePartie.equals("IAMoyennecontreIADifficile")){
+				setTexteTourJ1(new Label("C'est à Ordinateur Moyen de jouer"));
+				messageVictoireJ1 = "Ordinateur Moyen a gagné";
 				setTexteTourJ2(new Label("C'est à Ordinateur Difficile de jouer"));
 				messageVictoireJ2 = "Ordinateur Difficile a gagné";
 			}
