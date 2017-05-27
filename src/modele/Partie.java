@@ -6,6 +6,9 @@ import java.util.Stack;
 import modele.joueurs.Joueur;
 import modele.joueurs.JoueurHumain;
 import modele.joueurs.JoueurIA;
+import modele.joueurs.JoueurIADifficile;
+import modele.joueurs.JoueurIAFacile;
+import modele.joueurs.JoueurIAMoyen;
 import modele.joueurs.PionBloqueException;
 import modele.tests.Regles;
 
@@ -405,6 +408,21 @@ public class Partie {
 
 	public void reinitHistoriqueSecondaire() {
 		this.historiqueSecondaire = new Stack<Coup>();
+	}
+
+	public String getTypePartie() {
+		String type = "joueurcontre";
+		if(joueur2 instanceof JoueurHumain){
+			type+="joueur";
+		}else if(joueur2 instanceof JoueurIAFacile){
+			type+="IAFacile";
+		}else if(joueur2 instanceof JoueurIAMoyen){
+			type+="IAMoyenne";
+		}else if(joueur2 instanceof JoueurIADifficile){
+			type+="IADifficile";
+		}
+		
+		return type;
 	}
 
 	public Partie relancerPartie() {
