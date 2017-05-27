@@ -31,7 +31,7 @@ public class boutonPresseEnJeu implements EventHandler<ActionEvent> {
 			case 12: // Bouton Aide
 				if (!controleur.getDiaballik().partieFinie() && !controleur.estEnPause()
 						&& !controleur.getDiaballik().tourIA()) {
-					controleur.lancerAide();
+//					controleur.lancerAide();
 				}
 				break;
 

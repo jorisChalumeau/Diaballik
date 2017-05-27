@@ -1,11 +1,20 @@
 package controle;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+
+import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+
 import ihm.Affichage;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import modele.Partie;
 
 public class LancementIHM extends Application {
 
@@ -16,14 +25,23 @@ public class LancementIHM extends Application {
 		// le controleur de l'application
 		Controleur controleur = new Controleur();
 
+		// CHARGEMENT DES CONFIGS DANS LE CONTROLEUR
+		JsonReader reader = new JsonReader(new FileReader("./config/conf.cfg"));
+		Config conf = new Gson().fromJson(reader, Config.class);
+		reader.close();
+		if(conf != null)
+			controleur.setConf(conf);
+		else
+			controleur.setConf(new Config());
+		
 		// INITIALISATION IHM
 		Affichage app = new Affichage();
 		controleur.setIhm(app);
 		app.stage = stage;
 
-		//TODO : A ENLEVER à terme
+		// TODO : A ENLEVER à terme
 		app.changerCharteGraphique(1);
-		
+
 		app.stage.setTitle("Test IHM Diaballik");
 		app.stage.setMinHeight(645);
 		stage.setMinWidth(775);

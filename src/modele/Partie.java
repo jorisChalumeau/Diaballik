@@ -22,7 +22,6 @@ public class Partie {
 	private Joueur joueur2;
 	private int cptMouvement = 0;
 	private Regles r;
-	private double vitesseIA = 2;
 	private Stack<Coup> historique;
 	private Stack<Coup> historiqueSecondaire;
 
@@ -43,22 +42,6 @@ public class Partie {
 		this.historiqueSecondaire = new Stack<Coup>();
 		this.joueur1 = new JoueurHumain(1);
 		this.joueur2 = JoueurIA.creerIA(2, difficulte);
-		this.joueurActuel = joueur1;
-	}
-
-	public Partie(boolean inv, String difficulte) {
-		this.p = new Plateau();
-		this.r = new Regles();
-		this.historique = new Stack<Coup>();
-		this.historiqueSecondaire = new Stack<Coup>();
-
-		if (inv) {
-			this.joueur1 = JoueurIA.creerIA(1, difficulte);
-			this.joueur2 = new JoueurHumain(2);
-		} else {
-			this.joueur1 = new JoueurHumain(1);
-			this.joueur2 = JoueurIA.creerIA(2, difficulte);
-		}
 		this.joueurActuel = joueur1;
 	}
 
@@ -386,14 +369,6 @@ public class Partie {
 		this.r = r;
 	}
 
-	public double getVitesseIA() {
-		return vitesseIA;
-	}
-
-	public void setVitesseIA(double vitesseIA) {
-		this.vitesseIA = vitesseIA;
-	}
-
 	public Stack<Coup> getHistorique() {
 		return historique;
 	}
@@ -411,33 +386,38 @@ public class Partie {
 	}
 
 	public String getTypePartie() {
-		String type = "joueurcontre";
-		if(joueur2 instanceof JoueurHumain){
-			type+="joueur";
-		}else if(joueur2 instanceof JoueurIAFacile){
-			type+="IAFacile";
-		}else if(joueur2 instanceof JoueurIAMoyen){
-			type+="IAMoyenne";
-		}else if(joueur2 instanceof JoueurIADifficile){
-			type+="IADifficile";
-		}
-		
+		String type;
+		if (joueur1 instanceof JoueurHumain)
+			type = "joueurcontre";
+		else if (joueur1 instanceof JoueurIAFacile)
+			type = "IAFacilecontre";
+		else if (joueur1 instanceof JoueurIAMoyen)
+			type = "IAMoyennecontre";
+		else
+			type = "IADifficilecontre";
+
+		if (joueur2 instanceof JoueurHumain)
+			type += "joueur";
+		else if (joueur2 instanceof JoueurIAFacile)
+			type += "IAFacile";
+		else if (joueur2 instanceof JoueurIAMoyen)
+			type += "IAMoyenne";
+		else
+			type += "IADifficile";
+
 		return type;
 	}
 
-	public Partie relancerPartie() {
+	public Partie relancerPartie(int premJoueur) {
+		// 2 joueurs humains
+		if (joueur1 instanceof JoueurHumain && joueur2 instanceof JoueurHumain)
+			return new Partie().defPremJoueur(premJoueur);
+		// humain vs IA
+		if (joueur1 instanceof JoueurHumain && joueur2 instanceof JoueurIA)
+			return new Partie(joueur2.getDifficulte()).defPremJoueur(premJoueur);
 		// IA vs IA
 		if (joueur1 instanceof JoueurIA && joueur2 instanceof JoueurIA)
-			return new Partie(joueur1.getDifficulte(), joueur2.getDifficulte());
-		// IA vs humain
-		if (joueur1 instanceof JoueurIA && !(joueur2 instanceof JoueurIA))
-			return new Partie(true, joueur2.getDifficulte());
-		// humain vs IA
-		if (!(joueur1 instanceof JoueurIA) && joueur2 instanceof JoueurIA)
-			return new Partie(joueur2.getDifficulte());
-		// 2 joueur humains
-		if (!(joueur1 instanceof JoueurIA) && !(joueur2 instanceof JoueurIA))
-			return new Partie();
+			return new Partie(joueur1.getDifficulte(), joueur2.getDifficulte()).defPremJoueur(premJoueur);
 
 		return null;
 	}
@@ -486,6 +466,14 @@ public class Partie {
 
 		balleLancee = passe;
 		cptMouvement = dep;
+	}
+
+	public Partie defPremJoueur(int premJoueur) {
+		if (joueur1.getNumeroJoueur() == premJoueur)
+			joueurActuel = joueur1;
+		else
+			joueurActuel = joueur2;
+		return this;
 	}
 
 }

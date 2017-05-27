@@ -34,6 +34,7 @@ public class Controleur {
 	private Affichage ihm;
 	private Partie diaballik;
 	private Point pointPionSelectionne;
+	private Config conf;
 
 	public Controleur() {
 		pointPionSelectionne = null;
@@ -150,7 +151,7 @@ public class Controleur {
 			Iterator<MouvementIA> it = listeCoups.iterator();
 
 			// espacer chaque coup de l'IA de 2s pour les rendre plus "visibles"
-			PauseTransition pause = new PauseTransition(Duration.seconds(1.5 / diaballik.getVitesseIA()));
+			PauseTransition pause = new PauseTransition(Duration.seconds(1.5 / conf.getVitesseIA()));
 			pause.setOnFinished(event -> {
 				// déclenché à la fin du timer de 2s
 				MouvementIA mvt = it.next();
@@ -160,8 +161,7 @@ public class Controleur {
 
 					jouerActionIHM(mvt.caseSrc, numeroSrc, numeroDest);
 				} else if (it.hasNext())
-					pause.playFrom(
-							pause.getCurrentTime().add(Duration.seconds((1.5 / diaballik.getVitesseIA()) - 0.1)));
+					pause.playFrom(pause.getCurrentTime().add(Duration.seconds((1.5 / conf.getVitesseIA()) - 0.1)));
 
 				if (it.hasNext())
 					pause.play();
@@ -267,28 +267,6 @@ public class Controleur {
 		// un intervalle de 1,5s
 		if (!diaballik.getHistoriqueSecondaire().isEmpty())
 			pause.play();
-	}
-
-	public void lancerAide() {
-		int numeroSrc;
-		int numeroDest;
-
-		deselection();
-
-		// récupérer le Coup proposé par notre IA
-		Coup coupAide = diaballik.aiderJoueur();
-
-		if (coupAide != null) {
-			numeroSrc = pointToNumCase(coupAide.getSrc());
-			numeroDest = pointToNumCase(coupAide.getDest());
-
-			// on sélectionne le pion source
-			selectionPion(numeroSrc);
-
-			// TODO : lancer fonction ihm pour afficher en jaune (par exemple la
-			// case numeroDest)
-
-		}
 	}
 
 	public Partie getDiaballik() {
@@ -405,6 +383,7 @@ public class Controleur {
 
 				// on lit dans le fichier => json to Partie
 				diaballik = gson.fromJson(reader, Partie.class);
+				reader.close();
 
 				// on reinstancie le joueur actuel pour le debugger
 				diaballik.actualiserJoueur();
@@ -412,7 +391,7 @@ public class Controleur {
 				// on charge ensuite l'ihm de la partie
 				chargerFenetreJeu();
 				System.out.println("chargement reussi");
-			} catch (FileNotFoundException e) {
+			} catch (IOException e) {
 				System.out.println("fichier introuvable");
 			}
 		} else {
@@ -436,7 +415,10 @@ public class Controleur {
 	}
 
 	public void lancerFenetreJeu() {
-		ihm.afficherFenetreJeu(this,diaballik.getTypePartie());
+		// on applique la charte graphique des configs
+		ihm.changerCharteGraphique(conf.getCharteGraphique());
+
+		ihm.afficherFenetreJeu(this, diaballik.getTypePartie());
 
 		ihm.afficherMessageTourDuJoueur(diaballik.getNumJoueurActuel());
 		ihm.actualiserPasseDeplacementsRestants(diaballik.getCptMouvement(), diaballik.isBalleLancee(),
@@ -454,12 +436,21 @@ public class Controleur {
 				&& !(diaballik.tourIA() && diaballik.getHistoriqueSecondaire().isEmpty()));
 		ihm.setCouleurBoutonRefaire(!diaballik.getHistoriqueSecondaire().isEmpty() && !diaballik.partieFinie()
 				&& !(diaballik.tourIA() && diaballik.getHistoriqueSecondaire().isEmpty()));
-		ihm.setCouleurBoutonRemontrerIA(diaballik.getHistoriqueSecondaire().isEmpty() && !diaballik.tourIA()
-				&& diaballik.dejaJoueIA() && !diaballik.partieFinie());
+		ihm.setCouleurBoutonRemontrerIA(
+				diaballik.getHistoriqueSecondaire().isEmpty() && !diaballik.tourIA() && diaballik.dejaJoueIA()
+						&& !diaballik.partieFinie() && diaballik.getTypePartie().contains("joueurcontre"));
 	}
 
 	public void recommencerPartie() {
-		diaballik = diaballik.relancerPartie();
+		diaballik = diaballik.relancerPartie(conf.getPremierAJouer());
+	}
+
+	public Config getConf() {
+		return conf;
+	}
+
+	public void setConf(Config config) {
+		conf = config;
 	}
 
 }

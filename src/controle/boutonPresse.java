@@ -24,7 +24,7 @@ public class boutonPresse implements EventHandler<ActionEvent> {
 
 		case 1: // Bouton Mode 2 joueurs
 
-			controleur.setDiaballik(CreateurPartie.creerPartie2Humains());
+			controleur.setDiaballik(CreateurPartie.creerPartie2Humains(controleur.getConf().getPremierAJouer()));
 			// Modèle : Charger le modèle avec 2 joueurs humains
 			// Vue : Afficher la "fenêtre jeu"
 			controleur.lancerFenetreJeu();
@@ -47,21 +47,21 @@ public class boutonPresse implements EventHandler<ActionEvent> {
 			break;
 
 		case 5: // Bouton première difficulté
-			controleur.setDiaballik(CreateurPartie.creerPartieIA("facile"));
+			controleur.setDiaballik(CreateurPartie.creerPartieIA("facile", controleur.getConf().getPremierAJouer()));
 			// Modèle : Charger le modèle avec 1 joueur humain et une IA Facile
 			// Vue : Afficher la "fenêtre jeu"
 			controleur.lancerFenetreJeu();
 			break;
 
 		case 6: // Bouton deuxième difficulté
-			controleur.setDiaballik(CreateurPartie.creerPartieIA("moyen"));
+			controleur.setDiaballik(CreateurPartie.creerPartieIA("moyen", controleur.getConf().getPremierAJouer()));
 			// Modèle : Charger le modèle avec 1 joueur humain et une IA Moyenne
 			// Vue : Afficher la "fenêtre jeu"
 			controleur.lancerFenetreJeu();
 			break;
 
 		case 7: // Bouton troisième difficulté
-			controleur.setDiaballik(CreateurPartie.creerPartieIA("difficile"));
+			controleur.setDiaballik(CreateurPartie.creerPartieIA("difficile", controleur.getConf().getPremierAJouer()));
 			// Modèle : Charger le modèle avec 1 joueur humain et une IA
 			// Difficile
 			// Vue : Afficher la "fenêtre jeu"
@@ -72,7 +72,8 @@ public class boutonPresse implements EventHandler<ActionEvent> {
 
 			// Modèle : Charger le modèle avec 1 joueur humain et une IA
 			// Vue : Afficher la "fenêtre jeu"
-			controleur.setDiaballik(CreateurPartie.creerPartieIAvsIA("facile", "moyen"));
+			controleur.setDiaballik(
+					CreateurPartie.creerPartieIAvsIA("facile", "moyen", controleur.getConf().getPremierAJouer()));
 			controleur.lancerFenetreJeu();
 			break;
 
@@ -91,12 +92,12 @@ public class boutonPresse implements EventHandler<ActionEvent> {
 		case 17: // Bouton Reprendre
 			controleur.cacherMenuPause();
 			break;
-			
+
 		case 18: // Bouton Sauvegarder
 			File saveFile = FenetreSauvegarde.sauvegarder(controleur.getIhm().stage);
 			controleur.sauvegarderApplication(saveFile);
 			break;
-		
+
 		case 19: // Bouton Charger
 			File openFile = FenetreSauvegarde.charger(controleur.getIhm().stage);
 			controleur.chargerApplication(openFile);
