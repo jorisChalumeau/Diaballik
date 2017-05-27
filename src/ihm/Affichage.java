@@ -420,7 +420,7 @@ public class Affichage {
 
 		rbGraphisme[0] = creerRadioButton(groupeGraphisme,"Classique");
 		rbGraphisme[1] = creerRadioButton(groupeGraphisme,"Coupe du monde");	 
-		rbGraphisme[2] = creerRadioButton(groupeGraphisme,"J'aime les pates");
+		rbGraphisme[2] = creerRadioButton(groupeGraphisme,"Pions en bois");
 		rbGraphisme[this.charteGraphique].setSelected(true);
 		rbGraphisme[this.charteGraphique].requestFocus();
 		
@@ -575,7 +575,6 @@ public class Affichage {
 		final ImageView iconePause = new ImageView(new Image("file:Images/quitter50x50.png"));
 		Button pause = new Button("", iconePause);
 		setBoutonDesign2(pause, 11, controleur);
-
 
 		final ImageView iconeAnnuler = new ImageView(new Image("file:Images/undo50x50.png"));
 		annuler = new Button("", iconeAnnuler);
