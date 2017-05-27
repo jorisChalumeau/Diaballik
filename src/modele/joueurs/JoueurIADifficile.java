@@ -130,7 +130,10 @@ public class JoueurIADifficile extends JoueurIA {
 								joueurActuel) == TypeMouvement.DEPLACEMENT) {
 							MouvementIA tmp = new MouvementIA(pions[i], pions[i].changeColumn(j),
 									TypeMouvement.DEPLACEMENT, plateau.obtenirCase(pions[i]));
-							pMoves.add(tmp);
+							//Marche que dans un sens
+							if (joueurActuel.getNumeroJoueur() == 2 && (tmp.src.getRow() == 0 && tmp.dest.getRow() > 0) || 
+									(joueurActuel.getNumeroJoueur() == 1 && (tmp.src.getRow() == 6 && tmp.dest.getRow() < 6)));
+							else	pMoves.add(tmp);
 						}
 					}
 
@@ -139,7 +142,9 @@ public class JoueurIADifficile extends JoueurIA {
 								joueurActuel) == TypeMouvement.DEPLACEMENT) {
 							MouvementIA tmp = new MouvementIA(pions[i], pions[i].changeRow(j),
 									TypeMouvement.DEPLACEMENT, plateau.obtenirCase(pions[i]));
-							pMoves.add(tmp);
+							if (joueurActuel.getNumeroJoueur() == 2 && (tmp.src.getRow() == 0 && tmp.dest.getRow() > 0)|| 
+								(joueurActuel.getNumeroJoueur() == 1 && (tmp.src.getRow() == 6 && tmp.dest.getRow() < 6)));
+							else	pMoves.add(tmp);
 
 						}
 					}
@@ -219,14 +224,14 @@ public class JoueurIADifficile extends JoueurIA {
 
 		if (noeud.joueur == this) {
 			if (noeud.mouvement.src.getRow() == p1Start && noeud.mouvement.dest.getRow() > p1Start)
-				tmpGrade += 0;
+				tmpGrade += -300;
 			else
-				tmpGrade += ((noeud.mouvement.src.getRow() - noeud.mouvement.dest.getRow()) * 10);
+				tmpGrade += ((7-noeud.mouvement.dest.getRow()) * 10);
 		} else {
 			if (noeud.mouvement.src.getRow() == p2Start && noeud.mouvement.dest.getRow() < p2Start)
-				tmpGrade += 0;
+				tmpGrade += -300;
 			else
-				tmpGrade += ((noeud.mouvement.dest.getRow() - noeud.mouvement.src.getRow()) * 10);
+				tmpGrade += ((noeud.mouvement.dest.getRow() * 10));
 		}
 		return tmpGrade;
 	}
@@ -250,6 +255,9 @@ public class JoueurIADifficile extends JoueurIA {
 		coup2 = arbre.FindBestMove(coup1);
 		coup3 = arbre.FindBestMove(coup2);
 		coupIA.add(coup1.mouvement);
+		System.out.println(coup1.grade);
+		System.out.println(coup2.grade);
+		System.out.println(coup3.grade);
 		coupIA.add(coup2.mouvement);
 		coupIA.add(coup3.mouvement);
 
