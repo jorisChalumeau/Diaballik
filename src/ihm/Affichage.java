@@ -408,13 +408,13 @@ public class Affichage {
 		b.setBottom(retour);
 	}
 
-	public void afficherReglages(Controleur controleur) {
+	public void afficherReglages(Controleur controleur, int charteGraphiqueChargee) {
 		//On cree les objets graphiques
 		
 		charte[0] = new Image("file:Images/charteGraphiqueClassique.png");
 		charte[1] = new Image("file:Images/charteGraphiqueCoupeDuMonde.png");
 		charte[2] = new Image("file:Images/charteGraphiqueBois.png");
-		imageRB = new ImageView(charte[this.charteGraphique]);
+		imageRB = new ImageView(charte[charteGraphiqueChargee]);
 		
 		
 		final ToggleGroup groupeGraphisme = new ToggleGroup();
@@ -423,8 +423,8 @@ public class Affichage {
 		rbGraphisme[0] = creerRadioButton(groupeGraphisme,"Classique");
 		rbGraphisme[1] = creerRadioButton(groupeGraphisme,"Coupe du monde");	 
 		rbGraphisme[2] = creerRadioButton(groupeGraphisme,"Pions en bois");
-		rbGraphisme[this.charteGraphique].setSelected(true);
-		rbGraphisme[this.charteGraphique].requestFocus();
+		rbGraphisme[charteGraphiqueChargee].setSelected(true);
+		rbGraphisme[charteGraphiqueChargee].requestFocus();
 		
 		for(int i=0; i<nombreChartesGraphiques;i++){
 			rbGraphisme[i].setOnAction(new boutonControleReglages(controleur, 1, null, i));

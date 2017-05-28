@@ -103,7 +103,7 @@ public class boutonPresse implements EventHandler<ActionEvent> {
 			controleur.chargerApplication(openFile);
 			break;
 		case 20: // Bouton Reglages (menu principal)
-			controleur.getIhm().afficherReglages(controleur);
+			controleur.getIhm().afficherReglages(controleur,controleur.getConf().getCharteGraphique());
 			break;
 
 		default:
