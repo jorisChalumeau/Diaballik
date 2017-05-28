@@ -222,7 +222,7 @@ public class JoueurIADifficile extends JoueurIA {
 			return DEFAITE;
 		plateau.actualiser(noeud.mouvement.dest, noeud.mouvement.src);
 
-		if (noeud.joueur == this) {
+		if (noeud.joueur.getNumeroJoueur() == 2) {
 			if (noeud.mouvement.src.getRow() < noeud.mouvement.dest.getRow())
 				tmpGrade += -50;
 			else

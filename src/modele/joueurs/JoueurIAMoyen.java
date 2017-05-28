@@ -79,7 +79,7 @@ public class JoueurIAMoyen extends JoueurIA {
 		if (prof <= 0)
 			return;
 		Noeud tmp = new Noeud();
-		if (n.joueur != joueurActuel) {
+		if (n.joueur.getNumeroJoueur() != joueurActuel.getNumeroJoueur()) {
 			tmp.moves = 0;
 			tmp.passed = false;
 
@@ -89,7 +89,7 @@ public class JoueurIAMoyen extends JoueurIA {
 
 		}
 		for (MouvementIA move : genererMouvementsPossibles(tmp, p, pions, joueurActuel)) {
-			if (n.parent.joueur == joueurActuel) {
+			if (n.parent.joueur.getNumeroJoueur() == joueurActuel.getNumeroJoueur()) {
 				if (move.type == TypeMouvement.PASSE || n.passed)
 					n.enfants.add(new Noeud(move, true, n, n.moves, joueurActuel));
 				else
@@ -154,10 +154,10 @@ public class JoueurIAMoyen extends JoueurIA {
 					pMoves.add(tmp);
 				}
 		}
-		if (n.parent != null && n.parent.joueur == joueurActuel) {
+		if (n.parent != null && n.parent.joueur.getNumeroJoueur() == joueurActuel.getNumeroJoueur()) {
 			pMoves.remove(n.parent.mouvement);
 			pMoves.remove(new MouvementIA(n.parent.mouvement.dest, n.parent.mouvement.src, n.parent.mouvement.type));
-			if (n.parent.parent != null && n.parent.parent.joueur == joueurActuel) {
+			if (n.parent.parent != null && n.parent.parent.joueur.getNumeroJoueur() == joueurActuel.getNumeroJoueur()) {
 				pMoves.remove(n.parent.parent.mouvement);
 				pMoves.remove(new MouvementIA(n.parent.parent.mouvement.dest, n.parent.parent.mouvement.src,
 						n.parent.parent.mouvement.type));
@@ -218,7 +218,7 @@ public class JoueurIAMoyen extends JoueurIA {
 			return DEFAITE;
 		plateau.actualiser(noeud.mouvement.dest, noeud.mouvement.src);
 
-		if (noeud.joueur == this) {
+		if (noeud.joueur.getNumeroJoueur() == 2) {
 			if (noeud.mouvement.src.getRow() == p1Start && noeud.mouvement.dest.getRow() > p1Start)
 				tmpGrade += 0;
 			else
@@ -250,6 +250,7 @@ public class JoueurIAMoyen extends JoueurIA {
 		coup1 = arbre.FindBestMove(arbre.root);
 		coup2 = arbre.FindBestMove(coup1);
 		coup3 = arbre.FindBestMove(coup2);
+		System.out.println(coup3.grade);
 		coupIA.add(coup1.mouvement);
 		coupIA.add(coup2.mouvement);
 		coupIA.add(coup3.mouvement);
@@ -268,7 +269,8 @@ public class JoueurIAMoyen extends JoueurIA {
 				try {
 					partie.executerAction(move.src, move.dest);
 					listeCoups.add(move);
-					
+					System.out.println(move.src.getRow() + " " + move.src.getColumn() + " " + move.type.toString());
+					System.out.println(move.dest.getRow() + " " + move.dest.getColumn() + " " + move.type.toString());
 					// après chaque coup on vérifie si la partie est finie
 					if (partie.gagnantPartie() != null || listeCoups.size() == 3)
 						break;

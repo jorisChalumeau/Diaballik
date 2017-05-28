@@ -12,33 +12,53 @@ public class Main extends Application {
 
 	public static void main(String[] args) throws ExceptionMouvementIllegal, FileNotFoundException {
 		// TODO Auto-generated method stub
-		Partie diaballik = CreateurPartie.creerPartieIA("difficile", 1);
-		// Tour du joueur 1 qui est humain
-		Point pointA = new Point(0, 4);
-		Point pointB = new Point(2, 4);
-		diaballik.executerAction(pointA, pointB);
-		diaballik.finDeTour();
-		diaballik.getPlateau().Afficher();
-		// A l'IA de jouer
+		Partie diaballik = CreateurPartie.creerPartieIAvsIA("moyen", "difficile",1);
 		diaballik.jouerIA();
 		diaballik.finDeTour();
-		diaballik.getPlateau().Afficher();		
-		//tour2
-		pointA = new Point(0, 2);
-		pointB = new Point(2, 2);
-		diaballik.executerAction(pointA, pointB);
-		int i=0;
-		while(diaballik.gagnantPartie()==null){
-			diaballik.finDeTour();
-			System.out.println("TEST");
-			diaballik.jouerIA();
-			diaballik.getPlateau().Afficher();
-			diaballik.finDeTour();
-			i++;
-			System.out.println(i);
-		}
+		diaballik.getPlateau().Afficher();	
+		
+		diaballik.jouerIA();
+		diaballik.finDeTour();
 		diaballik.getPlateau().Afficher();
-		System.out.println(diaballik.gagnantPartie().toString());
+		
+		diaballik.jouerIA();
+		diaballik.finDeTour();
+		diaballik.getPlateau().Afficher();
+		
+		diaballik.jouerIA();
+		diaballik.finDeTour();
+		diaballik.getPlateau().Afficher();
+		
+		diaballik.jouerIA();
+		diaballik.finDeTour();
+		diaballik.getPlateau().Afficher();
+		
+		// Tour du joueur 1 qui est humain
+//		Point pointA = new Point(0, 4);
+//		Point pointB = new Point(2, 4);
+//		diaballik.executerAction(pointA, pointB);
+//		diaballik.finDeTour();
+//		diaballik.getPlateau().Afficher();
+//		// A l'IA de jouer
+//		diaballik.jouerIA();
+//		diaballik.finDeTour();
+//		diaballik.getPlateau().Afficher();		
+//		//tour2
+//		pointA = new Point(0, 2);
+//		pointB = new Point(2, 2);
+//		diaballik.executerAction(pointA, pointB);
+//		int i=0;
+//		while(diaballik.gagnantPartie()==null){
+//			diaballik.finDeTour();
+//			System.out.println("TEST");
+//			diaballik.jouerIA();
+//			diaballik.getPlateau().Afficher();
+//			diaballik.finDeTour();
+//			i++;
+//			System.out.println(i);
+//		}
+//		diaballik.getPlateau().Afficher();
+//		System.out.println(diaballik.gagnantPartie().toString());
 
 		// diaballik.getPlateau().Afficher();
 		// Point pointA = new Point(0, 4);
