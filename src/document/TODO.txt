@@ -1,11 +1,7 @@
+IHM
+	réécrire les règles
 
-MODELE
-Paramètres qui subsistent (stockés disque dur) -> Properties? Jsonjsaispasquoi?
- -si le joueur 1 ou 2 commence (les couleurs ne changent pas)
- -la vitesse de l'IA
- -le choix de la texture graphique. 
- 		=> Les TODO dans boutonControleReglages
- 		
+MODELE		
 IA Moyenne/difficile
 
 Faire que les IA puissent jouer en joueur 1 (pour la démo, ouais je sais c'est chiant)
