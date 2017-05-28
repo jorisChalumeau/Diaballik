@@ -1,7 +1,6 @@
 package controle;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -29,30 +28,121 @@ import modele.joueurs.InterfaceAdapter;
 import modele.joueurs.Joueur;
 import modele.tests.Test;
 
+/**
+ * controleur de l'application qui fait la liaison entre l'IHM et le modèle
+ */
 public class Controleur {
-
 	private Affichage ihm;
 	private Partie diaballik;
-	private Point pointPionSelectionne;
+	private Point pointPionSelectionne = null;
 	private Config conf;
+	private boolean pauseDurantTourIA = false;
+	private boolean pauseDurantRemontrerIA = false;
+	private Iterator<MouvementIA> iterListeCoups;
+
+	/**
+	 * annimation des actions de l'IA
+	 */
+	private PauseTransition pause = null;
+
+	/**
+	 * animation des actions lorsqu'on remontre le dernier tour de l'IA
+	 */
+	private PauseTransition pause2 = null;
 
 	public Controleur() {
-		pointPionSelectionne = null;
+
+	}
+
+	/**
+	 * iniatilise les PauseTransition qui servent à animer les déplacements de
+	 * l'IA (avec un intervalle de temps entre chaque coup)
+	 */
+	private void initAnimations() {
+		pause = new PauseTransition(Duration.seconds(1.5 / conf.getVitesseIA()));
+		pause.setOnFinished(event -> {
+			jouerActionIA();
+		});
+
+		pause2 = new PauseTransition(Duration.seconds(1.5));
+		pause2.setOnFinished(event -> {
+			refaireCoup();
+			if (!diaballik.getHistoriqueSecondaire().isEmpty() && diaballik.getHistoriqueSecondaire().peek().getJoueur()
+					.getNumeroJoueur() == diaballik.getNumJoueurActuel())
+				pause2.play();
+			else {
+				pauseDurantRemontrerIA = false;
+				pause2.stop();
+			}
+		});
+	}
+
+	/**
+	 * joue un coup de l'IA sur l'IHM et lance le suivant ou fini le tour
+	 */
+	private void jouerActionIA() {
+		// déclenché à la fin du timer de 2s
+		MouvementIA mvt = iterListeCoups.next();
+
+		if (mvt != null) {
+			int numeroSrc = pointToNumCase(mvt.src);
+			int numeroDest = pointToNumCase(mvt.dest);
+
+			// simuler le compteur de déplacements/passe pour l'IA
+			switch (mvt.type) {
+			case PASSE:
+				diaballik.setBalleLancee(true);
+				break;
+			default:
+				diaballik.setCptMouvement(diaballik.getCptMouvement() + 1);
+			}
+
+			jouerActionIHM(mvt.caseSrc, numeroSrc, numeroDest);
+		}
+
+		if (iterListeCoups.hasNext())
+			pause.play();
+		else {
+			pauseDurantTourIA = false;
+			pause.stop();
+			// test si l'IA a gagné la partie
+			testFinal();
+			// fin du tour de l'ia
+			triggerFinTour();
+			// on degrise les boutons après le tour de l'ia
+			actualiserCouleurBoutons();
+		}
 	}
 
 	private void afficherMessageTourDuJoueur(int joueur) {
 		ihm.afficherMessageTourDuJoueur(joueur);
 	}
-
+	
+	/**
+	 * affiche le "menu pause" et met le jeu (ainsi que les animations) en pause
+	 */
 	public void afficherMenuPause() {
 		ihm.afficherMenuPause();
+
+		// on bloque l'IA si c'est son tour
+		if (pauseDurantRemontrerIA)
+			pause2.pause();
+		else if (pauseDurantTourIA)
+			pause.pause();
 	}
 
+	/**
+	 * ferme le "menu pause" et reprend le jeu (ainsi que les animations qui étaient interrompues)
+	 */
 	public void cacherMenuPause() {
 		ihm.cacherMenuPause();
 
 		// on relance l'IA si c'est son tour
-		if (diaballik.tourIA())
+		if (pauseDurantRemontrerIA) {
+			pause2.play();
+		} else if (pauseDurantTourIA) {
+			pause.play();
+		} else if (diaballik.tourIA())
 			faireJouerIA();
 	}
 
@@ -76,6 +166,10 @@ public class Controleur {
 		ihm.passeBleu(n1, n2, this);
 	}
 
+	/**
+	 * sélectionne la case et affiche en vert les cases où le déplacement ou la passe sont possibles
+	 * @param numero de la case source à sélectionner
+	 */
 	public void selectionPion(int numero) {
 		int num;
 		Point point = numCaseToPoint(numero);
@@ -90,6 +184,10 @@ public class Controleur {
 		}
 	}
 
+	/**
+	 * Effectue l'action de la case sélectionnée à la case destination si le déplacement ou la passe est possible.
+	 * @param numero de la case destination
+	 */
 	public void jouerCoupHumain(int numero) {
 		Point dest = numCaseToPoint(numero);
 		try {
@@ -112,6 +210,9 @@ public class Controleur {
 		}
 	}
 
+	/**
+	 * désélectionne la case sélectionnée et repeint toutes les cases en blanc
+	 */
 	private void deselection() {
 		for (int i = 0; i < 49; i++) {
 			if (!ihm.getCase(i).getFill().equals(Color.WHITE))
@@ -120,6 +221,9 @@ public class Controleur {
 		pointPionSelectionne = null;
 	}
 
+	/**
+	 * termine le tour du joueur actuel
+	 */
 	private void lancerFinDeTour() {
 		if (!diaballik.partieFinie()) {
 			// on désélectionne si qqch est encore sélectionné
@@ -132,6 +236,9 @@ public class Controleur {
 		}
 	}
 
+	/**
+	 * termine le tour du joueur actuel, vide l'historique secondaire et fait jouer l'IA si nécessaire
+	 */
 	public void triggerFinTour() {
 		lancerFinDeTour();
 		reinitHistorique();
@@ -142,8 +249,14 @@ public class Controleur {
 		}
 	}
 
+	/**
+	 * fait jouer l'IA dans le modèle, puis reproduit ses coups dans l'IHM
+	 */
 	private void faireJouerIA() {
 		if (!estEnPause()) {
+			if (pause == null)
+				initAnimations();
+
 			// on grise les boutons au tour de l'ia
 			actualiserCouleurBoutons();
 
@@ -153,41 +266,27 @@ public class Controleur {
 				System.out.println("l'IA n'a pas trouvé de coup");
 				triggerFinTour();
 			} else {
-				Iterator<MouvementIA> it = listeCoups.iterator();
+				iterListeCoups = listeCoups.iterator();
+				if(diaballik.getNumJoueurActuel() == 1){
+					System.out.println("nbC : "+listeCoups.size());
+					diaballik.getPlateau().Afficher();
+				}
 
 				// espacer chaque coup de l'IA de 2s pour les rendre plus
 				// "visibles"
-				PauseTransition pause = new PauseTransition(Duration.seconds(1.5 / conf.getVitesseIA()));
-				pause.setOnFinished(event -> {
-					// déclenché à la fin du timer de 2s
-					MouvementIA mvt = it.next();
-					if (mvt != null) {
-						int numeroSrc = pointToNumCase(mvt.src);
-						int numeroDest = pointToNumCase(mvt.dest);
-
-						jouerActionIHM(mvt.caseSrc, numeroSrc, numeroDest);
-					} else if (it.hasNext())
-						pause.playFrom(pause.getCurrentTime().add(Duration.seconds((1.5 / conf.getVitesseIA()) - 0.1)));
-
-					if (it.hasNext())
-						pause.play();
-					else {
-						// test si l'IA a gagné la partie
-						testFinal();
-						// fin du tour de l'ia
-						triggerFinTour();
-						// on degrise les boutons après le tour de l'ia
-						actualiserCouleurBoutons();
-					}
-				});
-
-				if (it.hasNext()) {
+				if (iterListeCoups.hasNext()) {
+					diaballik.setCptMouvement(0);
+					diaballik.setBalleLancee(false);
+					pauseDurantTourIA = true;
 					pause.play();
 				}
 			}
 		}
 	}
 
+	/**
+	 * vide l'historique secondaire et actualise l'affichage des boutons
+	 */
 	private void reinitHistorique() {
 		if (!diaballik.getHistoriqueSecondaire().isEmpty()) {
 			diaballik.reinitHistoriqueSecondaire();
@@ -195,6 +294,9 @@ public class Controleur {
 		}
 	}
 
+	/**
+	 * annule le dernier coup joué, même s'il a été effectué par l'autre joueur
+	 */
 	public void annulerCoup() {
 		deselection();
 
@@ -223,6 +325,9 @@ public class Controleur {
 
 	}
 
+	/**
+	 * rejoue le dernier coup annulé, même s'il a été effectué par l'autre joueur
+	 */
 	public void refaireCoup() {
 		deselection();
 
@@ -251,6 +356,9 @@ public class Controleur {
 		}
 	}
 
+	/**
+	 * rejoue le tour précédent de l'IA plus lentement
+	 */
 	public void remontrerIA() {
 		deselection();
 
@@ -261,19 +369,12 @@ public class Controleur {
 			annulerCoup();
 		}
 
-		// puis on rejoue les coups de l'IA avec un délai de 1,5s
-		PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
-		pause.setOnFinished(event -> {
-			refaireCoup();
-			if (!diaballik.getHistoriqueSecondaire().isEmpty() && diaballik.getHistoriqueSecondaire().peek().getJoueur()
-					.getNumeroJoueur() == diaballik.getNumJoueurActuel())
-				pause.play();
-		});
-
 		// tant que l'ia n'a pas fini son tour, on remontre tous ses coups à
 		// un intervalle de 1,5s
-		if (!diaballik.getHistoriqueSecondaire().isEmpty())
-			pause.play();
+		if (!diaballik.getHistoriqueSecondaire().isEmpty()) {
+			pauseDurantRemontrerIA = true;
+			pause2.play();
+		}
 	}
 
 	public Partie getDiaballik() {
@@ -412,9 +513,6 @@ public class Controleur {
 		// on replace les pions où il faut
 		ihm.replacerPionsJeu(this, diaballik.getPlateau().obtenirPlateau());
 
-		// TODO : recharger la vitesse et autres réglages également (stockés
-		// dans la partie)
-
 		// on actualise la couleur des boutons
 		actualiserCouleurBoutons();
 		// test si la partie est finie
@@ -432,10 +530,6 @@ public class Controleur {
 				diaballik.getNumJoueurActuel());
 
 		cacherMenuPause(); // s'assurer que la partie n'est pas en pause
-
-		// si le joueur 1 est un IA
-		if (diaballik.tourIA())
-			faireJouerIA();
 	}
 
 	public void actualiserCouleurBoutons() {

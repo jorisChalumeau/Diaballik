@@ -190,6 +190,9 @@ public class Partie {
 		return p.obtenirCase(position);
 	}
 
+	/**
+	 * @return true si le joueur peut encore effectuer des actions ; false sinon
+	 */
 	public boolean actionEncorePossible() {
 		return (cptMouvement < 2 || !balleLancee);
 	}
