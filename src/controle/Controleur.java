@@ -50,6 +50,10 @@ public class Controleur {
 
 	public void cacherMenuPause() {
 		ihm.cacherMenuPause();
+
+		// on relance l'IA si c'est son tour
+		if (diaballik.tourIA())
+			faireJouerIA();
 	}
 
 	public Boolean estEnPause() {
@@ -139,44 +143,47 @@ public class Controleur {
 	}
 
 	private void faireJouerIA() {
-		// on grise les boutons au tour de l'ia
-		actualiserCouleurBoutons();
+		if (!estEnPause()) {
+			// on grise les boutons au tour de l'ia
+			actualiserCouleurBoutons();
 
-		ArrayList<MouvementIA> listeCoups = diaballik.jouerIA();
+			ArrayList<MouvementIA> listeCoups = diaballik.jouerIA();
 
-		if (listeCoups == null) {
-			System.out.println("l'IA n'a pas trouvé de coup");
-			triggerFinTour();
-		} else {
-			Iterator<MouvementIA> it = listeCoups.iterator();
+			if (listeCoups == null) {
+				System.out.println("l'IA n'a pas trouvé de coup");
+				triggerFinTour();
+			} else {
+				Iterator<MouvementIA> it = listeCoups.iterator();
 
-			// espacer chaque coup de l'IA de 2s pour les rendre plus "visibles"
-			PauseTransition pause = new PauseTransition(Duration.seconds(1.5 / conf.getVitesseIA()));
-			pause.setOnFinished(event -> {
-				// déclenché à la fin du timer de 2s
-				MouvementIA mvt = it.next();
-				if (mvt != null) {
-					int numeroSrc = pointToNumCase(mvt.src);
-					int numeroDest = pointToNumCase(mvt.dest);
+				// espacer chaque coup de l'IA de 2s pour les rendre plus
+				// "visibles"
+				PauseTransition pause = new PauseTransition(Duration.seconds(1.5 / conf.getVitesseIA()));
+				pause.setOnFinished(event -> {
+					// déclenché à la fin du timer de 2s
+					MouvementIA mvt = it.next();
+					if (mvt != null) {
+						int numeroSrc = pointToNumCase(mvt.src);
+						int numeroDest = pointToNumCase(mvt.dest);
 
-					jouerActionIHM(mvt.caseSrc, numeroSrc, numeroDest);
-				} else if (it.hasNext())
-					pause.playFrom(pause.getCurrentTime().add(Duration.seconds((1.5 / conf.getVitesseIA()) - 0.1)));
+						jouerActionIHM(mvt.caseSrc, numeroSrc, numeroDest);
+					} else if (it.hasNext())
+						pause.playFrom(pause.getCurrentTime().add(Duration.seconds((1.5 / conf.getVitesseIA()) - 0.1)));
 
-				if (it.hasNext())
+					if (it.hasNext())
+						pause.play();
+					else {
+						// test si l'IA a gagné la partie
+						testFinal();
+						// fin du tour de l'ia
+						triggerFinTour();
+						// on degrise les boutons après le tour de l'ia
+						actualiserCouleurBoutons();
+					}
+				});
+
+				if (it.hasNext()) {
 					pause.play();
-				else {
-					// test si l'IA a gagné la partie
-					testFinal();
-					// fin du tour de l'ia
-					triggerFinTour();
-					// on degrise les boutons après le tour de l'ia
-					actualiserCouleurBoutons();
 				}
-			});
-
-			if (it.hasNext()) {
-				pause.play();
 			}
 		}
 	}

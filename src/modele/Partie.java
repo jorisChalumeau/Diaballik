@@ -12,6 +12,9 @@ import modele.joueurs.JoueurIAMoyen;
 import modele.joueurs.PionBloqueException;
 import modele.tests.Regles;
 
+/**
+ * contient tout le modèle : le plateau, les joueurs, les historiques, les différents compteurs et les règles
+ */
 public class Partie {
 
 	private Plateau p;
@@ -25,6 +28,9 @@ public class Partie {
 	private Stack<Coup> historique;
 	private Stack<Coup> historiqueSecondaire;
 
+	/**
+	 * mode joueur contre joueur
+	 */
 	public Partie() {
 		this.p = new Plateau();
 		this.r = new Regles();
@@ -35,6 +41,9 @@ public class Partie {
 		this.joueurActuel = joueur1;
 	}
 
+	/**
+	 * mode joueur contre IA
+	 */
 	public Partie(String difficulte) {
 		this.p = new Plateau();
 		this.r = new Regles();
@@ -45,6 +54,9 @@ public class Partie {
 		this.joueurActuel = joueur1;
 	}
 
+	/**
+	 * mode IA contre IA
+	 */
 	public Partie(String dif1, String dif2) {
 		this.p = new Plateau();
 		this.r = new Regles();
@@ -55,8 +67,11 @@ public class Partie {
 		this.joueurActuel = joueur1;
 	}
 
-	// renvoie la liste des points où le joueur peut effectuer une action avec
-	// le pion sélectionné
+	/**
+	 * @param src le point correspondant au pion sélectionné
+	 * @return la liste des points où le joueur peut effectuer une action avec
+	 * le pion sélectionné
+	 */
 	public ArrayList<Point> obtenirActionsPossibles(Point src) {
 		ArrayList<Point> listePoints = null;
 		ArrayList<Point> listePointsFinale = new ArrayList<Point>();
@@ -83,6 +98,10 @@ public class Partie {
 		return listePointsFinale;
 	}
 
+	/**
+	 * @param src point du pion
+	 * @return true si le joueur est autorisé à jouer un pion ; false sinon
+	 */
 	private boolean actionAutorisee(Point src) {
 		if (!(joueurActuel instanceof JoueurHumain))
 			return false;
@@ -96,6 +115,10 @@ public class Partie {
 		return true;
 	}
 
+	/**
+	 * @param src point du pion
+	 * @return la liste des points où le pion peut faire une passe ; null si la liste est vide
+	 */
 	private ArrayList<Point> getPassesPossibles(Point src) {
 		int ligneSrc = src.getRow();
 		int colonneSrc = src.getColumn();
@@ -115,6 +138,10 @@ public class Partie {
 		return listePoints;
 	}
 
+	/**
+	 * @param src point du pion
+	 * @return la liste des points où le pion peut se déplacer ; null si la liste est vide
+	 */
 	private ArrayList<Point> getMouvementsPossibles(Point src) {
 		int ligneSrc = src.getRow();
 		int colonneSrc = src.getColumn();
@@ -150,6 +177,11 @@ public class Partie {
 		return listePoints;
 	}
 
+	/**
+	 * effectue l'action dans le modèle
+	 * @param src point source
+	 * @param dest point destination
+	 */
 	private void realiserAction(Point src, Point dest) {
 		p.actualiser(src, dest);
 	}

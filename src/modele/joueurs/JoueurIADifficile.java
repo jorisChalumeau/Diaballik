@@ -267,18 +267,8 @@ public class JoueurIADifficile extends JoueurIA {
 	@Override
 	public ArrayList<MouvementIA> jouerCoup(Partie partie) throws PionBloqueException, InterruptedException {
 		plateauActuel = new Plateau(partie.getPlateau());
+		ArrayList<MouvementIA> movesTemp = jouer(partie);
 		ArrayList<MouvementIA> listeCoups = new ArrayList<MouvementIA>();
-		ArrayList<MouvementIA> movesTemp = null;
-
-		// Si coup gagnant => le faire ; si adversaire coup gagnant => le
-		// bloquer
-		movesTemp = checkCoupsGagnantBloquant(partie);
-		
-		if (movesTemp == null) {
-			// Sinon, algo moyen en favorisant les coups qui avancent la balle
-			// et ceux qui bloquent le pion adverse le plus avancé
-			movesTemp = jouer(partie);
-		}
 
 		for (MouvementIA move : movesTemp) {
 			if (move != null) {
@@ -295,56 +285,6 @@ public class JoueurIADifficile extends JoueurIA {
 		}
 
 		return listeCoups;
-	}
-
-	// renvoie la liste des coups à jouer pour remporter la partie ; null si on
-	// ne peut pas gagner en 3 coups
-	private ArrayList<MouvementIA> checkCoupsGagnantBloquant(Partie partie) {
-		ArrayList<MouvementIA> listeTemp = null;
-
-		// Si coup gagnant (en 3 coups ou moins) par victoire => le faire
-		listeTemp = checkVictoireDefaut(partie);
-
-		if (listeTemp == null) {
-			// Si coup gagnant (en 3 coups ou moins) par antijeu => le faire
-			listeTemp = checkVictoireAntiJeu(partie);
-
-			if (listeTemp == null) {
-				// Si coup gagnant adversaire (en 3 coups ou moins) par victoire
-				// => le
-				// bloquer
-				listeTemp = checkBloquageDefaut(partie);
-
-				if (listeTemp == null) {
-					// Si coup gagnant adversaire (en 3 coups ou moins) par
-					// antijeu => le
-					// bloquer
-					listeTemp = checkBloquageAntiJeu(partie);
-				}
-			}
-		}
-
-		return listeTemp;
-	}
-
-	private ArrayList<MouvementIA> checkVictoireDefaut(Partie partie) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private ArrayList<MouvementIA> checkVictoireAntiJeu(Partie partie) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private ArrayList<MouvementIA> checkBloquageDefaut(Partie partie) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private ArrayList<MouvementIA> checkBloquageAntiJeu(Partie partie) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

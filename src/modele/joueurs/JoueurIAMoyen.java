@@ -269,8 +269,7 @@ public class JoueurIAMoyen extends JoueurIA {
 				try {
 					partie.executerAction(move.src, move.dest);
 					listeCoups.add(move);
-					System.out.println(move.src.getRow() + " " + move.src.getColumn() + " " + move.type.toString());
-					System.out.println(move.dest.getRow() + " " + move.dest.getColumn() + " " + move.type.toString());
+					
 					// après chaque coup on vérifie si la partie est finie
 					if (partie.gagnantPartie() != null || listeCoups.size() == 3)
 						break;
