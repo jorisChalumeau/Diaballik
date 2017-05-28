@@ -44,6 +44,7 @@ public class Affichage {
 	private Button annuler;
 	private Button remontrerIA;
 	private Button refaire;
+	private Button finTour;
 	private Label messageVictoire;
 	private String messageVictoireJ1;
 	private String messageVictoireJ2;
@@ -607,7 +608,7 @@ public class Affichage {
 		
 
 		// LES BOUTONS EN JEU
-		Button finTour = boutonFinDeTour(controleur);
+		finTour = boutonFinDeTour(controleur);
 
 		final ImageView iconePause = new ImageView(new Image("file:Images/quitter50x50.png"));
 		Button pause = new Button("", iconePause);
@@ -932,6 +933,14 @@ public class Affichage {
 			remontrerIA.setDisable(false);
 		} else {
 			remontrerIA.setDisable(true);
+		}
+	}
+	
+	public void setCouleurBoutonFinTour(boolean b){
+		if (b) {
+			finTour.setDisable(false);
+		} else {
+			finTour.setDisable(true);
 		}
 	}
 

@@ -13,7 +13,8 @@ import modele.joueurs.PionBloqueException;
 import modele.tests.Regles;
 
 /**
- * contient tout le modèle : le plateau, les joueurs, les historiques, les différents compteurs et les règles
+ * contient tout le modèle : le plateau, les joueurs, les historiques, les
+ * différents compteurs et les règles
  */
 public class Partie {
 
@@ -68,9 +69,10 @@ public class Partie {
 	}
 
 	/**
-	 * @param src le point correspondant au pion sélectionné
+	 * @param src
+	 *            le point correspondant au pion sélectionné
 	 * @return la liste des points où le joueur peut effectuer une action avec
-	 * le pion sélectionné
+	 *         le pion sélectionné
 	 */
 	public ArrayList<Point> obtenirActionsPossibles(Point src) {
 		ArrayList<Point> listePoints = null;
@@ -99,8 +101,9 @@ public class Partie {
 	}
 
 	/**
-	 * @param src point du pion
-	 * @return true si le joueur est autorisé à jouer un pion ; false sinon
+	 * @param src
+	 *            point du pion
+	 * @return true si le joueur est autorisé à utiliser le pion ; false sinon
 	 */
 	private boolean actionAutorisee(Point src) {
 		if (!(joueurActuel instanceof JoueurHumain))
@@ -116,8 +119,10 @@ public class Partie {
 	}
 
 	/**
-	 * @param src point du pion
-	 * @return la liste des points où le pion peut faire une passe ; null si la liste est vide
+	 * @param src
+	 *            point du pion
+	 * @return la liste des points sur la même ligne, colonne ou diagonale que
+	 *         le point sélectionné qui sont sur le plateau
 	 */
 	private ArrayList<Point> getPassesPossibles(Point src) {
 		int ligneSrc = src.getRow();
@@ -139,8 +144,11 @@ public class Partie {
 	}
 
 	/**
-	 * @param src point du pion
-	 * @return la liste des points où le pion peut se déplacer ; null si la liste est vide
+	 * @param src
+	 *            point du pion
+	 * @return la liste de tous les points 1 ou 2 cases autour du point
+	 *         sélectionné (selon le nb de déplacements restants) qui sont sur
+	 *         le plateau
 	 */
 	private ArrayList<Point> getMouvementsPossibles(Point src) {
 		int ligneSrc = src.getRow();
@@ -179,15 +187,14 @@ public class Partie {
 
 	/**
 	 * effectue l'action dans le modèle
-	 * @param src point source
-	 * @param dest point destination
+	 * 
+	 * @param src
+	 *            point source
+	 * @param dest
+	 *            point destination
 	 */
 	private void realiserAction(Point src, Point dest) {
 		p.actualiser(src, dest);
-	}
-
-	public Case getCase(Point position) {
-		return p.obtenirCase(position);
 	}
 
 	/**
@@ -206,6 +213,16 @@ public class Partie {
 		}
 	}
 
+	/**
+	 * Effectue l'action (mouvement ou passe) si elle est possible
+	 * 
+	 * @param src
+	 *            pion source
+	 * @param dest
+	 *            case (ou pion) destination
+	 * @return
+	 * @throws ExceptionMouvementIllegal
+	 */
 	public Case executerAction(Point src, Point dest) throws ExceptionMouvementIllegal {
 		Case caseSrc = p.obtenirCase(src);
 		int distance = compterMvtEffectues(src, dest);
@@ -235,6 +252,12 @@ public class Partie {
 		}
 	}
 
+	/**
+	 * annule la dernière action dans le modèle
+	 * 
+	 * @return
+	 * @throws ExceptionMouvementIllegal
+	 */
 	public Case annulerAction() throws ExceptionMouvementIllegal {
 		Coup action = historique.pop();
 
@@ -259,6 +282,12 @@ public class Partie {
 		}
 	}
 
+	/**
+	 * refait la dernière action annulée dans le modèle
+	 * 
+	 * @return
+	 * @throws ExceptionMouvementIllegal
+	 */
 	public Case refaireAction() throws ExceptionMouvementIllegal {
 		Coup action = historiqueSecondaire.pop();
 
@@ -282,10 +311,23 @@ public class Partie {
 		}
 	}
 
+	/**
+	 * contre le nb déplacements à effectuer pour se déplacer de src à dest
+	 * 
+	 * @param src
+	 * @param dest
+	 * @return
+	 */
 	private int compterMvtEffectues(Point src, Point dest) {
 		return Math.abs(dest.getRow() - src.getRow()) + Math.abs(dest.getColumn() - src.getColumn());
 	}
 
+	/**
+	 * fait jouer l'IA dans le modèle
+	 * 
+	 * @return la liste des actions effectuées au controleur pour qu'il modifie
+	 *         l'IHM
+	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<MouvementIA> jouerIA() {
 		ArrayList<MouvementIA> listeCoups = null;
@@ -304,24 +346,19 @@ public class Partie {
 		changerJoueur();
 	}
 
-	public Coup aiderJoueur() {
-		Coup coup = null;
-
-		if (joueurActuel instanceof JoueurHumain) {
-			try {
-				coup = (Coup) joueurActuel.jouerCoup(this);
-			} catch (PionBloqueException | InterruptedException e) {
-			}
-		}
-
-		return coup;
-	}
-
+	/**
+	 * reinitialise le compteur de déplacement et de passe
+	 */
 	private void resetActionsPossibles() {
 		cptMouvement = 0;
 		balleLancee = false;
 	}
 
+	/**
+	 * 
+	 * @return le Joueur qui a gagné la partie ; null si la partie n'est pas
+	 *         finie
+	 */
 	public Joueur gagnantPartie() {
 		return r.checkGameIsOver(this);
 	}
@@ -334,16 +371,186 @@ public class Partie {
 		partieFinie = true;
 	}
 
+	/**
+	 * 
+	 * @return true si le joueurActuel est un IA ; false sinon
+	 */
 	public boolean tourIA() {
 		return (joueurActuel instanceof JoueurIA);
 	}
 
+	/**
+	 * 
+	 * @return true si le joueur a effectué 2 déplacements et 1 passe ; false
+	 *         sinon
+	 */
 	public boolean tourFini() {
 		if (cptMouvement == 2 && balleLancee)
 			return true;
 		return false;
 	}
+	
+	/**
+	 * vide l'historique secondaire
+	 */
+	public void reinitHistoriqueSecondaire() {
+		this.historiqueSecondaire = new Stack<Coup>();
+	}
 
+	/**
+	 * 
+	 * @return un String qui définit le type de la partie
+	 */
+	public String getTypePartie() {
+		String type;
+		if (joueur1 instanceof JoueurHumain)
+			type = "joueurcontre";
+		else if (joueur1 instanceof JoueurIAFacile)
+			type = "IAFacilecontre";
+		else if (joueur1 instanceof JoueurIAMoyen)
+			type = "IAMoyennecontre";
+		else
+			type = "IADifficilecontre";
+
+		if (joueur2 instanceof JoueurHumain)
+			type += "joueur";
+		else if (joueur2 instanceof JoueurIAFacile)
+			type += "IAFacile";
+		else if (joueur2 instanceof JoueurIAMoyen)
+			type += "IAMoyenne";
+		else
+			type += "IADifficile";
+
+		return type;
+	}
+
+	/**
+	 * relance une partie avec les mêmes paramètres
+	 * 
+	 * @param premJoueur
+	 * @return
+	 */
+	public Partie relancerPartie(int premJoueur) {
+		// 2 joueurs humains
+		if (joueur1 instanceof JoueurHumain && joueur2 instanceof JoueurHumain)
+			return new Partie().defPremJoueur(premJoueur);
+		// humain vs IA
+		if (joueur1 instanceof JoueurHumain && joueur2 instanceof JoueurIA)
+			return new Partie(joueur2.getDifficulte()).defPremJoueur(premJoueur);
+		// IA vs IA
+		if (joueur1 instanceof JoueurIA && joueur2 instanceof JoueurIA)
+			return new Partie(joueur1.getDifficulte(), joueur2.getDifficulte()).defPremJoueur(premJoueur);
+
+		return null;
+	}
+
+	/**
+	 * 
+	 * @return true si l'IA a déjà joué au moins une fois depuis le début de la
+	 *         partie
+	 */
+	public boolean dejaJoueIA() {
+		Coup[] histo = new Coup[this.historique.size()];
+		this.historique.copyInto(histo);
+		for (Coup c : histo)
+			if (c.getJoueur() instanceof JoueurIA)
+				return true;
+		return false;
+	}
+
+	/**
+	 * lorsqu'on annule un coup et revient au tour du joueur précédent,
+	 * actualise les compteurs de déplacement et passe
+	 */
+	public void ajusterCompteurs() {
+		int numJ = joueurActuel.getNumeroJoueur();
+		Coup[] histo = new Coup[historique.size()];
+		historique.copyInto(histo);
+		int dep = 0;
+		boolean passe = false;
+
+		if (historique == null)
+			return;
+
+		// on compte le nb de déplacements et passe effectués dans le tour
+		for (int i = historique.size() - 1; i >= 0 && histo[i].getJoueur().getNumeroJoueur() == numJ; i--) {
+			switch (histo[i].getTypeMvt()) {
+			case DEPLACEMENT:
+				dep += compterMvtEffectues(histo[i].getSrc(), histo[i].getDest());
+				break;
+			case PASSE:
+				passe = true;
+				break;
+			default:
+			}
+		}
+
+		balleLancee = passe;
+		cptMouvement = dep;
+	}
+
+	public Partie defPremJoueur(int premJoueur) {
+		if (joueur1.getNumeroJoueur() == premJoueur)
+			joueurActuel = joueur1;
+		else
+			joueurActuel = joueur2;
+		return this;
+	}
+
+	/**
+	 * vider les attributs inutiles des joueurs IA pour les rendre sérializable
+	 */
+	public void reinitJoueurs() {
+		if (joueur1 instanceof JoueurIAMoyen)
+			((JoueurIAMoyen) joueur1).viderAttributs();
+		if (joueur1 instanceof JoueurIADifficile)
+			((JoueurIADifficile) joueur1).viderAttributs();
+
+		if (joueur2 instanceof JoueurIAMoyen)
+			((JoueurIAMoyen) joueur2).viderAttributs();
+		else if (joueur2 instanceof JoueurIADifficile)
+			((JoueurIADifficile) joueur2).viderAttributs();
+
+		switch (getNumJoueurActuel()) {
+		case 2:
+			joueurActuel = joueur2;
+			break;
+		default:
+			joueurActuel = joueur1;
+		}
+	}
+
+	/**
+	 * rétablit les attributs des joueurs IA pour reprendre la partie
+	 */
+	public void retablirJoueurs() {
+		if (joueur1 instanceof JoueurIAMoyen)
+			joueur1 = new JoueurIAMoyen(1);
+		else if (joueur1 instanceof JoueurIADifficile)
+			joueur1 = new JoueurIADifficile(1);
+
+		if (joueur2 instanceof JoueurIAMoyen)
+			joueur2 = new JoueurIAMoyen(2);
+		else if (joueur2 instanceof JoueurIADifficile)
+			joueur2 = new JoueurIADifficile(2);
+
+		switch (getNumJoueurActuel()) {
+		case 2:
+			joueurActuel = joueur2;
+			break;
+		default:
+			joueurActuel = joueur1;
+		}
+	}
+
+	public Case getCase(Point position) {
+		return p.obtenirCase(position);
+	}
+
+	/**
+	 * 
+	 * @return le numéros du joueurActuel
+	 */
 	public int getNumJoueurActuel() {
 		return joueurActuel.getNumeroJoueur();
 	}
@@ -414,101 +621,6 @@ public class Partie {
 
 	public Stack<Coup> getHistoriqueSecondaire() {
 		return historiqueSecondaire;
-	}
-
-	public void reinitHistoriqueSecondaire() {
-		this.historiqueSecondaire = new Stack<Coup>();
-	}
-
-	public String getTypePartie() {
-		String type;
-		if (joueur1 instanceof JoueurHumain)
-			type = "joueurcontre";
-		else if (joueur1 instanceof JoueurIAFacile)
-			type = "IAFacilecontre";
-		else if (joueur1 instanceof JoueurIAMoyen)
-			type = "IAMoyennecontre";
-		else
-			type = "IADifficilecontre";
-
-		if (joueur2 instanceof JoueurHumain)
-			type += "joueur";
-		else if (joueur2 instanceof JoueurIAFacile)
-			type += "IAFacile";
-		else if (joueur2 instanceof JoueurIAMoyen)
-			type += "IAMoyenne";
-		else
-			type += "IADifficile";
-
-		return type;
-	}
-
-	public Partie relancerPartie(int premJoueur) {
-		// 2 joueurs humains
-		if (joueur1 instanceof JoueurHumain && joueur2 instanceof JoueurHumain)
-			return new Partie().defPremJoueur(premJoueur);
-		// humain vs IA
-		if (joueur1 instanceof JoueurHumain && joueur2 instanceof JoueurIA)
-			return new Partie(joueur2.getDifficulte()).defPremJoueur(premJoueur);
-		// IA vs IA
-		if (joueur1 instanceof JoueurIA && joueur2 instanceof JoueurIA)
-			return new Partie(joueur1.getDifficulte(), joueur2.getDifficulte()).defPremJoueur(premJoueur);
-
-		return null;
-	}
-
-	public boolean dejaJoueIA() {
-		Coup[] histo = new Coup[this.historique.size()];
-		this.historique.copyInto(histo);
-		for (Coup c : histo)
-			if (c.getJoueur() instanceof JoueurIA)
-				return true;
-		return false;
-	}
-
-	public void actualiserJoueur() {
-		switch (getNumJoueurActuel()) {
-		case 2:
-			joueurActuel = joueur2;
-			break;
-		default:
-			joueurActuel = joueur1;
-		}
-	}
-
-	public void ajusterCompteurs() {
-		int numJ = joueurActuel.getNumeroJoueur();
-		Coup[] histo = new Coup[historique.size()];
-		historique.copyInto(histo);
-		int dep = 0;
-		boolean passe = false;
-
-		if (historique == null)
-			return;
-
-		// on compte le nb de déplacements et passe effectués dans le tour
-		for (int i = historique.size() - 1; i >= 0 && histo[i].getJoueur().getNumeroJoueur() == numJ; i--) {
-			switch (histo[i].getTypeMvt()) {
-			case DEPLACEMENT:
-				dep += compterMvtEffectues(histo[i].getSrc(), histo[i].getDest());
-				break;
-			case PASSE:
-				passe = true;
-				break;
-			default:
-			}
-		}
-
-		balleLancee = passe;
-		cptMouvement = dep;
-	}
-
-	public Partie defPremJoueur(int premJoueur) {
-		if (joueur1.getNumeroJoueur() == premJoueur)
-			joueurActuel = joueur1;
-		else
-			joueurActuel = joueur2;
-		return this;
 	}
 
 }

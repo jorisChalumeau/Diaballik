@@ -15,32 +15,38 @@ import modele.TypeMouvement;
 import modele.tests.Regles;
 
 public class JoueurIADifficile extends JoueurIA {
-	int numJoueur;
 	public Plateau plateauActuel;
-
-	Arbre arbre;
-	Regles regles;
-	ArrayList<MouvementIA> coupIA;
-	List<Point> positionsPions;
-	Point positionBalle;
-	List<Point> allPosibleCoord;
-	Random generator;
-	public int profondeur;
-	final int VICTOIRE = 10000;
-	final int DEFAITE = -10000;
-	List<MouvementIA> last3;
+	private Arbre arbre;
+	private Regles regles;
+	private ArrayList<MouvementIA> coupIA;
+	private List<Point> allPosibleCoord;
+	private int profondeur;
+	private static final int VICTOIRE = 10000;
+	private static final int DEFAITE = -10000;
+	private List<MouvementIA> last3;
 
 	public JoueurIADifficile(int numJoueur) {
 		this.numJoueur = numJoueur;
 		this.difficulte = "difficile";
+		reinitAttributs();
+	}
+	
+	public void viderAttributs(){
+		arbre = null;
+		allPosibleCoord = null;
+		coupIA = null;
+		last3 = null;
+		plateauActuel = null;
+		regles = null;
+	}
+	
+	public void reinitAttributs(){
+		allPosibleCoord = new ArrayList<>();
 		coupIA = new ArrayList<>();
 		last3 = new ArrayList<>();
 		regles = new Regles();
-		positionsPions = new ArrayList<>();
-		allPosibleCoord = new ArrayList<>();
-		generator = new Random();
 		profondeur = 1;
-
+		
 		for (int i = 0; i < 7; i++) {
 			for (int j = 0; j < 7; j++) {
 				allPosibleCoord.add(new Point(i, j));
@@ -211,8 +217,6 @@ public class JoueurIADifficile extends JoueurIA {
 
 	public int evaluerAction(Plateau plateau, Noeud noeud, boolean maximiser) {
 		int tmpGrade = 0;
-		int p1Start = 0;
-		int p2Start = 6;
 		Joueur currentPlayer = noeud.joueur;
 		plateau.actualiser(noeud.mouvement.src, noeud.mouvement.dest);
 		if (regles.checkCasGagnant(currentPlayer, plateau) && currentPlayer == this) {

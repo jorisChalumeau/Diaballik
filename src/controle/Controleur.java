@@ -114,61 +114,12 @@ public class Controleur {
 		}
 	}
 
-	private void afficherMessageTourDuJoueur(int joueur) {
-		ihm.afficherMessageTourDuJoueur(joueur);
-	}
-	
 	/**
-	 * affiche le "menu pause" et met le jeu (ainsi que les animations) en pause
-	 */
-	public void afficherMenuPause() {
-		ihm.afficherMenuPause();
-
-		// on bloque l'IA si c'est son tour
-		if (pauseDurantRemontrerIA)
-			pause2.pause();
-		else if (pauseDurantTourIA)
-			pause.pause();
-	}
-
-	/**
-	 * ferme le "menu pause" et reprend le jeu (ainsi que les animations qui étaient interrompues)
-	 */
-	public void cacherMenuPause() {
-		ihm.cacherMenuPause();
-
-		// on relance l'IA si c'est son tour
-		if (pauseDurantRemontrerIA) {
-			pause2.play();
-		} else if (pauseDurantTourIA) {
-			pause.play();
-		} else if (diaballik.tourIA())
-			faireJouerIA();
-	}
-
-	public Boolean estEnPause() {
-		return ihm.estEnPause();
-	}
-
-	private void deplacementOrange(int n1, int n2) {
-		ihm.deplacementOrange(n1, n2, this);
-	}
-
-	private void deplacementBleu(int n1, int n2) {
-		ihm.deplacementBleu(n1, n2, this);
-	}
-
-	private void passeOrange(int n1, int n2) {
-		ihm.passeOrange(n1, n2, this);
-	}
-
-	private void passeBleu(int n1, int n2) {
-		ihm.passeBleu(n1, n2, this);
-	}
-
-	/**
-	 * sélectionne la case et affiche en vert les cases où le déplacement ou la passe sont possibles
-	 * @param numero de la case source à sélectionner
+	 * sélectionne la case et affiche en vert les cases où le déplacement ou la
+	 * passe sont possibles
+	 * 
+	 * @param numero
+	 *            de la case source à sélectionner
 	 */
 	public void selectionPion(int numero) {
 		int num;
@@ -185,8 +136,11 @@ public class Controleur {
 	}
 
 	/**
-	 * Effectue l'action de la case sélectionnée à la case destination si le déplacement ou la passe est possible.
-	 * @param numero de la case destination
+	 * Effectue l'action de la case sélectionnée à la case destination si le
+	 * déplacement ou la passe est possible.
+	 * 
+	 * @param numero
+	 *            de la case destination
 	 */
 	public void jouerCoupHumain(int numero) {
 		Point dest = numCaseToPoint(numero);
@@ -237,7 +191,8 @@ public class Controleur {
 	}
 
 	/**
-	 * termine le tour du joueur actuel, vide l'historique secondaire et fait jouer l'IA si nécessaire
+	 * termine le tour du joueur actuel, vide l'historique secondaire et fait
+	 * jouer l'IA si nécessaire
 	 */
 	public void triggerFinTour() {
 		lancerFinDeTour();
@@ -254,9 +209,6 @@ public class Controleur {
 	 */
 	private void faireJouerIA() {
 		if (!estEnPause()) {
-			if (pause == null)
-				initAnimations();
-
 			// on grise les boutons au tour de l'ia
 			actualiserCouleurBoutons();
 
@@ -267,10 +219,6 @@ public class Controleur {
 				triggerFinTour();
 			} else {
 				iterListeCoups = listeCoups.iterator();
-				if(diaballik.getNumJoueurActuel() == 1){
-					System.out.println("nbC : "+listeCoups.size());
-					diaballik.getPlateau().Afficher();
-				}
 
 				// espacer chaque coup de l'IA de 2s pour les rendre plus
 				// "visibles"
@@ -326,7 +274,8 @@ public class Controleur {
 	}
 
 	/**
-	 * rejoue le dernier coup annulé, même s'il a été effectué par l'autre joueur
+	 * rejoue le dernier coup annulé, même s'il a été effectué par l'autre
+	 * joueur
 	 */
 	public void refaireCoup() {
 		deselection();
@@ -377,43 +326,41 @@ public class Controleur {
 		}
 	}
 
-	public Partie getDiaballik() {
-		return diaballik;
-	}
-
-	public void setDiaballik(Partie nouvellePartie) {
-		diaballik = nouvellePartie;
-	}
-
-	public Affichage getIhm() {
-		return ihm;
-	}
-
-	public void setIhm(Affichage nouvelIhm) {
-		ihm = nouvelIhm;
-	}
-
-	public Point getPointPionSelectionne() {
-		return pointPionSelectionne;
-	}
-
-	public void setPointPionSelectionne(Point pointPionSelectionne) {
-		this.pointPionSelectionne = pointPionSelectionne;
-	}
-
+	/**
+	 * convertit un Point du modèle en un numéros de case de l'IHM
+	 * 
+	 * @param src
+	 * @return
+	 */
 	public int pointToNumCase(Point src) {
 		return coordToNumCase(src.getRow(), src.getColumn());
 	}
 
+	/**
+	 * convertit des coordonnées (ligne ; col) en un numéros de case de l'IHM
+	 * 
+	 * @param ligne
+	 * @param col
+	 * @return
+	 */
 	public int coordToNumCase(int ligne, int col) {
 		return 48 - (ligne * 7 + col);
 	}
 
+	/**
+	 * convertit un numéros de case de l'IHM en un Point du modèle
+	 * 
+	 * @param numCase
+	 * @return
+	 */
 	public Point numCaseToPoint(int numCase) {
 		int numModele = 48 - numCase;
 		return new Point(numModele / 7, numModele % 7);
 	}
 
+	/**
+	 * teste si un joueur a gagné ; termine la partie si c'est le cas
+	 */
 	private void testFinal() {
 		Joueur j = diaballik.gagnantPartie();
 		if (j != null) {
@@ -424,7 +371,13 @@ public class Controleur {
 		}
 	}
 
-	// effectue le déplacement ou la passe au niveau de l'IHM
+	/**
+	 * effectue le déplacement ou la passe au niveau de l'IHM
+	 * 
+	 * @param typePionSource
+	 * @param numeroCaseSrc
+	 * @param numeroCaseDest
+	 */
 	public void jouerActionIHM(Case typePionSource, int numeroCaseSrc, int numeroCaseDest) {
 		switch (typePionSource) {
 		case PION_BLANC:
@@ -447,10 +400,19 @@ public class Controleur {
 				diaballik.getNumJoueurActuel());
 	}
 
+	/**
+	 * quitte le jeu
+	 */
 	public void fermerAplication() {
 		ihm.fermerAplication();
 	}
 
+	/**
+	 * sauvegarder une partie
+	 * 
+	 * @param file
+	 *            fichier où sera stockée la partie au format Json
+	 */
 	public void sauvegarderApplication(File file) {
 		if (file != null && file.getPath().endsWith(".dblk")) {
 			JsonWriter writer = null;
@@ -461,12 +423,17 @@ public class Controleur {
 				Gson gson = new GsonBuilder().registerTypeAdapter(Joueur.class, new InterfaceAdapter<Joueur>())
 						.registerTypeAdapter(Test.class, new InterfaceAdapter<Test>()).create();
 
+				diaballik.reinitJoueurs();
+
 				// Partie to json => on l'ecrit dans le fichier
 				gson.toJson(this.diaballik, Partie.class, writer);
 				writer.flush();
 				writer.close();
 
 				System.out.println("sauvegarde reussie");
+
+				// on reinstancie le joueur actuel pour le debugger
+				diaballik.retablirJoueurs();
 
 				// on reprend la partie
 				cacherMenuPause();
@@ -478,6 +445,12 @@ public class Controleur {
 		}
 	}
 
+	/**
+	 * charger une partie
+	 * 
+	 * @param file
+	 *            fichier où est stockée la partie au format Json
+	 */
 	public void chargerApplication(File file) {
 		if (file != null && file.getPath().endsWith(".dblk") && file.exists()) {
 			JsonReader reader = null;
@@ -493,8 +466,8 @@ public class Controleur {
 				diaballik = gson.fromJson(reader, Partie.class);
 				reader.close();
 
-				// on reinstancie le joueur actuel pour le debugger
-				diaballik.actualiserJoueur();
+				// on reinstancie les joueursIA pour les débuger
+				this.diaballik.retablirJoueurs();
 
 				// on charge ensuite l'ihm de la partie
 				chargerFenetreJeu();
@@ -507,6 +480,9 @@ public class Controleur {
 		}
 	}
 
+	/**
+	 * chargement de l'IHM
+	 */
 	private void chargerFenetreJeu() {
 		// on lance l'ihm du jeu
 		lancerFenetreJeu();
@@ -519,6 +495,9 @@ public class Controleur {
 		testFinal();
 	}
 
+	/**
+	 * initialise la fenêtre de jeu
+	 */
 	public void lancerFenetreJeu() {
 		// on applique la charte graphique des configs
 		ihm.changerCharteGraphique(conf.getCharteGraphique());
@@ -529,9 +508,16 @@ public class Controleur {
 		ihm.actualiserPasseDeplacementsRestants(diaballik.getCptMouvement(), diaballik.isBalleLancee(),
 				diaballik.getNumJoueurActuel());
 
+		initAnimations();
+		pauseDurantTourIA = false;
+		pauseDurantRemontrerIA = false;
+
 		cacherMenuPause(); // s'assurer que la partie n'est pas en pause
 	}
 
+	/**
+	 * désactive / réactive les boutons de l'interface selon la situation
+	 */
 	public void actualiserCouleurBoutons() {
 		ihm.setCouleurBoutonAnnuler(!diaballik.getHistorique().isEmpty() && !diaballik.partieFinie()
 				&& !(diaballik.tourIA() && diaballik.getHistoriqueSecondaire().isEmpty()));
@@ -540,10 +526,67 @@ public class Controleur {
 		ihm.setCouleurBoutonRemontrerIA(
 				diaballik.getHistoriqueSecondaire().isEmpty() && !diaballik.tourIA() && diaballik.dejaJoueIA()
 						&& !diaballik.partieFinie() && diaballik.getTypePartie().contains("joueurcontre"));
+		ihm.setCouleurBoutonFinTour(!diaballik.tourIA());
 	}
 
+	/**
+	 * redémarre une partie avec les mêmes paramètres
+	 */
 	public void recommencerPartie() {
 		diaballik = diaballik.relancerPartie(conf.getPremierAJouer());
+	}
+
+	/**
+	 * affiche le "menu pause" et met le jeu (ainsi que les animations) en pause
+	 */
+	public void afficherMenuPause() {
+		ihm.afficherMenuPause();
+
+		// on bloque l'IA si c'est son tour
+		if (pauseDurantRemontrerIA)
+			pause2.pause();
+		else if (pauseDurantTourIA)
+			pause.pause();
+	}
+
+	/**
+	 * ferme le "menu pause" et reprend le jeu (ainsi que les animations qui
+	 * étaient interrompues)
+	 */
+	public void cacherMenuPause() {
+		ihm.cacherMenuPause();
+
+		// on relance l'IA si c'est son tour
+		if (pauseDurantRemontrerIA) {
+			pause2.play();
+		} else if (pauseDurantTourIA) {
+			pause.play();
+		} else if (diaballik.tourIA())
+			faireJouerIA();
+	}
+
+	private void afficherMessageTourDuJoueur(int joueur) {
+		ihm.afficherMessageTourDuJoueur(joueur);
+	}
+
+	public Boolean estEnPause() {
+		return ihm.estEnPause();
+	}
+
+	private void deplacementOrange(int n1, int n2) {
+		ihm.deplacementOrange(n1, n2, this);
+	}
+
+	private void deplacementBleu(int n1, int n2) {
+		ihm.deplacementBleu(n1, n2, this);
+	}
+
+	private void passeOrange(int n1, int n2) {
+		ihm.passeOrange(n1, n2, this);
+	}
+
+	private void passeBleu(int n1, int n2) {
+		ihm.passeBleu(n1, n2, this);
 	}
 
 	public Config getConf() {
@@ -552,6 +595,30 @@ public class Controleur {
 
 	public void setConf(Config config) {
 		conf = config;
+	}
+
+	public Partie getDiaballik() {
+		return diaballik;
+	}
+
+	public void setDiaballik(Partie nouvellePartie) {
+		diaballik = nouvellePartie;
+	}
+
+	public Affichage getIhm() {
+		return ihm;
+	}
+
+	public void setIhm(Affichage nouvelIhm) {
+		ihm = nouvelIhm;
+	}
+
+	public Point getPointPionSelectionne() {
+		return pointPionSelectionne;
+	}
+
+	public void setPointPionSelectionne(Point pointPionSelectionne) {
+		this.pointPionSelectionne = pointPionSelectionne;
 	}
 
 }
