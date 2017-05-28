@@ -1,90 +1,76 @@
 package controle;
 
-import java.io.FileNotFoundException;
+import java.io.FileReader;
 
+import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
+
+import ihm.Affichage;
 import javafx.application.Application;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
-import modele.ExceptionMouvementIllegal;
-import modele.Partie;
-import modele.Point;
+import javafx.stage.WindowEvent;
 
 public class Main extends Application {
 
-	public static void main(String[] args) throws ExceptionMouvementIllegal, FileNotFoundException {
-		// TODO Auto-generated method stub
-		Partie diaballik = CreateurPartie.creerPartieIAvsIA("moyen", "difficile",1);
-		diaballik.jouerIA();
-		diaballik.finDeTour();
-		diaballik.getPlateau().Afficher();	
-		
-		diaballik.jouerIA();
-		diaballik.finDeTour();
-		diaballik.getPlateau().Afficher();
-		
-		diaballik.jouerIA();
-		diaballik.finDeTour();
-		diaballik.getPlateau().Afficher();
-		
-		diaballik.jouerIA();
-		diaballik.finDeTour();
-		diaballik.getPlateau().Afficher();
-		
-		diaballik.jouerIA();
-		diaballik.finDeTour();
-		diaballik.getPlateau().Afficher();
-		
-		// Tour du joueur 1 qui est humain
-//		Point pointA = new Point(0, 4);
-//		Point pointB = new Point(2, 4);
-//		diaballik.executerAction(pointA, pointB);
-//		diaballik.finDeTour();
-//		diaballik.getPlateau().Afficher();
-//		// A l'IA de jouer
-//		diaballik.jouerIA();
-//		diaballik.finDeTour();
-//		diaballik.getPlateau().Afficher();		
-//		//tour2
-//		pointA = new Point(0, 2);
-//		pointB = new Point(2, 2);
-//		diaballik.executerAction(pointA, pointB);
-//		int i=0;
-//		while(diaballik.gagnantPartie()==null){
-//			diaballik.finDeTour();
-//			System.out.println("TEST");
-//			diaballik.jouerIA();
-//			diaballik.getPlateau().Afficher();
-//			diaballik.finDeTour();
-//			i++;
-//			System.out.println(i);
-//		}
-//		diaballik.getPlateau().Afficher();
-//		System.out.println(diaballik.gagnantPartie().toString());
-
-		// diaballik.getPlateau().Afficher();
-		// Point pointA = new Point(0, 4);
-		// Point pointB = new Point(1, 4);
-		// diaballik.executerMouvement(pointA, pointB);
-		// diaballik.getPlateau().Afficher();
-		// //diaballik.sauvegarder();
-		// //On fait une passe
-		// pointA = new Point(0, 3);
-		// pointB = new Point(0, 5);
-		// diaballik.executerMouvement(pointA, pointB);
-		// diaballik.getPlateau().Afficher();
-		// //On cherche a deplacer le porteur du ballon ---> leve une exception
-		// qu'on devra prendre en charge dans l'ihm
-		// pointA = new Point(0, 5);
-		// pointB = new Point(1, 5);
-		// diaballik.executerMouvement(pointA, pointB);
-		// diaballik.getPlateau().Afficher();
-		//// diaballik.sauvegarder("sauvegardes/test.txt");
-		//// diaballik.charger("sauvegardes/test.txt");
-	}
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		// TODO Auto-generated method stub
-		// new FenetreIHM(stage);
+		final boolean fullScreen = false;
+
+		// le controleur de l'application
+		Controleur controleur = new Controleur();
+
+		// CHARGEMENT DES CONFIGS DANS LE CONTROLEUR
+		JsonReader reader = new JsonReader(new FileReader("./config/conf.cfg"));
+		Config conf = new Gson().fromJson(reader, Config.class);
+		reader.close();
+		if(conf != null)
+			controleur.setConf(conf);
+		else
+			controleur.setConf(new Config());
+		
+		// INITIALISATION IHM
+		Affichage app = new Affichage();
+		controleur.setIhm(app);
+		app.stage = stage;
+
+		app.stage.setTitle("Diaballik");
+		app.stage.setMinHeight(645);
+		stage.setMinWidth(775);
+
+		app.b.setStyle("-fx-background-color: #E6E3EE");
+
+		app.afficherMenuPrincipal(controleur);
+
+		// Contenu de la fenêtre
+		Scene s;
+
+		if (fullScreen) {
+			s = new Scene(app.b);
+			stage.setFullScreen(true);
+		} else {
+			s = new Scene(app.b, 800, 610);
+		}
+		stage.setScene(s);
+
+		// Petit message dans la console quand la fenetre est fermée
+		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			public void handle(WindowEvent we) {
+				System.out.println("Fin du jeu");
+			}
+		});
+
+		stage.show();
+
 	}
 
+	public static void creer(String[] args) {
+		launch(args);
+	}
+
+	public static void main(String[] args) {
+		creer(args);
+	}
 }
