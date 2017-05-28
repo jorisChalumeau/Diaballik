@@ -73,7 +73,7 @@ public class boutonPresse implements EventHandler<ActionEvent> {
 			// Modèle : Charger le modèle avec 1 joueur humain et une IA
 			// Vue : Afficher la "fenêtre jeu"
 			controleur.setDiaballik(
-					CreateurPartie.creerPartieIAvsIA("facile", "moyen", controleur.getConf().getPremierAJouer()));
+					CreateurPartie.creerPartieIAvsIA("moyen", "difficile", controleur.getConf().getPremierAJouer()));
 			controleur.lancerFenetreJeu();
 			break;
 
