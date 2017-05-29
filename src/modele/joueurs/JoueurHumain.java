@@ -1,8 +1,8 @@
 package modele.joueurs;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import modele.Coup;
 import modele.MouvementIA;
 import modele.Partie;
 import modele.Plateau;
@@ -15,15 +15,11 @@ public class JoueurHumain implements Joueur {
 	public JoueurHumain(int numJ) {
 		this.numJoueur = numJ;
 	}
-
+	
 	@Override
-	public Coup jouerCoup(Partie partie) throws PionBloqueException {
-		Coup coup = null;
-		
-		// TODO : lancer le programme qui renvoie le coup proposé à l'utilisateur
-		
-		
-		return coup;
+	public ArrayList<MouvementIA> jouerCoup(Partie partie) throws PionBloqueException, InterruptedException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	public List<MouvementIA> genererMouvementsPossibles(Plateau plateau, Point[] pions, JoueurIA ia) {
