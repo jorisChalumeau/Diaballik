@@ -440,7 +440,7 @@ public class Affichage {
 		
 		
 		ChoiceBox choixVitesse = new ChoiceBox(FXCollections.observableArrayList(
-			    "First", "Second", "Third")
+			    "Lent", "Moyen", "Rapide")
 			);
 		
 		choixVitesse.setOnAction(new boutonControleReglages(controleur,2,choixVitesse, -42));
