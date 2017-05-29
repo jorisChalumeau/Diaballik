@@ -328,7 +328,6 @@ public class Partie {
 	 * @return la liste des actions effectuées au controleur pour qu'il modifie
 	 *         l'IHM
 	 */
-	@SuppressWarnings("unchecked")
 	public ArrayList<MouvementIA> jouerIA() {
 		ArrayList<MouvementIA> listeCoups = null;
 
