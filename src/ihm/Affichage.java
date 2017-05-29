@@ -563,6 +563,12 @@ public class Affichage {
 				setTexteTourJ2(new Label("C'est à Ordinateur Difficile de jouer"));
 				messageVictoireJ2 = "Ordinateur Difficile a gagné";
 			}
+			else if(typeDePartie.equals("IADifficilecontreIADifficile")){
+				setTexteTourJ1(new Label("C'est à Ordinateur Difficile 1 de jouer"));
+				messageVictoireJ1 = "Ordinateur Difficile 1 a gagné";
+				setTexteTourJ2(new Label("C'est à Ordinateur Difficile 2 de jouer"));
+				messageVictoireJ2 = "Ordinateur Difficile 2 a gagné";
+			}
 			else{
 				System.err.println("WTF (Affichage.afficherFenetreJeu) \n mauvaise chaine :"+typeDePartie);
 				setTexteTourJ2(new Label("C'est au joueur 2 de jouer"));

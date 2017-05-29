@@ -133,16 +133,9 @@ public class Plateau {
 	 * affiche une représentation String du plateau dans la console
 	 */
 	public void Afficher() {
-		for (int i = 0; i < TAILLE; i++) {
-			for (int j = 0; j < TAILLE; j++) {
-				System.out.print(terrain[i][j].contenu);
-			}
-			System.out.println();
-		}
 		System.out.println("\n");
-		System.out.println("\n");
-		for (int i = TAILLE - 1; i >= 0; i++) {
-			for (int j = TAILLE - 1; j >= 0; j++) {
+		for (int i = TAILLE - 1; i >= 0; i--) {
+			for (int j = TAILLE - 1; j >= 0; j--) {
 				System.out.print(terrain[i][j].contenu);
 			}
 			System.out.println();

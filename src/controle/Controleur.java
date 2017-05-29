@@ -105,6 +105,7 @@ public class Controleur {
 		else {
 			pauseDurantTourIA = false;
 			pause.stop();
+			iterListeCoups = null;
 			// test si l'IA a gagné la partie
 			testFinal();
 			// fin du tour de l'ia
