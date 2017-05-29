@@ -352,18 +352,25 @@ public class Affichage {
 
 		Label sousTitre2 = new Label("Règle d'antijeu");
 		sousTitre2.setStyle("-fx-font-size: 15; -fx-font-weight: bold;");
+		
+		Label sousTitre3 = new Label("But du jeu");
+		sousTitre3.setStyle("-fx-font-size: 15; -fx-font-weight: bold;");
 
 		Label texte1 = new Label(
-				"Les deux adversaires jouent à tour de rôle. À son tour, le joueur a la possibilité d'effectuer jusqu'à 3 actions dans n'importe quel ordre : 2 déplacements orthogonaux d'une case et une passe. Il n'est pas obligé d'effectuer toutes ces actions. Pour déplacer un joueur, il faut que celui-ci n'ait pas le ballon et il faut que la case adjacente située horizontalement ou verticalement soit libre (sans pion de son équipe ou de l'équipe adverse). Comme le joueur a 2 déplacements à sa disposition, s'il veut déplacer un pion vers une case voisine en diagonale, il doit pour cela utiliser deux déplacements orthogonaux, un verticalement et un horizontalement, la case de passage devant être libre. Il est également possible de déplacer deux pions différents d'une case. Le pion qui a le ballon peut faire une passe en lançant aussi loin qu'il veut à un autre pion du même camp situé sur la même ligne, colonne ou diagonale que lui, à condition qu'aucun pion adverse ne soit placé entre les deux pions alliés. Comme au handball, le pion qui a le ballon ne peut pas se déplacer pendant le même tour (mais le pion qui reçoit le ballon peut se déplacer avant de recevoir le ballon).");
+				"Les deux adversaires jouent à tour de rôle. À son tour, le joueur a la possibilité d'effectuer jusqu'à 3 actions dans n'importe quel ordre : 2 d'une case et une passe. Il n'est pas obligé d'effectuer toutes ces actions pour terminer son tour. Pour déplacer un joueur, il faut que celui-ci n'ait pas le ballon et il faut que la case voisine située horizontalement ou verticalement soit libre (sans pion de son équipe ou de l'équipe adverse). Comme le joueur a 2 déplacements à sa disposition, s'il veut déplacer un pion vers une case voisine en diagonale, il doit pour cela utiliser deux déplacements, un vertical et un horizontal, la case de passage devant être libre. On peut tout à fait déplacer deux pions différents d'une case. Le pion qui a le ballon peut faire une passe en lançant aussi loin qu'il veut à un autre pion allié situé sur la même ligne, colonne ou diagonale que lui, à condition qu'aucun pion adverse ne soit placé entre les deux pions alliés. Comme au handball, le pion qui a le ballon ne peut pas se déplacer pendant le même tour (mais le pion qui reçoit le ballon peut se déplacer avant de recevoir le ballon).");
 		texte1.setStyle("-fx-font-size: 14;");
 		texte1.setWrapText(true);
 
 		Label texte2 = new Label(
-				"Afin que chaque équipe puisse aller dans le camp adverse, une règle d'antijeu interdit aux joueurs, sous conditions, de constituer une ligne infranchissable pour l'adversaire. Si un joueur crée une ligne infranchissable et que 3 pions adverses sont adjacents à cette ligne, le joueur celui qui a constitué la ligne perd immédiatement.");
+				"Afin que chaque équipe puisse aller dans le camp adverse, une règle d'antijeu interdit aux joueurs de constituer une ligne infranchissable pour l'adversaire. Si un joueur crée une ligne infranchissable ET que 3 pions adverses sont adjacents à cette ligne, le joueur celui qui a constitué la ligne perd immédiatement.");
 		texte2.setStyle("-fx-font-size: 14;");
 		texte2.setWrapText(true);
+		Label texte3 = new Label(
+				"Comme au rugby, le but est de placer la balle au bout du camp adverse. Si un pion s'y retrouve et que ce pion a la balle, alors le détenteur de ce pion est automatiquement déclaré vainqueur.");
+		texte3.setStyle("-fx-font-size: 14;");
+		texte3.setWrapText(true);
 
-		vbox.getChildren().addAll(sousTitre1, texte1, sousTitre2, texte2);
+		vbox.getChildren().addAll(sousTitre1, texte1, sousTitre2, texte2, sousTitre3, texte3);
 		return vbox;
 	}
 
