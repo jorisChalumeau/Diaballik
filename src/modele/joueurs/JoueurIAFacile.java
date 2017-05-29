@@ -13,7 +13,10 @@ public class JoueurIAFacile extends JoueurIA {
 		this.numJoueur = numJoueur;
 		this.difficulte = "facile";
 	}
-
+	
+	/**
+	 * @return La liste de tout les mouvements que peut faire l'IA à un instant T, à appeler donc dans le generateur d'arbre 
+	 */
 	public List<MouvementIA> genererMouvementsPossibles(Partie partie) {
 		List<MouvementIA> mouvementsJoueur = new ArrayList<>();
 		Plateau p = partie.getPlateau();
@@ -54,6 +57,11 @@ public class JoueurIAFacile extends JoueurIA {
 		return mouvementsJoueur;
 	}
 
+	/**
+	 * Selectione parmis tout les coups possibles un coup aleatoirement et le réalise
+	 * @param partie
+	 * @return le coup choisi
+	 */
 	public MouvementIA jouerAction(Partie partie) {
 		List<MouvementIA> listeMvm = genererMouvementsPossibles(partie);
 		Random generator = new Random();
@@ -70,6 +78,9 @@ public class JoueurIAFacile extends JoueurIA {
 			return null;
 	}
 
+	/**
+	 * Fonction à appeler à chaque tour de l'IA et qui va mettre a jour le plateau (modèle) selon les 3 actions aléatoires qu'a choisit l'IA 
+	 */
 	@Override
 	public ArrayList<MouvementIA> jouerCoup(Partie partie) throws PionBloqueException, InterruptedException {
 		ArrayList<MouvementIA> listeCoups = new ArrayList<MouvementIA>();

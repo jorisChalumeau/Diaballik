@@ -14,6 +14,9 @@ import modele.Point;
 import modele.TypeAction;
 import modele.tests.Regles;
 
+/**
+ * Classe qui crée une intelligence artificielle de difficulté difficile
+ */
 public class JoueurIADifficile extends JoueurIA {
 	public Plateau plateauActuel;
 	private Arbre arbre;
@@ -40,6 +43,9 @@ public class JoueurIADifficile extends JoueurIA {
 		regles = null;
 	}
 	
+	/**
+	 * Initialise les différentes données à la création d'une IA
+	 */
 	public void reinitAttributs(){
 		allPosibleCoord = new ArrayList<>();
 		coupIA = new ArrayList<>();
@@ -55,6 +61,11 @@ public class JoueurIADifficile extends JoueurIA {
 		}
 	}
 
+	/**
+	 * 
+	 * @param plateau
+	 * @return La liste des coordonnées des pions du joueur actuel
+	 */
 	private Point[] obtenirPositionDesPions(Plateau plateau) {
 		Point[] tmpPieceList = new Point[7];
 		int i = 0;
@@ -80,6 +91,16 @@ public class JoueurIADifficile extends JoueurIA {
 		return tmpPieceList;
 	}
 
+	/**
+	 * Genere un arbre de jeu sur 3 coup maximum à partir d'une racine, donc crée pour chaque action possible un noeud dans lequel on stockera le type de mouvement réalisé
+	 * ainsi que les coorndonnées et autres informations mais pas le poids de chaque noeud
+	 * @param n
+	 * @param p
+	 * @param pions
+	 * @param prof
+	 * @param joueurActuel
+	 * @param partie
+	 */
 	public void genererArbreDeJeu(Noeud n, Plateau p, Point[] pions, int prof, Joueur joueurActuel, Partie partie) {
 		if (prof <= 0)
 			return;
@@ -91,7 +112,6 @@ public class JoueurIADifficile extends JoueurIA {
 		} else {
 			tmp.moves = n.moves;
 			tmp.passed = n.passed;
-
 		}
 		for (MouvementIA move : genererMouvementsPossibles(tmp, p, pions, joueurActuel)) {
 			if (n.parent.joueur == joueurActuel) {
@@ -118,14 +138,26 @@ public class JoueurIADifficile extends JoueurIA {
 					partie);
 		}
 	}
-
+/**
+ * 
+ * @param joueurActuel
+ * @param partie
+ * @return Le nouveau joueur, utile dans genererArbreDeJeu pour arreter la generation
+ */
 	private Joueur changerJoueur(Joueur joueurActuel, Partie partie) {
 		if (joueurActuel.getNumeroJoueur() == partie.getJ1().getNumeroJoueur())
 			return partie.getJ2();
 		else
 			return partie.getJ1();
 	}
-
+/**
+ * 
+ * @param n
+ * @param plateau
+ * @param pions
+ * @param joueurActuel
+ * @return La liste de tout les mouvements que peut faire l'IA à un instant T, à appeler donc dans le generateur d'arbre 
+ */
 	public List<MouvementIA> genererMouvementsPossibles(Noeud n, Plateau plateau, Point[] pions, Joueur joueurActuel) {
 		List<MouvementIA> pMoves = new ArrayList<>();
 		for (int i = 0; i < 7; i++) {
@@ -136,7 +168,6 @@ public class JoueurIADifficile extends JoueurIA {
 								joueurActuel) == TypeAction.DEPLACEMENT) {
 							MouvementIA tmp = new MouvementIA(pions[i], pions[i].changeColumn(j),
 									TypeAction.DEPLACEMENT, plateau.obtenirCase(pions[i]));
-							//Marche que dans un sens
 							if (joueurActuel.getNumeroJoueur() == 2 && (tmp.src.getRow() == 0 && tmp.dest.getRow() >= 0) || 
 									(joueurActuel.getNumeroJoueur() == 1 && (tmp.src.getRow() == 6 && tmp.dest.getRow() <= 6)));
 							else	pMoves.add(tmp);
@@ -177,7 +208,16 @@ public class JoueurIADifficile extends JoueurIA {
 
 		return pMoves;
 	}
-
+	
+	
+/**
+ * Methode parcourant l'arbre de jeu et simulant tout les coups de l'arbre
+ * @param noeud
+ * @param plateau
+ * @param profondeur
+ * @param maximiser
+ * @return Le meilleur poids possible qu'on aura trouvé à partir d'un noeud de l'arbre
+ */
 	public int MinMax(Noeud noeud, Plateau plateau, int profondeur, boolean maximiser) {
 
 		if (profondeur == 0 || noeud.enfants.isEmpty()) {
@@ -214,7 +254,16 @@ public class JoueurIADifficile extends JoueurIA {
 			return bestValue;
 		}
 	}
-
+/**
+ * Methode permettant d'affecter aux différent noeuds(donc mouvements et passe) des poids calculés de manière suivante : 
+ * 			Plus le joueur s'approche du but adverse par un mouvement plus le noeud représentant ce mouvement est fort et la position de départ est prise en compte
+ * 			C'est à dire que faire un saut de deux lignes vers l'avant sera pas d'une même importance selon d'ou le pion part, plus il part de haut mieux c'est, donc on 
+ * 			force l'IA à jouer trés aggressif
+ * @param plateau
+ * @param noeud
+ * @param maximiser
+ * @return L'evaluation du noeud en parametre
+ */
 	public int evaluerAction(Plateau plateau, Noeud noeud, boolean maximiser) {
 		int tmpGrade = 0;
 		Joueur currentPlayer = noeud.joueur;
@@ -239,7 +288,11 @@ public class JoueurIADifficile extends JoueurIA {
 		}
 		return tmpGrade;
 	}
-
+/**
+ * A chaque tour de l'IA, on genere l'arbre à partir de ses pions et effectue un minmax sur cet arbre 
+ * @param partie
+ * @return La liste d'action à realiser
+ */
 	public ArrayList<MouvementIA> jouer(Partie partie) {
 
 		arbre = new Arbre();
@@ -252,6 +305,10 @@ public class JoueurIADifficile extends JoueurIA {
 		return coup();
 	}
 
+	/**
+	 * 
+	 * @return La liste d'action à realiser
+	 */
 	public ArrayList<MouvementIA> coup() {
 		coupIA.clear();
 		Noeud coup1, coup2, coup3;
@@ -267,7 +324,11 @@ public class JoueurIADifficile extends JoueurIA {
 
 		return coupIA;
 	}
-
+	
+	
+	/**
+	 * Fonction à appeler à chaque tour de l'IA et qui va mettre a jour le plateau (modèle) selon les actions qu'a choisit l'IA 
+	 */
 	@Override
 	public ArrayList<MouvementIA> jouerCoup(Partie partie) throws PionBloqueException, InterruptedException {
 		plateauActuel = new Plateau(partie.getPlateau());
