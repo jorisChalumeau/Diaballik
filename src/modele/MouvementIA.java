@@ -1,25 +1,28 @@
 package modele;
 
+/**
+ * structure d'une action de l'IA
+ */
 public class MouvementIA {
 
 	public Case caseSrc;
 	public Point src;
 	public Point dest;
-	public TypeMouvement type;
+	public TypeAction type;
 
 	public MouvementIA(Point x, Point y) {
 		src = x;
 		dest = y;
 	}
 
-	public MouvementIA(Point x, Point y, TypeMouvement type, Case caseSrc) {
+	public MouvementIA(Point x, Point y, TypeAction type, Case caseSrc) {
 		src = x;
 		dest = y;
 		this.type = type;
 		this.caseSrc = caseSrc;
 	}
 	
-	public MouvementIA(Point x, Point y, TypeMouvement type)
+	public MouvementIA(Point x, Point y, TypeAction type)
 	{
 		src = x;
 		dest = y;

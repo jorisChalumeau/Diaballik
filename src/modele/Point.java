@@ -2,6 +2,9 @@ package modele;
 
 import java.util.function.Function;
 
+/**
+ * C'est une position de coordonnées (ligne ; colonne)
+ */
 public class Point {
 	private int row;
 	private int column;
@@ -27,14 +30,31 @@ public class Point {
 		this.column = y;
 	}
 
+	/**
+	 * 
+	 * @param rowMovement
+	 * @return un nouveau Point décalé de rowMovement lignes par rapport à ce
+	 *         Point
+	 */
 	public Point changeRow(int rowMovement) {
 		return new Point(row + rowMovement, column);
 	}
 
+	/**
+	 * 
+	 * @param columnMovement
+	 * @return un nouveau Point décalé de columnMovement colonnes par rapport à
+	 *         ce Point
+	 */
 	public Point changeColumn(int columnMovement) {
 		return new Point(row, columnMovement + column);
 	}
 
+	/**
+	 * 
+	 * @param otherPosition
+	 * @return true si otherPosition est un Point adjascent à ce Point ; false sinon
+	 */
 	public boolean estVoisin(Point otherPosition) {
 		if (this.row == otherPosition.row
 				&& (this.column + 1 == otherPosition.column || this.column - 1 == otherPosition.column)) {
@@ -59,6 +79,11 @@ public class Point {
 		return false;
 	}
 
+	/**
+	 * 
+	 * @param to
+	 * @return true si to est un Point situé en diagonale par rapport à ce point
+	 */
 	public boolean isOnDiagonal(Point to) {
 		if (this.row > to.row && this.column > to.column) {
 			return checkDiagonal((from) -> {

@@ -5,8 +5,13 @@ import java.util.List;
 
 import modele.joueurs.Joueur;
 
+/**
+ * le plateau de la partie
+ */
 public class Plateau {
-
+	/**
+	 * plateau : tableau [7]x[7] de cases
+	 */
 	private Case[][] terrain;
 	public final static int TAILLE = 7;
 	List<Point> allPosibleCoord;
@@ -21,6 +26,11 @@ public class Plateau {
 		}
 	}
 
+	/**
+	 * crée un nouveau Plateau identique au Plateau p
+	 * 
+	 * @param p
+	 */
 	public Plateau(Plateau p) {
 		this.terrain = new Case[7][7];
 
@@ -31,6 +41,9 @@ public class Plateau {
 		}
 	}
 
+	/**
+	 * initialise le plateau au début de la partie
+	 */
 	public void initialiserTerrain() {
 		terrain = new Case[TAILLE][TAILLE];
 		for (int i = 0; i < TAILLE; i++) {
@@ -52,9 +65,14 @@ public class Plateau {
 				terrain[i][j] = Case.LIBRE;
 			}
 		}
-
 	}
 
+	/**
+	 * 
+	 * @param player
+	 * @return un tableau de Points correspondant à la position de chaque pion
+	 *         du joueur player
+	 */
 	public Point[] obtenirPositionDesPions(Joueur player) {
 		Point[] tmpPieceList = new Point[7];
 		int i = 0;
@@ -80,14 +98,30 @@ public class Plateau {
 		return tmpPieceList;
 	}
 
+	/**
+	 * 
+	 * @param position
+	 * @return la case à la position position sur le plateau
+	 */
 	public Case obtenirCase(Point position) {
 		return terrain[position.getRow()][position.getColumn()];
 	}
 
+	/**
+	 * 
+	 * @return le plateau réel (le tableau de cases)
+	 */
 	public Case[][] obtenirPlateau() {
 		return this.terrain;
 	}
 
+	/**
+	 * effectue une action (déplacement ou passe) dans le modèle (échange les
+	 * cases aux positions src et dest)
+	 * 
+	 * @param src
+	 * @param dest
+	 */
 	public void actualiser(Point src, Point dest) {
 		Case newDestValue = terrain[src.getRow()][src.getColumn()];
 		Case newSrcValue = terrain[dest.getRow()][dest.getColumn()];
@@ -95,6 +129,9 @@ public class Plateau {
 		terrain[dest.getRow()][dest.getColumn()] = newDestValue;
 	}
 
+	/**
+	 * affiche une représentation String du plateau dans la console
+	 */
 	public void Afficher() {
 		for (int i = 0; i < TAILLE; i++) {
 			for (int j = 0; j < TAILLE; j++) {
@@ -103,8 +140,23 @@ public class Plateau {
 			System.out.println();
 		}
 		System.out.println("\n");
+		System.out.println("\n");
+		for (int i = TAILLE - 1; i >= 0; i++) {
+			for (int j = TAILLE - 1; j >= 0; j++) {
+				System.out.print(terrain[i][j].contenu);
+			}
+			System.out.println();
+		}
+		System.out.println("\n");
 	}
 
+	/**
+	 * 
+	 * @param src
+	 * @param dest
+	 * @return true si la case au point src est vide et a pour voisin la case au
+	 *         point dest ; false sinon
+	 */
 	public boolean estVoisinVide(Point src, Point dest) {
 		if (this.obtenirCase(src).equals(Case.LIBRE) && src.estVoisin(dest))
 			return true;

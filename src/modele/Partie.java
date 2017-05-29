@@ -93,7 +93,7 @@ public class Partie {
 
 		for (Point dest : listePoints) {
 			if (!r.obtenirActionDuJoueurSiActionPossible(p, src, dest, joueurActuel)
-					.equals(TypeMouvement.MOUVEMENT_ILLEGAL))
+					.equals(TypeAction.MOUVEMENT_ILLEGAL))
 				listePointsFinale.add(dest);
 		}
 
@@ -226,7 +226,7 @@ public class Partie {
 	public Case executerAction(Point src, Point dest) throws ExceptionMouvementIllegal {
 		Case caseSrc = p.obtenirCase(src);
 		int distance = compterMvtEffectues(src, dest);
-		TypeMouvement currentMove = r.obtenirActionDuJoueurSiActionPossible(this.p, src, dest, this.joueurActuel);
+		TypeAction currentMove = r.obtenirActionDuJoueurSiActionPossible(this.p, src, dest, this.joueurActuel);
 
 		switch (currentMove) {
 		case DEPLACEMENT:

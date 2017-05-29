@@ -5,7 +5,9 @@ import javafx.event.EventHandler;
 import javafx.scene.input.*;
 import javafx.scene.shape.Rectangle;
 
-
+/**
+ * handler drag exited (l'objet est sorti d'une case "droppable")
+ */
 public class dragExited implements EventHandler<DragEvent> {
 	
 	Controleur controleur;

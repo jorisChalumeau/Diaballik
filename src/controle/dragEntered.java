@@ -5,7 +5,9 @@ import javafx.scene.input.*;
 import javafx.scene.shape.Rectangle;
 import ihm.ColorateurDeRectangles;
 
-
+/**
+ * handler drag entered (l'objet est déplacé au dessus d'une case "droppable")
+ */
 public class dragEntered implements EventHandler<DragEvent> {
 	
 	Controleur controleur;

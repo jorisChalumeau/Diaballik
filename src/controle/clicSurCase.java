@@ -4,6 +4,9 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.*;
 
+/**
+ * handler du clic sur une case du plateau
+ */
 public class clicSurCase implements EventHandler<MouseEvent> {
 
 	Controleur controleur;

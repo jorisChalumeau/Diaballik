@@ -11,7 +11,7 @@ import modele.MouvementIA;
 import modele.Partie;
 import modele.Plateau;
 import modele.Point;
-import modele.TypeMouvement;
+import modele.TypeAction;
 import modele.tests.Regles;
 
 public class JoueurIADifficile extends JoueurIA {
@@ -95,11 +95,11 @@ public class JoueurIADifficile extends JoueurIA {
 		}
 		for (MouvementIA move : genererMouvementsPossibles(tmp, p, pions, joueurActuel)) {
 			if (n.parent.joueur == joueurActuel) {
-				if (move.type == TypeMouvement.PASSE || n.passed)
+				if (move.type == TypeAction.PASSE || n.passed)
 					n.enfants.add(new Noeud(move, true, n, n.moves, joueurActuel));
 				else
 					n.enfants.add(new Noeud(move, false, n, n.moves + 1, joueurActuel));
-			} else if (move.type == TypeMouvement.PASSE)
+			} else if (move.type == TypeAction.PASSE)
 				n.enfants.add(new Noeud(move, true, n, n.moves, joueurActuel));
 			else
 				n.enfants.add(new Noeud(move, false, n, n.moves + 1, joueurActuel));
@@ -133,9 +133,9 @@ public class JoueurIADifficile extends JoueurIA {
 				for (int j = -1; j < 2; j = j + 2) {
 					if (pions[i].changeColumn(j).getColumn() > 0 && pions[i].changeColumn(j).getColumn() < 7) {
 						if (regles.obtenirActionDuJoueurSiActionPossible(plateau, pions[i], pions[i].changeColumn(j),
-								joueurActuel) == TypeMouvement.DEPLACEMENT) {
+								joueurActuel) == TypeAction.DEPLACEMENT) {
 							MouvementIA tmp = new MouvementIA(pions[i], pions[i].changeColumn(j),
-									TypeMouvement.DEPLACEMENT, plateau.obtenirCase(pions[i]));
+									TypeAction.DEPLACEMENT, plateau.obtenirCase(pions[i]));
 							//Marche que dans un sens
 							if (joueurActuel.getNumeroJoueur() == 2 && (tmp.src.getRow() == 0 && tmp.dest.getRow() >= 0) || 
 									(joueurActuel.getNumeroJoueur() == 1 && (tmp.src.getRow() == 6 && tmp.dest.getRow() <= 6)));
@@ -145,9 +145,9 @@ public class JoueurIADifficile extends JoueurIA {
 
 					if (pions[i].changeRow(j).getRow() >= 0 && pions[i].changeRow(j).getRow() < 7) {
 						if (regles.obtenirActionDuJoueurSiActionPossible(plateau, pions[i], pions[i].changeRow(j),
-								joueurActuel) == TypeMouvement.DEPLACEMENT) {
+								joueurActuel) == TypeAction.DEPLACEMENT) {
 							MouvementIA tmp = new MouvementIA(pions[i], pions[i].changeRow(j),
-									TypeMouvement.DEPLACEMENT, plateau.obtenirCase(pions[i]));
+									TypeAction.DEPLACEMENT, plateau.obtenirCase(pions[i]));
 							if (joueurActuel.getNumeroJoueur() == 2 && (tmp.src.getRow() == 0 && tmp.dest.getRow() > 0)|| 
 								(joueurActuel.getNumeroJoueur() == 1 && (tmp.src.getRow() == 6 && tmp.dest.getRow() < 6)));
 							else	pMoves.add(tmp);
@@ -158,8 +158,8 @@ public class JoueurIADifficile extends JoueurIA {
 				}
 			if (!n.passed)
 				if (regles.obtenirActionDuJoueurSiActionPossible(plateau, pions[6], pions[i],
-						joueurActuel) == TypeMouvement.PASSE) {
-					MouvementIA tmp = new MouvementIA(pions[6], pions[i], TypeMouvement.PASSE,
+						joueurActuel) == TypeAction.PASSE) {
+					MouvementIA tmp = new MouvementIA(pions[6], pions[i], TypeAction.PASSE,
 							plateau.obtenirCase(pions[6]));
 					pMoves.add(tmp);
 				}

@@ -12,8 +12,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+/**
+ * Lanceur de l'application
+ */
 public class Main extends Application {
-
 
 	@Override
 	public void start(Stage stage) throws Exception {

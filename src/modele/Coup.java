@@ -2,14 +2,17 @@ package modele;
 
 import modele.joueurs.Joueur;
 
+/**
+ * structure d'un coup, pour stocker dans l'historique
+ */
 public class Coup {
 	private Joueur joueur;
 	private Point src;
 	private Point dest;
-	private TypeMouvement typeMvt;
+	private TypeAction typeMvt;
 	private int cptMouvement;
 
-	public Coup(Joueur j, Point s, Point d, TypeMouvement m, int cptMvt) {
+	public Coup(Joueur j, Point s, Point d, TypeAction m, int cptMvt) {
 		joueur = j;
 		src = s;
 		dest = d;
@@ -29,7 +32,7 @@ public class Coup {
 		return dest;
 	}
 
-	public TypeMouvement getTypeMvt() {
+	public TypeAction getTypeMvt() {
 		return typeMvt;
 	}
 

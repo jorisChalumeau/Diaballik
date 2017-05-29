@@ -4,7 +4,9 @@ import javafx.event.EventHandler;
 import javafx.scene.input.*;
 import javafx.scene.shape.Rectangle;
 
-
+/**
+ * handler drop
+ */
 public class dragDropped implements EventHandler<DragEvent> {
 	
 	Controleur controleur;

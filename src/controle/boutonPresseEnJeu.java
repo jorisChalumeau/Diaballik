@@ -3,6 +3,9 @@ package controle;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
 
+/**
+ * handler sur les actions des boutons dans une partie
+ */
 public class boutonPresseEnJeu implements EventHandler<ActionEvent> {
 
 	Controleur controleur;

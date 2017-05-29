@@ -25,18 +25,18 @@ public class JoueurIAFacile extends JoueurIA {
 				for (int j = -1; j < 2; j = j + 2) {
 					if (pions[i].changeColumn(j).getColumn() > 0 && pions[i].changeColumn(j).getColumn() < 7) {
 						if (r.obtenirActionDuJoueurSiActionPossible(p, pions[i], pions[i].changeColumn(j),
-								this) == TypeMouvement.DEPLACEMENT) {
+								this) == TypeAction.DEPLACEMENT) {
 							MouvementIA tmp = new MouvementIA(pions[i], pions[i].changeColumn(j),
-									TypeMouvement.DEPLACEMENT, p.obtenirCase(pions[i]));
+									TypeAction.DEPLACEMENT, p.obtenirCase(pions[i]));
 							mouvementsJoueur.add(tmp);
 						}
 					}
 
 					if (pions[i].changeRow(j).getRow() >= 0 && pions[i].changeRow(j).getRow() < 7) {
 						if (r.obtenirActionDuJoueurSiActionPossible(p, pions[i], pions[i].changeRow(j),
-								this) == TypeMouvement.DEPLACEMENT) {
+								this) == TypeAction.DEPLACEMENT) {
 							MouvementIA tmp = new MouvementIA(pions[i], pions[i].changeRow(j),
-									TypeMouvement.DEPLACEMENT, p.obtenirCase(pions[i]));
+									TypeAction.DEPLACEMENT, p.obtenirCase(pions[i]));
 							mouvementsJoueur.add(tmp);
 
 						}
@@ -45,8 +45,8 @@ public class JoueurIAFacile extends JoueurIA {
 				}
 
 			if (!partie.isBalleLancee())
-				if (r.obtenirActionDuJoueurSiActionPossible(p, pions[6], pions[i], this) == TypeMouvement.PASSE) {
-					MouvementIA tmp = new MouvementIA(pions[6], pions[i], TypeMouvement.PASSE, p.obtenirCase(pions[6]));
+				if (r.obtenirActionDuJoueurSiActionPossible(p, pions[6], pions[i], this) == TypeAction.PASSE) {
+					MouvementIA tmp = new MouvementIA(pions[6], pions[i], TypeAction.PASSE, p.obtenirCase(pions[6]));
 					mouvementsJoueur.add(tmp);
 				}
 

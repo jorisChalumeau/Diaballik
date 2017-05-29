@@ -6,6 +6,9 @@ import javafx.scene.input.*;
 import javafx.scene.shape.Rectangle;
 import modele.Case;
 
+/**
+ * handler drag detected (début du drag-and-drop)
+ */
 public class dragDetected implements EventHandler<MouseEvent> {
 	
 	Controleur controleur;

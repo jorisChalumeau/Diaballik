@@ -151,7 +151,8 @@ public class Controleur {
 			jouerActionIHM(typePionSource, numeroCaseSrc, numero);
 			actualiserCouleurBoutons();
 		} catch (Exception e) {
-			System.out.println("déplacement impossible");
+			// cas impossible
+			// System.out.println("déplacement impossible");
 		}
 		this.deselection();
 
@@ -215,7 +216,7 @@ public class Controleur {
 			ArrayList<MouvementIA> listeCoups = diaballik.jouerIA();
 
 			if (listeCoups == null) {
-				System.out.println("l'IA n'a pas trouvé de coup");
+				// System.out.println("l'IA n'a pas trouvé de coup");
 				triggerFinTour();
 			} else {
 				iterListeCoups = listeCoups.iterator();
@@ -267,7 +268,8 @@ public class Controleur {
 
 				actualiserCouleurBoutons();
 			} catch (ExceptionMouvementIllegal e) {
-				System.out.println("déplacement impossible");
+				// cas impossible
+				// System.out.println("déplacement impossible");
 			}
 		}
 
@@ -300,7 +302,8 @@ public class Controleur {
 
 				actualiserCouleurBoutons();
 			} catch (ExceptionMouvementIllegal e) {
-				System.out.println("déplacement impossible");
+				// cas impossible
+				// System.out.println("déplacement impossible");
 			}
 		}
 	}
@@ -366,8 +369,6 @@ public class Controleur {
 		if (j != null) {
 			diaballik.mettreFinALaPartie();
 			ihm.afficherMenuFinPartie(j.getNumeroJoueur());
-			System.out.println("\n\n\n######################################\n\nLe joueur " + j.getNumeroJoueur()
-					+ " a gagné\n\n######################################");
 		}
 	}
 
@@ -438,7 +439,8 @@ public class Controleur {
 				// on reprend la partie
 				cacherMenuPause();
 			} catch (IOException e) {
-				System.out.println("impossible d'ecrire dans le fichier");
+				// cas impossible
+				// System.out.println("impossible d'ecrire dans le fichier");
 			}
 		} else {
 			System.out.println("fichier incorrect ou inexistant");
@@ -473,7 +475,8 @@ public class Controleur {
 				chargerFenetreJeu();
 				System.out.println("chargement reussi");
 			} catch (IOException e) {
-				System.out.println("fichier introuvable");
+				// cas impossible
+				// System.out.println("fichier introuvable");
 			}
 		} else {
 			System.out.println("fichier incorrect ou inexistant");

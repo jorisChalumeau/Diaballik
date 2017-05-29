@@ -4,7 +4,9 @@ import javafx.event.EventHandler;
 import javafx.scene.input.*;
 import javafx.scene.shape.Rectangle;
 
-
+/**
+ * handler drag over (déplacement données)
+ */
 public class dragOver implements EventHandler<DragEvent> {
 	
 	Controleur controleur;

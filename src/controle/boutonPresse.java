@@ -7,6 +7,9 @@ import java.io.File;
 import ihm.FenetreSauvegarde;
 import javafx.event.ActionEvent;
 
+/**
+ * handler sur les actions du menu principale et du menuPause
+ */
 public class boutonPresse implements EventHandler<ActionEvent> {
 
 	Controleur controleur;

@@ -7,7 +7,7 @@ import modele.Case;
 import modele.Partie;
 import modele.Plateau;
 import modele.Point;
-import modele.TypeMouvement;
+import modele.TypeAction;
 import modele.joueurs.Joueur;
 
 public class Regles {
@@ -27,14 +27,14 @@ public class Regles {
 	}
 
 	// Check si l'action que veut réaliser le joueur est possible
-	public TypeMouvement obtenirActionDuJoueurSiActionPossible(Plateau plateau, Point src, Point dest,
+	public TypeAction obtenirActionDuJoueurSiActionPossible(Plateau plateau, Point src, Point dest,
 			Joueur joueurActuel) {
-		TypeMouvement result = obtenirActionDuJoueur(plateau, src, dest, joueurActuel);
-		TypeMouvement resultatTests = TypeMouvement.MOUVEMENT_ILLEGAL;
-		if (result.equals(TypeMouvement.DEPLACEMENT)) {
+		TypeAction result = obtenirActionDuJoueur(plateau, src, dest, joueurActuel);
+		TypeAction resultatTests = TypeAction.MOUVEMENT_ILLEGAL;
+		if (result.equals(TypeAction.DEPLACEMENT)) {
 			resultatTests = checkTests(plateau, src, dest, joueurActuel, testsPourDeplacement);
 		}
-		if (result.equals(TypeMouvement.PASSE)) {
+		if (result.equals(TypeAction.PASSE)) {
 			resultatTests = checkTests(plateau, src, dest, joueurActuel, testsPourPasse);
 		}
 		if (resultatTests == null) {
@@ -44,20 +44,20 @@ public class Regles {
 	}
 
 	// Obtient l'action que veut réaliser le joueur
-	private TypeMouvement obtenirActionDuJoueur(Plateau plateau, Point src, Point dest, Joueur joueurActuel) {
+	private TypeAction obtenirActionDuJoueur(Plateau plateau, Point src, Point dest, Joueur joueurActuel) {
 		if (new TestMouvement().test(plateau, src, dest, joueurActuel)) {
-			return TypeMouvement.DEPLACEMENT;
+			return TypeAction.DEPLACEMENT;
 		}
 		if (new TestPasseurRecepteur().test(plateau, src, dest, joueurActuel)) {
-			return TypeMouvement.PASSE;
+			return TypeAction.PASSE;
 		}
-		return TypeMouvement.MOUVEMENT_ILLEGAL;
+		return TypeAction.MOUVEMENT_ILLEGAL;
 	}
 
-	private TypeMouvement checkTests(Plateau plateau, Point src, Point dest, Joueur joueurActuel, List<Test> tests) {
+	private TypeAction checkTests(Plateau plateau, Point src, Point dest, Joueur joueurActuel, List<Test> tests) {
 		for (Test t : tests) {
 			if (!t.test(plateau, src, dest, joueurActuel)) {
-				return TypeMouvement.MOUVEMENT_ILLEGAL;
+				return TypeAction.MOUVEMENT_ILLEGAL;
 			}
 		}
 		return null;
