@@ -242,7 +242,7 @@ public class Affichage {
 		Button bDifficile = new Button("Difficile");
 		setBoutonClassique(bDifficile, 7, controleur);
 
-		Button bEnRab = new Button("(Pour démo) IA Moyenne VS IA DIfficile?");
+		Button bEnRab = new Button("(Pour démo) IA DIfficile VS IA DIfficile");
 		setBoutonClassique(bEnRab, 8, controleur);
 
 		vbox.getChildren().addAll(bFacile, bNormal, bDifficile, bEnRab);
